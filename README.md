@@ -8,7 +8,7 @@ EatStep, Munchview, Pickorn and the live browser game
 Single-page Astro site, static output, no UI framework — plain CSS
 (`src/styles/global.css`) and vanilla TypeScript in component `<script>` tags.
 Art direction: *daybreak on dark* — coral→amber sunrise gradient on near-black,
-Space Grotesk display type with Instrument Serif italic accents.
+Space Grotesk display type with Fraunces italic accents.
 
 ## Setup
 
