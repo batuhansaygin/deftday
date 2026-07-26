@@ -1,6 +1,6 @@
 /* ============================================================
    DeftDay — daybreak on dark
-   Space Grotesk display · Fraunces italic accents
+   Space Grotesk display · DM Serif Display italic accents
    coral→amber sunrise gradient on near-black
    ============================================================ */
 :root{
@@ -16,7 +16,7 @@
   --grad:linear-gradient(120deg,var(--sun1),var(--sun2));
   --font-d:'Space Grotesk',sans-serif;
   --font-b:'Inter',sans-serif;
-  --font-s:'Fraunces',serif;
+  --font-s:'DM Serif Display',serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
