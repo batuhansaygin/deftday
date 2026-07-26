@@ -1,8 +1,9 @@
 # DeftDay — deftday.com
 
 Marketing site for **DeftDay**, an independent app & game studio building
-productivity apps, mobile games and everyday utilities for iOS & Android.
-First products land 2026.
+apps, games and everyday utilities for iOS, Android and the web. Home of
+EatStep, Munchview, Pickorn and the live browser game
+[SkyBattleSea](https://skybattlesea.com).
 
 Single-page Astro site, static output, no UI framework — plain CSS
 (`src/styles/global.css`) and vanilla TypeScript in component `<script>` tags.
