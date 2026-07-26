@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import DesktopHero from '../components/DesktopHero.astro';
+import Manifesto from '../components/Manifesto.astro';
+import AppsGrid from '../components/AppsGrid.astro';
+import Lab from '../components/Lab.astro';
+import Craft from '../components/Craft.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base
+  title="DeftDay Studio — Independent App & Game Studio for iOS & Android"
+  description="DeftDay builds productivity apps, mobile games and everyday utilities for iOS and Android. Small independent studio, everything crafted in-house. First apps landing 2026."
+>
+  <DesktopHero />
+  <main>
+    <Manifesto />
+    <AppsGrid />
+    <Lab />
+    <Craft />
+    <Contact />
+  </main>
+  <Footer />
+</Base>

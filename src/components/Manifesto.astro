@@ -1,0 +1,31 @@
+---
+// Studio manifesto — words light up as you scroll.
+---
+
+<section id="studio" class="manifesto" aria-labelledby="studio-title">
+  <div class="sec-tag"><b>01</b> The Studio</div>
+  <h2 id="studio-title" class="visually-hidden">The studio</h2>
+  <p id="manifesto-text">
+    Small studio. Sharp craft. We design, build and ship our own products — from
+    planners that tame your morning to games that own your night. No committees.
+    No filler. Just work we're proud to put our name on.
+  </p>
+</section>
+
+<script>
+  const man = document.getElementById('manifesto-text');
+  if (man) {
+    const words = (man.textContent || '').trim().split(/\s+/);
+    man.innerHTML = words.map((w) => `<span class="w">${w}</span>`).join(' ');
+    const manWords = man.querySelectorAll<HTMLElement>('.w');
+    function light() {
+      const r = man!.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const progress = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.35)));
+      const count = Math.floor(progress * manWords.length);
+      manWords.forEach((w, i) => w.classList.toggle('on', i < count));
+    }
+    window.addEventListener('scroll', light, { passive: true });
+    light();
+  }
+</script>

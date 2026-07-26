@@ -1,0 +1,59 @@
+---
+// What we build — three disciplines, one standard.
+---
+
+<section id="build" aria-labelledby="build-title">
+  <div class="sec-tag"><b>02</b> What we build</div>
+  <h2 id="build-title" class="rv" style="margin-bottom:56px">
+    Three obsessions,<br /><span class="serif">one standard.</span>
+  </h2>
+  <div class="grid3">
+    <article class="card rv">
+      <span class="num">/ 01</span>
+      <div class="icon i-sun" aria-hidden="true"></div>
+      <h3>Productivity</h3>
+      <p>
+        Planners, trackers and focus tools that make the day feel lighter —
+        opinionated, fast, and beautiful enough to open first thing in the
+        morning.
+      </p>
+    </article>
+    <article class="card rv d1">
+      <span class="num">/ 02</span>
+      <div class="icon i-play" aria-hidden="true"></div>
+      <h3>Games</h3>
+      <p>
+        Tight mechanics, playful worlds, zero bloat. Games built to be picked up
+        in seconds and remembered for weeks.
+      </p>
+    </article>
+    <article class="card rv d2">
+      <span class="num">/ 03</span>
+      <div class="icon i-tool" aria-hidden="true"></div>
+      <h3>Utilities</h3>
+      <p>
+        Small everyday problems, solved elegantly. Single-purpose tools that do
+        one thing so well you forget life before them.
+      </p>
+    </article>
+  </div>
+</section>
+
+<script>
+  /* card spotlight + tilt */
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      card.style.setProperty('--mx', x + 'px');
+      card.style.setProperty('--my', y + 'px');
+      if (reduced) return;
+      const rx = (y / r.height - 0.5) * -6;
+      const ry = (x / r.width - 0.5) * 6;
+      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave', () => (card.style.transform = ''));
+  });
+</script>

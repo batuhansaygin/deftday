@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://deftday.com/sitemap-index.xml
