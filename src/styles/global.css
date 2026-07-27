@@ -86,20 +86,12 @@ body::after{
 /* a counter-light on the far side, so it reads as depth not a glow */
 .sky .s3{background:radial-gradient(80% 40% at 14% 110%,
   oklch(81.4% .155 72.3 / .3) 0%,transparent 62%)}
-/* the horizon rule itself */
-.sky .line{
-  position:absolute;left:0;right:0;bottom:5%;height:1px;
-  background:var(--grad);opacity:0;
-}
-
 @supports (animation-timeline: scroll()) {
   .sky span{animation:sky-rise linear both;animation-timeline:scroll(root block)}
   .sky .s1{animation-range:0% 88%}
   .sky .s2{animation-range:0% 100%}
   .sky .s3{animation-range:12% 100%}
-  .sky .line{animation:horizon linear both;animation-timeline:scroll(root block)}
   @keyframes sky-rise{from{opacity:0;transform:translateY(14%)}to{opacity:1;transform:none}}
-  @keyframes horizon{from{opacity:0;transform:translateY(30px)}to{opacity:.7;transform:none}}
 }
 
 /* Reading progress: a sunrise rule that fills as the page scrolls.
@@ -534,7 +526,7 @@ html.js .hero .rv.d3{animation-delay:.15s}
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   html{scroll-behavior:auto}
   html.js .rv{opacity:1;transform:none;animation:none}
-  .sky span,.sky .line{animation:none;opacity:.55;transform:none}
+  .sky span{animation:none;opacity:.55;transform:none}
   .progress{display:none}
   .manifesto .w{color:var(--ink)}
   #loader{display:none}
