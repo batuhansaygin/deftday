@@ -1,0 +1,229 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteChrome from '../components/SiteChrome.astro';
+import Footer from '../components/Footer.astro';
+
+const updated = 'July 27, 2026';
+---
+
+<Base
+  title="Privacy — DeftDay Studio"
+  description="What DeftDay's apps store, what they send, and what they never collect. One page, per app, in plain language."
+>
+  <SiteChrome />
+  <div class="sky" aria-hidden="true">
+    <span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="line"></span>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+
+  <main id="main" class="legal">
+    <span class="eyebrow">Privacy</span>
+    <h1>What we keep,<br /><span class="serif">and what we don't.</span></h1>
+    <p class="lede">
+      DeftDay builds small apps and one browser game. None of them are funded by
+      advertising, so none of them are built to watch you. This page says exactly
+      what each app stores and what it sends, in plain language.
+    </p>
+    <p class="updated">Last updated: {updated}</p>
+
+    <section class="legal-block" aria-labelledby="studio">
+      <h2 id="studio">Across the studio</h2>
+      <ul>
+        <li>We do not sell or share personal data with data brokers.</li>
+        <li>We do not use advertising SDKs, and we run no ad network in any app.</li>
+        <li>We do not build advertising profiles, and we do not track you across apps or websites.</li>
+        <li>
+          Where an app needs to remember something — a preference, a watched
+          item, a saved list — it keeps it on your device unless that app's
+          section below says otherwise.
+        </li>
+        <li>
+          This site, <strong>deftday.com</strong>, sets no cookies and runs no
+          analytics. It is a static page served from Cloudflare, which processes
+          request data such as IP address to deliver and protect the site.
+        </li>
+      </ul>
+    </section>
+
+    <section class="legal-block" aria-labelledby="munchview">
+      <h2 id="munchview">Munchview <span class="tag">Android</span></h2>
+      <p>
+        Munchview starts a video that fits how long your meal is. It has no
+        accounts, no sign-in, and no analytics.
+      </p>
+      <h3>Stored on your device</h3>
+      <p>
+        Your length preference and what you have already seen, so it does not
+        repeat itself. This lives in the app's own storage and is removed when
+        you uninstall the app. It is not sent to us.
+      </p>
+      <h3>Sent off your device</h3>
+      <ul>
+        <li>
+          A request to our own content service asking for videos, carrying only
+          the category or length you chose — not an identifier for you.
+        </li>
+        <li>
+          Video playback happens through YouTube's player, and thumbnails load
+          from YouTube's servers. Once a video plays, YouTube receives the
+          request as it would in any browser and its own privacy policy applies
+          (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>).
+          We do not send YouTube anything about you beyond the video being opened.
+        </li>
+      </ul>
+      <h3>Not collected</h3>
+      <p>
+        No name, email, phone number, contacts, photos, precise location, or
+        advertising identifier. Munchview requests no runtime permissions.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="pickorn">
+      <h2 id="pickorn">Pickorn <span class="tag">iOS &amp; Android, not yet released</span></h2>
+      <p>
+        Pickorn picks a film from a catalogue that ships inside the app, so it
+        works with no network at all. There are no accounts and no analytics.
+        Your watchlist, your watched films and your filters are stored on your
+        device and are not sent anywhere. Opening a film on IMDb hands you to
+        IMDb, where their policy applies.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="eatstep">
+      <h2 id="eatstep">EatStep <span class="tag">iOS &amp; Android, in development</span></h2>
+      <p>
+        EatStep is a food-delivery platform, so it will necessarily handle an
+        account, an address and order history in order to deliver food. It is
+        not released yet; this section will be replaced with its full policy
+        before the first release, and no data is being collected today.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="skybattlesea">
+      <h2 id="skybattlesea">SkyBattleSea <span class="tag">Web</span></h2>
+      <p>
+        SkyBattleSea is playable as a guest or with an account, and it keeps its
+        own policy alongside the game:
+        <a href="https://skybattlesea.com/privacy.html" target="_blank" rel="noopener"
+          >skybattlesea.com/privacy.html <span aria-hidden="true">↗</span></a
+        >.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="rights">
+      <h2 id="rights">Your choices</h2>
+      <p>
+        For apps that store everything on your device, uninstalling removes the
+        data — we hold nothing to delete. For anything else, or if you simply
+        want to ask what we hold, write to
+        <a class="mail-inline" href="mailto:hello@deftday.com">hello@deftday.com</a>
+        and we will answer.
+      </p>
+      <p>
+        If this policy changes in a way that affects what we collect, we will
+        update the date at the top and describe the change here.
+      </p>
+    </section>
+
+    <p class="back-home"><a href="/">← Back to the studio</a></p>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .legal {
+    max-width: 78ch;
+    margin: 0 auto;
+    padding: 160px var(--gutter) 40px;
+  }
+  .legal h1 {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    margin-bottom: 28px;
+  }
+  .lede {
+    color: var(--muted);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    text-wrap: pretty;
+    max-width: 60ch;
+  }
+  .updated {
+    margin-top: 14px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .legal-block {
+    margin-top: 56px;
+    padding-top: 34px;
+    border-top: 1px solid var(--line);
+  }
+  .legal-block h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-bottom: 18px;
+  }
+  .legal-block h3 {
+    font-family: var(--font-d);
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sun-text);
+    margin: 26px 0 10px;
+  }
+  .legal-block p,
+  .legal-block li {
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+  .legal-block p + p {
+    margin-top: 14px;
+  }
+  .legal-block ul {
+    margin: 12px 0 0 1.1em;
+    display: grid;
+    gap: 10px;
+  }
+  .legal-block strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .legal-block a,
+  .mail-inline {
+    color: var(--sun-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .legal-block a:hover,
+  .mail-inline:hover {
+    color: var(--ink);
+  }
+  .tag {
+    font-family: var(--font-b);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 5px 12px;
+    margin-left: 10px;
+    vertical-align: 5px;
+    white-space: nowrap;
+  }
+  .back-home {
+    margin-top: 64px;
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+  }
+  .back-home a {
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .back-home a:hover {
+    color: var(--ink);
+  }
+</style>

@@ -14,7 +14,10 @@ const { title, description, noindex = false } = Astro.props;
 const emitJsonLd = !noindex;
 
 const SITE = 'https://deftday.com/';
-const canonical = new URL(Astro.url.pathname, Astro.site);
+/* Pages build to /privacy.html so the served URL has no trailing slash; the
+   canonical has to name the URL people actually visit, without the extension. */
+const canonicalPath = Astro.url.pathname.replace(/\.html$/, '') || '/';
+const canonical = new URL(canonicalPath, SITE);
 const ogImage = new URL('/og.png', SITE).href;
 
 /* Every product below is also stated in visible page copy — structured data
