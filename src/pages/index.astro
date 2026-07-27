@@ -14,6 +14,14 @@ import Footer from '../components/Footer.astro';
   title="DeftDay Studio — Indie Apps & Games for iOS, Android & Web"
   description="DeftDay is an independent studio crafting apps, games and utilities for iOS, Android and the web — home of EatStep, Munchview, Pickorn and SkyBattleSea."
 >
+  {/* Ambient sky: static gradient layers the scroll timeline raises and fades in. */}
+  <div class="sky" aria-hidden="true">
+    <span class="s1"></span>
+    <span class="s2"></span>
+    <span class="s3"></span>
+    <span class="line"></span>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
   <SiteChrome />
   <main id="main">
     <Hero />

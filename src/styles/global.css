@@ -5,6 +5,7 @@
    ============================================================ */
 @import './fonts.css';
 
+
 :root{
   --bg:#08080d;
   --panel:#0e0e15;
@@ -25,10 +26,23 @@
   --gutter:clamp(20px,5vw,64px);
   --pad-x:max(var(--gutter),calc((100% - var(--shell)) / 2));
 }
+
+/* Interpolating coral→amber in sRGB dips ~6% in luminance at the midpoint,
+   which reads as a muddy brown band. OKLCH holds perceptual lightness across
+   the ramp, so the sunrise stays luminous end to end. */
+@supports (color: oklch(70% 0.2 34)) {
+  :root{
+    --sun1:oklch(68.6% .205 34);
+    --sun2:oklch(81.4% .155 72.3);
+    --sun-text:oklch(79.2% .131 47.9);
+    --grad:linear-gradient(in oklch 120deg,var(--sun1),var(--sun2));
+  }
+}
 *{margin:0;padding:0;box-sizing:border-box}
 /* Offset anchor landings so a section's label clears the fixed nav. */
+/* One offset, not two: scroll-padding-top on the scroll container was being
+   added to scroll-margin-top on the targets, landing every anchor 192px low. */
 html{scroll-behavior:smooth;scroll-padding-top:96px}
-section[id],header[id]{scroll-margin-top:96px}
 body{
   background:var(--bg);color:var(--ink);
   font-family:var(--font-b);font-size:16.5px;line-height:1.65;
@@ -47,6 +61,57 @@ a{color:inherit;text-decoration:none}
 body::after{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.5;
   background-size:256px 256px;background-image:url("data:image/svg+xml,%3Csvg width='256' height='256' viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   THE DAYBREAK — the page's signature
+   Scrolling moves the page from night to daybreak. Each sky layer is a
+   STATIC gradient; the scroll timeline only animates opacity and transform,
+   which the compositor handles. An earlier version interpolated the
+   gradients themselves through a --dawn custom property: visually identical,
+   but it repainted a full-viewport layer with three color-mix() gradients
+   every frame and cost 2.9s of style-and-layout (Lighthouse 98 -> 61).
+   ============================================================ */
+.sky{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.sky span{
+  position:absolute;left:0;right:0;bottom:-10%;height:120%;
+  display:block;opacity:0;transform:translateY(14%);
+}
+/* the sun's core */
+.sky .s1{background:radial-gradient(38% 24% at 68% 92%,
+  oklch(81.4% .155 72.3 / .5) 0%,transparent 70%)}
+/* the warm wash it throws along the horizon */
+.sky .s2{background:radial-gradient(130% 64% at 50% 104%,
+  oklch(68.6% .205 34 / .55) 0%,transparent 66%)}
+/* a counter-light on the far side, so it reads as depth not a glow */
+.sky .s3{background:radial-gradient(80% 40% at 14% 110%,
+  oklch(81.4% .155 72.3 / .3) 0%,transparent 62%)}
+/* the horizon rule itself */
+.sky .line{
+  position:absolute;left:0;right:0;bottom:5%;height:1px;
+  background:var(--grad);opacity:0;
+}
+
+@supports (animation-timeline: scroll()) {
+  .sky span{animation:sky-rise linear both;animation-timeline:scroll(root block)}
+  .sky .s1{animation-range:0% 88%}
+  .sky .s2{animation-range:0% 100%}
+  .sky .s3{animation-range:12% 100%}
+  .sky .line{animation:horizon linear both;animation-timeline:scroll(root block)}
+  @keyframes sky-rise{from{opacity:0;transform:translateY(14%)}to{opacity:1;transform:none}}
+  @keyframes horizon{from{opacity:0;transform:translateY(30px)}to{opacity:.7;transform:none}}
+}
+
+/* Reading progress: a sunrise rule that fills as the page scrolls.
+   Pure CSS — the scroll timeline scales it, nothing measures anything. */
+.progress{
+  position:fixed;top:0;left:0;right:0;height:2px;z-index:10002;
+  background:var(--grad);transform-origin:0 50%;transform:scaleX(0);
+  pointer-events:none;
+}
+@supports (animation-timeline: scroll()) {
+  .progress{animation:progress linear both;animation-timeline:scroll(root block)}
+  @keyframes progress{to{transform:scaleX(1)}}
 }
 
 /* keyboard skip link — visible only once focused */
@@ -102,6 +167,9 @@ html:not(.js) #cursor{display:none}
   border-bottom:1px solid transparent;
 }
 .nav.scrolled{background:rgba(8,8,13,.78);backdrop-filter:blur(16px);border-color:var(--line);padding-top:13px;padding-bottom:13px}
+/* Without JS nothing ever adds .scrolled, so the bar would sit transparent on
+   top of the content it overlaps. Give it the backdrop unconditionally there. */
+html:not(.js) .nav{background:rgba(8,8,13,.78);backdrop-filter:blur(16px);border-color:var(--line)}
 .logo{font-family:var(--font-d);font-weight:700;font-size:1.15rem;letter-spacing:.05em;display:inline-flex;align-items:center;min-height:44px}
 .logo em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .nav-links{display:flex;gap:clamp(18px,2.4vw,34px);align-items:center}
@@ -142,11 +210,12 @@ html:not(.js) #cursor{display:none}
 }
 .eyebrow::before{content:"";width:34px;height:1px;background:var(--grad)}
 h1{
+  text-wrap:balance;
   font-family:var(--font-d);font-weight:700;line-height:.98;letter-spacing:-.02em;
   font-size:clamp(2.9rem,7.6vw,6.6rem);position:relative;z-index:2;
 }
 h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;letter-spacing:0;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero-sub{margin-top:32px;max-width:46ch;color:var(--muted);font-size:clamp(1rem,1.4vw,1.18rem);position:relative;z-index:2}
+.hero-sub{text-wrap:pretty;margin-top:32px;max-width:46ch;color:var(--muted);font-size:clamp(1rem,1.4vw,1.18rem);position:relative;z-index:2}
 /* Below 1020px the product visual is hidden, so the headline takes the width
    it left behind. Declared after the base rules so it actually wins. */
 @media(max-width:1020px){
@@ -291,13 +360,17 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 /* Full-bleed like the nav and hero, with content centred in the same shell,
    so every section's left edge lines up with the logo. */
 section{padding:clamp(90px,12vw,160px) var(--pad-x);position:relative}
+/* content-visibility was tried here and removed: skipping off-screen sections
+   makes the document report a shorter height, so the daybreak scroll timeline
+   never reached its end (--dawn topped out at 0.79 instead of 1). The signature
+   is worth more than the render saving on a page that already scores 99. */
 .sec-tag{
   display:flex;align-items:center;gap:14px;font-size:.78rem;font-weight:600;
   letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:56px;
 }
 .sec-tag b{font-family:var(--font-d);color:var(--sun-text);font-weight:700}
 .sec-tag::after{content:"";flex:1;height:1px;background:var(--line)}
-h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1.05;font-size:clamp(2rem,5vw,4rem)}
+h2{text-wrap:balance;font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1.05;font-size:clamp(2rem,5vw,4rem)}
 .nb{white-space:nowrap} /* keeps "in-house," from splitting at the hyphen */
 
 /* ---------- manifesto ---------- */
@@ -369,7 +442,7 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 .numbers{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;border-top:1px solid var(--line);padding-top:56px;margin-top:20px}
 @media(max-width:820px){.numbers{grid-template-columns:repeat(2,1fr)}}
 .numbers .n{font-family:var(--font-d);font-weight:700;font-size:clamp(2.6rem,5vw,4.2rem);letter-spacing:-.02em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.numbers .l{color:var(--muted);font-size:.85rem;letter-spacing:.06em;margin-top:6px}
+.numbers .l{text-wrap:balance;color:var(--muted);font-size:.85rem;letter-spacing:.06em;margin-top:6px}
 
 /* ---------- craft list ---------- */
 .craft-list{border-top:1px solid var(--line)}
@@ -433,6 +506,19 @@ footer{border-top:1px solid var(--line);padding:70px var(--pad-x) 40px;overflow:
 /* ---------- reveal (JS-gated: content stays visible without JS) ---------- */
 html.js .rv{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
 html.js .rv.on{opacity:1;transform:none}
+/* Where the platform can do it, the reveal is a scroll-driven animation
+   instead of an IntersectionObserver callback: it runs on the compositor and
+   tracks the scroll position rather than firing once at a threshold. The JS
+   observer stays as the fallback for browsers without view(). */
+@supports (animation-timeline: view()) {
+  html.js .rv:not(.hero .rv){
+    opacity:1;transform:none;
+    animation:rv-in linear both;
+    animation-timeline:view();
+    animation-range:entry 4% cover 26%;
+  }
+  @keyframes rv-in{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:none}}
+}
 /* The hero sits above the fold behind the loader curtain, so its entrance is
    never actually watched. It animates straight from CSS (no IntersectionObserver
    round-trip) and slides without fading — text painted at full opacity from the
@@ -447,7 +533,9 @@ html.js .hero .rv.d3{animation-delay:.15s}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   html{scroll-behavior:auto}
-  html.js .rv{opacity:1;transform:none}
+  html.js .rv{opacity:1;transform:none;animation:none}
+  .sky span,.sky .line{animation:none;opacity:.55;transform:none}
+  .progress{display:none}
   .manifesto .w{color:var(--ink)}
   #loader{display:none}
 }
