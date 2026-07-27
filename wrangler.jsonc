@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "deftday-site",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-07-01",
+  // Static site served from Workers Assets. Attaching the custom domain
+  // through the Workers API also creates the DNS record, which the Pages
+  // custom-domain flow does not — that is why the site lives here.
+  //
+  // run_worker_first lets src/worker.ts see every request so it can redirect
+  // www to the apex; the zone token cannot write redirect rules.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": true
+  }
+}
