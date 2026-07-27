@@ -19,6 +19,11 @@
   --font-d:'Space Grotesk',sans-serif;
   --font-b:'Inter',sans-serif;
   --font-s:'DM Serif Display',serif;
+  /* Page shell: content never grows past --shell, but full-bleed bands
+     (nav, hero glow, marquee) still span the viewport. */
+  --shell:1560px;
+  --gutter:clamp(20px,5vw,64px);
+  --pad-x:max(var(--gutter),calc((100% - var(--shell)) / 2));
 }
 *{margin:0;padding:0;box-sizing:border-box}
 /* Offset anchor landings so a section's label clears the fixed nav. */
@@ -92,15 +97,15 @@ html:not(.js) #cursor{display:none}
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:1000;
   display:flex;align-items:center;justify-content:space-between;
-  padding:20px clamp(20px,5vw,64px);
+  padding:20px var(--pad-x);
   transition:background .4s,border-color .4s,padding .4s;
   border-bottom:1px solid transparent;
 }
 .nav.scrolled{background:rgba(8,8,13,.78);backdrop-filter:blur(16px);border-color:var(--line);padding-top:13px;padding-bottom:13px}
-.logo{font-family:var(--font-d);font-weight:700;font-size:1.15rem;letter-spacing:.05em}
+.logo{font-family:var(--font-d);font-weight:700;font-size:1.15rem;letter-spacing:.05em;display:inline-flex;align-items:center;min-height:44px}
 .logo em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .nav-links{display:flex;gap:clamp(18px,2.4vw,34px);align-items:center}
-.nav-links a:not(.btn){font-size:.85rem;font-weight:500;color:var(--muted);letter-spacing:.02em;transition:color .3s;padding:10px 2px}
+.nav-links a:not(.btn){display:inline-flex;align-items:center;min-height:44px;font-size:.85rem;font-weight:500;color:var(--muted);letter-spacing:.02em;transition:color .3s;padding:0 2px}
 .nav-links a:not(.btn):hover{color:var(--ink)}
 .btn{
   display:inline-flex;align-items:center;gap:10px;
@@ -119,7 +124,7 @@ html:not(.js) #cursor{display:none}
 .hero{
   min-height:100svh;position:relative;display:grid;
   grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px;align-items:center;
-  padding:120px clamp(20px,5vw,64px) 90px;overflow:hidden;
+  padding:120px var(--pad-x) 90px;overflow:hidden;
 }
 @media(max-width:1020px){.hero{grid-template-columns:1fr;padding-bottom:70px}}
 /* --py is written by the parallax handler; the independent `translate`
@@ -142,10 +147,16 @@ h1{
 }
 h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;letter-spacing:0;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero-sub{margin-top:32px;max-width:46ch;color:var(--muted);font-size:clamp(1rem,1.4vw,1.18rem);position:relative;z-index:2}
+/* Below 1020px the product visual is hidden, so the headline takes the width
+   it left behind. Declared after the base rules so it actually wins. */
+@media(max-width:1020px){
+  h1{font-size:clamp(2.9rem,9.2vw,5.4rem)}
+  .hero-sub{max-width:54ch}
+}
 .hero-cta{margin-top:42px;display:flex;gap:16px;flex-wrap:wrap;position:relative;z-index:2}
 .scroll-cue{
-  position:absolute;bottom:32px;left:clamp(20px,5vw,64px);display:flex;align-items:center;gap:12px;
-  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  position:absolute;bottom:32px;left:var(--pad-x);display:flex;align-items:center;gap:12px;
+  font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
 }
 .scroll-cue i{display:block;width:1px;height:44px;background:var(--line);position:relative;overflow:hidden}
 .scroll-cue i::after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;background:var(--grad);animation:cue 1.8s ease-in-out infinite}
@@ -153,6 +164,7 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 
 /* hero visual: floating phone + chips */
 .hero-visual{position:relative;z-index:2;display:flex;justify-content:center;perspective:1200px}
+.hero-visual .float{position:relative}
 @media(max-width:1020px){.hero-visual{display:none}}
 .hero-visual .float{animation:floaty 6s ease-in-out infinite alternate}
 @keyframes floaty{to{transform:translateY(-16px)}}
@@ -163,9 +175,9 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
   box-shadow:0 20px 40px -20px rgba(0,0,0,.8);
 }
 .chip-float b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.chip-float.c1{top:9%;left:-4%;animation:floaty 5s .4s ease-in-out infinite alternate}
-.chip-float.c2{bottom:20%;right:-6%;animation:floaty 7s .8s ease-in-out infinite alternate}
-.chip-float.c3{bottom:-2%;left:4%;animation:floaty 6s .2s ease-in-out infinite alternate}
+.chip-float.c1{top:9%;left:-14%;animation:floaty 5s .4s ease-in-out infinite alternate}
+.chip-float.c2{bottom:20%;right:-16%;animation:floaty 7s .8s ease-in-out infinite alternate}
+.chip-float.c3{bottom:-2%;left:-4%;animation:floaty 6s .2s ease-in-out infinite alternate}
 
 /* ---------- phones (shared) ---------- */
 .phone{
@@ -237,6 +249,24 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 .arcade .track::before{content:"";position:absolute;left:12%;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:4px;background:var(--grad);animation:hop 1.6s ease-in-out infinite alternate}
 @keyframes hop{to{left:78%}}
 
+/* Short landscape phones: the hero cannot hold a 100svh column, so let it
+   size to its content and pull the type down a step. */
+@media (max-height:560px) and (orientation:landscape){
+  .hero{min-height:auto;padding-top:96px;padding-bottom:52px;align-items:start}
+  h1{font-size:clamp(2.1rem,5.4vw,3.4rem)}
+  .eyebrow{margin-bottom:18px}
+  .hero-sub{margin-top:18px}
+  .hero-cta{margin-top:24px}
+  .scroll-cue{display:none}
+}
+@media (max-height:440px) and (orientation:landscape){
+  .hero{padding-top:78px;padding-bottom:40px}
+  h1{font-size:clamp(1.75rem,4.4vw,2.4rem)}
+  .eyebrow{margin-bottom:12px;font-size:.72rem}
+  .hero-sub{margin-top:12px;font-size:.95rem;max-width:60ch}
+  .hero-cta{margin-top:18px;gap:12px}
+}
+
 /* ---------- marquee ---------- */
 .marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:22px 0;background:var(--panel)}
 .marquee-track{display:flex;width:max-content;animation:scrollx 30s linear infinite}
@@ -252,7 +282,7 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 @keyframes scrollx{to{transform:translateX(-50%)}}
 
 /* ---------- shared sections ---------- */
-section{padding:clamp(90px,12vw,160px) clamp(20px,5vw,64px);position:relative;max-width:1560px;margin:0 auto}
+section{padding:clamp(90px,12vw,160px) var(--gutter);position:relative;max-width:var(--shell);margin:0 auto}
 .sec-tag{
   display:flex;align-items:center;gap:14px;font-size:.78rem;font-weight:600;
   letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:56px;
@@ -273,7 +303,9 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 
 /* ---------- build cards ---------- */
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-@media(max-width:900px){.grid3{grid-template-columns:1fr}}
+/* Step down 3 -> 2 -> 1 so tablets never get one absurdly wide card. */
+@media(max-width:1080px){.grid3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid3{grid-template-columns:1fr}}
 .card{
   background:var(--panel);border:1px solid var(--line);border-radius:22px;
   padding:38px 32px;position:relative;overflow:hidden;
@@ -305,7 +337,7 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 .lab-row.flip .phone-wrap{order:-1}
 @media(max-width:860px){.lab-row{grid-template-columns:1fr}.lab-row.flip .phone-wrap{order:0}}
 .badge{
-  display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;
+  display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;
   letter-spacing:.14em;text-transform:uppercase;color:var(--sun2);
   border:1px solid rgba(255,176,58,.35);border-radius:100px;padding:8px 16px;margin-bottom:22px;
 }
@@ -314,8 +346,8 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 .badge.live{color:#7ee2a8;border-color:rgba(126,226,168,.4)}
 .badge.live::before{background:#7ee2a8}
 .lab-link{
-  display:inline-block;margin-top:22px;font-family:var(--font-d);font-weight:500;
-  color:var(--sun-text);padding:8px 0;position:relative;
+  display:inline-flex;align-items:center;margin-top:22px;font-family:var(--font-d);font-weight:500;
+  color:var(--sun-text);padding:8px 0;min-height:44px;position:relative;
 }
 .lab-link::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1.5px;background:var(--grad);transform:scaleX(.4);transform-origin:left;transition:transform .4s cubic-bezier(.22,1,.36,1)}
 .lab-link:hover::after{transform:scaleX(1)}
@@ -356,7 +388,7 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 .cta p{color:var(--muted);margin:26px auto 44px;max-width:44ch}
 .mail{
   font-family:var(--font-d);font-weight:500;font-size:clamp(1.15rem,2.6vw,1.8rem);
-  display:inline-flex;align-items:center;gap:14px;padding:6px 2px;
+  display:inline-flex;align-items:center;gap:14px;padding:6px 2px;min-height:44px;
   position:relative;transition:letter-spacing .4s;
 }
 .mail::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--grad);transform-origin:left;transition:transform .4s cubic-bezier(.22,1,.36,1)}
@@ -364,7 +396,7 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 .mail:hover::after{transform:scaleX(1.06)}
 
 /* ---------- footer ---------- */
-footer{border-top:1px solid var(--line);padding:70px clamp(20px,5vw,64px) 40px;overflow:hidden}
+footer{border-top:1px solid var(--line);padding:70px var(--pad-x) 40px;overflow:hidden}
 .foot-word{
   display:block;text-align:center;user-select:none;text-decoration:none;
   font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:.9;
@@ -379,11 +411,11 @@ footer{border-top:1px solid var(--line);padding:70px clamp(20px,5vw,64px) 40px;o
 }
 .foot-nav a{
   font-family:var(--font-d);font-weight:500;font-size:.85rem;color:var(--muted);
-  padding:10px 2px;transition:color .3s;
+  display:inline-flex;align-items:center;min-height:44px;padding:0 2px;transition:color .3s;
 }
 .foot-nav a:hover{color:var(--ink)}
 .foot-meta{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.8rem;margin-top:34px}
-.foot-meta a{color:var(--sun-text)}
+.foot-meta a{color:var(--sun-text);display:inline-flex;align-items:center;min-height:44px}
 .foot-meta a:hover{color:var(--ink)}
 
 /* ---------- reveal (JS-gated: content stays visible without JS) ---------- */
