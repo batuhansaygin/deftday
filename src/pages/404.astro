@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Page not found — DeftDay Studio"
+  description="That page doesn't exist. Head back to the DeftDay studio homepage."
+  noindex
+>
+  <main class="notfound">
+    <span class="eyebrow">Error 404</span>
+    <h1>Nothing here.<br /><span class="serif">Yet.</span></h1>
+    <p>
+      The page you're after doesn't exist — it may have moved, or the link may
+      be a typo. Everything we're building is one click away.
+    </p>
+    <div class="hero-cta">
+      <a class="btn grad" href="/">Back to the studio</a>
+      <a class="btn ghost" href="mailto:hello@deftday.com">Report a broken link</a>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .notfound {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 100px clamp(20px, 5vw, 64px);
+  }
+  .notfound p {
+    margin-top: 28px;
+    max-width: 46ch;
+    color: var(--muted);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+  }
+  .notfound .hero-cta {
+    margin-top: 40px;
+  }
+</style>

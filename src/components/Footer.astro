@@ -3,10 +3,31 @@ const year = new Date().getFullYear();
 ---
 
 <footer>
-  <a class="foot-word" href="#top" aria-label="Back to top">DEFTDAY</a>
+  <a class="foot-word" href="#top" aria-label="DeftDay — back to top">DEFTDAY</a>
+
+  <!-- Also the only in-page navigation below 820px, where the fixed nav
+       collapses to just the contact button. -->
+  <nav class="foot-nav" aria-label="Sections">
+    <a href="#studio">Studio</a>
+    <a href="#build">What we build</a>
+    <a href="#lab">In the lab</a>
+    <a href="#craft">Craft</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
   <div class="foot-meta">
-    <span>© {year} DeftDay Studio. All rights reserved.</span>
+    <!-- Build-time year, corrected client-side so a static build doesn't go
+         stale on January 1st. -->
+    <span>© <span id="year">{year}</span> DeftDay Studio. All rights reserved.</span>
     <span><a href="mailto:hello@deftday.com">hello@deftday.com</a></span>
     <span>Crafted deftly, daily.</span>
   </div>
 </footer>
+
+<script is:inline>
+  {
+    const el = document.getElementById('year');
+    const now = String(new Date().getFullYear());
+    if (el && el.textContent !== now) el.textContent = now;
+  }
+</script>

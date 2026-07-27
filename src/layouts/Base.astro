@@ -4,31 +4,134 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
+  /** Set on pages that must stay out of the index (e.g. 404). */
+  noindex?: boolean;
 }
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
+/* The entity graph describes the studio and its products, all of which live on
+   the homepage. Emitting it from another page would bind the same @id nodes to
+   that page's copy. */
+const emitJsonLd = !noindex;
+
+const SITE = 'https://deftday.com/';
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.png', SITE).href;
+
+/* Every product below is also stated in visible page copy — structured data
+   must never claim more than the page shows. */
+const products = [
+  {
+    '@type': 'VideoGame',
+    '@id': `${SITE}#skybattlesea`,
+    name: 'SkyBattleSea',
+    url: 'https://skybattlesea.com',
+    description:
+      'Fast planes vs tanky ships in a free browser battle — five modes, eight craft classes, real multiplayer.',
+    applicationCategory: 'GameApplication',
+    operatingSystem: 'Web browser',
+    playMode: 'MultiPlayer',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    author: { '@id': `${SITE}#org` },
+    publisher: { '@id': `${SITE}#org` },
+  },
+  {
+    '@type': 'MobileApplication',
+    '@id': `${SITE}#eatstep`,
+    name: 'EatStep',
+    description:
+      'On-demand healthy food for athletes and health-conscious eaters — customer, partner and courier apps built end to end on one shared core.',
+    applicationCategory: 'FoodAndDrinkApplication',
+    operatingSystem: 'iOS, Android',
+    author: { '@id': `${SITE}#org` },
+    publisher: { '@id': `${SITE}#org` },
+  },
+  {
+    '@type': 'MobileApplication',
+    '@id': `${SITE}#munchview`,
+    name: 'Munchview',
+    description:
+      'Open it and a good video is already playing — matched to how long your meal is. Under three seconds from tap to watching.',
+    applicationCategory: 'EntertainmentApplication',
+    operatingSystem: 'Android',
+    author: { '@id': `${SITE}#org` },
+    publisher: { '@id': `${SITE}#org` },
+  },
+  {
+    '@type': 'MobileApplication',
+    '@id': `${SITE}#pickorn`,
+    name: 'Pickorn',
+    description:
+      'An offline movie picker: choose a mood, roll the dice, watch tonight. Nineteen thousand IMDb-rated movies bundled in.',
+    applicationCategory: 'EntertainmentApplication',
+    operatingSystem: 'iOS, Android',
+    author: { '@id': `${SITE}#org` },
+    publisher: { '@id': `${SITE}#org` },
+  },
+];
 
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'Organization',
-      '@id': 'https://deftday.com/#org',
+      '@id': `${SITE}#org`,
       name: 'DeftDay Studio',
-      url: 'https://deftday.com',
+      alternateName: 'DeftDay',
+      url: SITE,
       email: 'hello@deftday.com',
-      logo: 'https://deftday.com/favicon.svg',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE}icon-512.png`,
+        width: 512,
+        height: 512,
+      },
+      image: ogImage,
       description:
         'DeftDay is an independent app and game studio building apps, games and everyday utilities for iOS, Android and the web — home of EatStep, Munchview, Pickorn and SkyBattleSea.',
       foundingDate: '2026',
+      knowsAbout: ['Mobile app development', 'Game development', 'iOS', 'Android', 'Product design'],
+      contactPoint: {
+        '@type': 'ContactPoint',
+        email: 'hello@deftday.com',
+        contactType: 'sales',
+        availableLanguage: 'en',
+      },
     },
     {
       '@type': 'WebSite',
-      '@id': 'https://deftday.com/#site',
-      url: 'https://deftday.com',
+      '@id': `${SITE}#site`,
+      url: SITE,
       name: 'DeftDay Studio',
-      publisher: { '@id': 'https://deftday.com/#org' },
+      description,
+      inLanguage: 'en',
+      publisher: { '@id': `${SITE}#org` },
     },
+    {
+      '@type': 'WebPage',
+      '@id': `${SITE}#webpage`,
+      url: SITE,
+      name: title,
+      description,
+      inLanguage: 'en',
+      isPartOf: { '@id': `${SITE}#site` },
+      about: { '@id': `${SITE}#org` },
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: ogImage,
+        width: 1200,
+        height: 630,
+      },
+      mainEntity: {
+        '@type': 'ItemList',
+        name: 'DeftDay products',
+        itemListElement: products.map((p, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          item: { '@id': p['@id'] },
+        })),
+      },
+    },
+    ...products,
   ],
 });
 ---
@@ -41,32 +144,60 @@ const jsonLd = JSON.stringify({
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, follow" />
+      ) : (
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+      )
+    }
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#08080d" />
+    <meta name="color-scheme" content="dark" />
 
-    <!-- Open Graph / Twitter -->
+    <!-- Icons: SVG for modern browsers, ICO for Safari, PNG for iOS home screen -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32 48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="DeftDay Studio" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content="https://deftday.com/og.png" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:image:alt"
+      content="DeftDay Studio — independent app and game studio for iOS, Android and the web"
+    />
+
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="https://deftday.com/og.png" />
-
-    <!-- Fonts: Space Grotesk display · Inter body · DM Serif Display italic accents -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=DM+Serif+Display:ital@1&display=swap"
-      rel="stylesheet"
+    <meta name="twitter:image" content={ogImage} />
+    <meta
+      name="twitter:image:alt"
+      content="DeftDay Studio — independent app and game studio for iOS, Android and the web"
     />
 
-    <script type="application/ld+json" set:html={jsonLd} />
+    <!--
+      Fonts are self-hosted from /fonts (see src/styles/fonts.css) so the
+      critical path has no third-party hop. Preload only the latin files the
+      first screen needs; latin-ext is fetched on demand via unicode-range.
+    -->
+    <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-serif-display-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    {emitJsonLd && <script type="application/ld+json" set:html={jsonLd} />}
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>

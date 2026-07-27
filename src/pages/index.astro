@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import DesktopHero from '../components/DesktopHero.astro';
+import SiteChrome from '../components/SiteChrome.astro';
+import Hero from '../components/Hero.astro';
 import Manifesto from '../components/Manifesto.astro';
 import AppsGrid from '../components/AppsGrid.astro';
 import Lab from '../components/Lab.astro';
@@ -10,11 +11,12 @@ import Footer from '../components/Footer.astro';
 ---
 
 <Base
-  title="DeftDay Studio — Independent App & Game Studio for iOS & Android"
-  description="DeftDay builds apps, games and everyday utilities for iOS, Android and the web — home of EatStep, Munchview, Pickorn and SkyBattleSea. Small independent studio, everything crafted in-house."
+  title="DeftDay Studio — Indie Apps & Games for iOS, Android & Web"
+  description="DeftDay is an independent studio crafting apps, games and utilities for iOS, Android and the web — home of EatStep, Munchview, Pickorn and SkyBattleSea."
 >
-  <DesktopHero />
-  <main>
+  <SiteChrome />
+  <main id="main">
+    <Hero />
     <Manifesto />
     <AppsGrid />
     <Lab />

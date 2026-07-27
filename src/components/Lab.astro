@@ -17,7 +17,7 @@
       </p>
     </div>
     <div class="phone-wrap rv d1">
-      <div class="phone">
+      <div class="phone" aria-hidden="true">
         <div class="screen eatstep">
           <div class="sunball" aria-hidden="true"></div>
           <span class="app">EatStep</span>
@@ -43,7 +43,7 @@
       </p>
     </div>
     <div class="phone-wrap rv d1">
-      <div class="phone">
+      <div class="phone" aria-hidden="true">
         <div class="screen munch">
           <span class="app">Munchview</span>
           <span class="sub">Eat. Watch. Done.</span>
@@ -69,7 +69,7 @@
       </p>
     </div>
     <div class="phone-wrap rv d1">
-      <div class="phone">
+      <div class="phone" aria-hidden="true">
         <div class="screen pick">
           <span class="app">Pickorn</span>
           <span class="sub">Movie night, solved</span>
@@ -97,11 +97,11 @@
         craft classes, real multiplayer. Kill, grow, lead.
       </p>
       <a class="lab-link" href="https://skybattlesea.com" target="_blank" rel="noopener"
-        >Play at skybattlesea.com ↗</a
+        >Play at skybattlesea.com<span aria-hidden="true"> ↗</span></a
       >
     </div>
     <div class="phone-wrap rv d1">
-      <div class="phone">
+      <div class="phone" aria-hidden="true">
         <div class="screen sea">
           <div class="waves" aria-hidden="true"></div>
           <span class="app">SkyBattleSea</span>
@@ -116,10 +116,10 @@
   </div>
 
   <div class="numbers">
-    <div class="rv"><div class="n" data-count="4">0</div><div class="l">Platforms we ship to</div></div>
-    <div class="rv d1"><div class="n" data-count="4">0</div><div class="l">Products in flight</div></div>
-    <div class="rv d2"><div class="n" data-count="100">0</div><div class="l">% independent</div></div>
-    <div class="rv d3"><div class="n" data-count="1">0</div><div class="l">Obsession: the details</div></div>
+    <div class="rv"><div class="n" data-count="4">4</div><div class="l">Platforms we ship to</div></div>
+    <div class="rv d1"><div class="n" data-count="4">4</div><div class="l">Products in flight</div></div>
+    <div class="rv d2"><div class="n" data-count="100">100</div><div class="l">% independent</div></div>
+    <div class="rv d3"><div class="n" data-count="1">1</div><div class="l">Obsession: the details</div></div>
   </div>
 </section>
 
@@ -132,10 +132,9 @@
         cio.unobserve(en.target);
         const el = en.target as HTMLElement;
         const target = parseInt(el.getAttribute('data-count') || '0', 10);
-        if (reduced) {
-          el.textContent = String(target);
-          return;
-        }
+        /* The final value ships in the HTML so crawlers and no-JS visitors read
+           the real number; the count-up only replays it. */
+        if (reduced) return;
         let t0: number | null = null;
         function step(ts: number) {
           if (!t0) t0 = ts;

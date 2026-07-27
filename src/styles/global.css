@@ -3,6 +3,8 @@
    Space Grotesk display · DM Serif Display italic accents
    coral→amber sunrise gradient on near-black
    ============================================================ */
+@import './fonts.css';
+
 :root{
   --bg:#08080d;
   --panel:#0e0e15;
@@ -19,7 +21,9 @@
   --font-s:'DM Serif Display',serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+/* Offset anchor landings so a section's label clears the fixed nav. */
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+section[id],header[id]{scroll-margin-top:96px}
 body{
   background:var(--bg);color:var(--ink);
   font-family:var(--font-b);font-size:16.5px;line-height:1.65;
@@ -37,8 +41,17 @@ a{color:inherit;text-decoration:none}
 /* grain */
 body::after{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.5;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size:256px 256px;background-image:url("data:image/svg+xml,%3Csvg width='256' height='256' viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
+
+/* keyboard skip link — visible only once focused */
+.skip-link{
+  position:fixed;top:10px;left:10px;z-index:10001;
+  transform:translateY(-200%);transition:transform .2s;
+  background:var(--ink);color:var(--bg);border-radius:100px;
+  padding:12px 22px;font-family:var(--font-d);font-weight:500;font-size:.9rem;
+}
+.skip-link:focus-visible{transform:none}
 
 /* visually hidden (accessible headings) */
 .visually-hidden{
@@ -52,21 +65,27 @@ html:not(.js) #cursor{display:none}
 #loader{
   position:fixed;inset:0;z-index:10000;background:var(--bg);
   display:flex;align-items:center;justify-content:center;
-  transition:transform .8s cubic-bezier(.76,0,.24,1);
+  transition:transform .5s cubic-bezier(.76,0,.24,1);
+  /* Failsafe: if the script never runs, the curtain still lifts. */
+  animation:loader-bail 0s 4s forwards;
 }
 #loader.done{transform:translateY(-100%)}
+@keyframes loader-bail{to{transform:translateY(-100%);visibility:hidden}}
 #loader .word{font-family:var(--font-d);font-weight:700;font-size:clamp(2rem,6vw,4rem);letter-spacing:.04em;display:flex;overflow:hidden}
-#loader .word span{display:inline-block;transform:translateY(110%);animation:rise .6s cubic-bezier(.22,1,.36,1) forwards}
+#loader .word span{display:inline-block;transform:translateY(110%);animation:rise .42s cubic-bezier(.22,1,.36,1) forwards}
 @keyframes rise{to{transform:translateY(0)}}
 
 /* ---------- cursor ---------- */
 #cursor{
-  position:fixed;top:-40px;left:-40px;width:10px;height:10px;border-radius:50%;
+  position:fixed;top:0;left:0;width:56px;height:56px;border-radius:50%;
   background:var(--sun2);pointer-events:none;z-index:9999;
-  transform:translate(-50%,-50%);transition:width .25s,height .25s;
+  /* --cx/--cy are written per mousemove; translate and scale are
+     compositor-only, so the cursor never triggers layout. */
+  translate:calc(var(--cx,-100px) - 50%) calc(var(--cy,-100px) - 50%);
+  scale:.18;transition:scale .25s;
   mix-blend-mode:difference;
 }
-#cursor.big{width:56px;height:56px}
+#cursor.big{scale:1}
 @media (hover:none){#cursor{display:none}}
 
 /* ---------- nav ---------- */
@@ -80,7 +99,7 @@ html:not(.js) #cursor{display:none}
 .nav.scrolled{background:rgba(8,8,13,.78);backdrop-filter:blur(16px);border-color:var(--line);padding-top:13px;padding-bottom:13px}
 .logo{font-family:var(--font-d);font-weight:700;font-size:1.15rem;letter-spacing:.05em}
 .logo em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.nav-links{display:flex;gap:34px;align-items:center}
+.nav-links{display:flex;gap:clamp(18px,2.4vw,34px);align-items:center}
 .nav-links a:not(.btn){font-size:.85rem;font-weight:500;color:var(--muted);letter-spacing:.02em;transition:color .3s;padding:10px 2px}
 .nav-links a:not(.btn):hover{color:var(--ink)}
 .btn{
@@ -94,7 +113,7 @@ html:not(.js) #cursor{display:none}
 .btn.grad:hover{box-shadow:0 12px 40px -8px rgba(255,92,56,.75)}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .btn.ghost:hover{border-color:var(--ink)}
-@media(max-width:820px){.nav-links a:not(.btn){display:none}}
+@media(max-width:700px){.nav-links a:not(.btn){display:none}}
 
 /* ---------- hero ---------- */
 .hero{
@@ -103,7 +122,9 @@ html:not(.js) #cursor{display:none}
   padding:120px clamp(20px,5vw,64px) 90px;overflow:hidden;
 }
 @media(max-width:1020px){.hero{grid-template-columns:1fr;padding-bottom:70px}}
-.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none}
+/* --py is written by the parallax handler; the independent `translate`
+   property composes with each blob's drift animation on `transform`. */
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none;translate:0 var(--py,0)}
 .blob.b1{width:560px;height:560px;background:radial-gradient(circle,#ff5c38 0%,transparent 70%);top:-12%;right:-6%;animation:drift1 14s ease-in-out infinite alternate}
 .blob.b2{width:440px;height:440px;background:radial-gradient(circle,#ffb03a 0%,transparent 70%);bottom:-16%;left:-8%;animation:drift2 18s ease-in-out infinite alternate}
 .blob.b3{width:300px;height:300px;background:radial-gradient(circle,#7b3bff 0%,transparent 70%);top:40%;left:44%;opacity:.22;animation:drift1 22s ease-in-out infinite alternate-reverse}
@@ -169,7 +190,7 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 .todo .t{
   display:flex;align-items:center;gap:9px;
   background:rgba(4,14,11,.5);border:1px solid rgba(255,255,255,.14);
-  border-radius:11px;padding:9px 11px;backdrop-filter:blur(4px);
+  border-radius:11px;padding:9px 11px;
 }
 .todo .t i{width:15px;height:15px;border-radius:50%;border:1.6px solid rgba(255,255,255,.75);flex:none;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-style:normal;color:#04231c}
 .todo .t.done i{background:#2fd7a4;border-color:#2fd7a4}
@@ -194,7 +215,7 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 .reel{margin-top:auto;display:grid;gap:10px;position:relative;z-index:2}
 .reel .poster{
   display:grid;gap:8px;background:rgba(10,6,14,.5);border:1px solid rgba(255,255,255,.14);
-  border-radius:13px;padding:14px 13px;backdrop-filter:blur(4px);
+  border-radius:13px;padding:14px 13px;
 }
 .reel .line{height:7px;border-radius:5px;background:rgba(255,255,255,.42)}
 .reel .line.t1{width:64%;height:9px;background:rgba(255,255,255,.75)}
@@ -245,8 +266,10 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
   font-family:var(--font-d);font-weight:500;letter-spacing:-.01em;line-height:1.25;
   font-size:clamp(1.6rem,3.6vw,3rem);max-width:26ch;
 }
-.manifesto .w{opacity:.13;transition:opacity .5s ease}
-.manifesto .w.on{opacity:1}
+/* Words light up on scroll. Unlit words use --muted rather than a low opacity
+   so every word stays above the 4.5:1 contrast floor while dimmed. */
+.manifesto .w{color:var(--muted);transition:color .5s ease}
+.manifesto .w.on{color:var(--ink)}
 
 /* ---------- build cards ---------- */
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -254,7 +277,7 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 .card{
   background:var(--panel);border:1px solid var(--line);border-radius:22px;
   padding:38px 32px;position:relative;overflow:hidden;
-  transition:transform .5s cubic-bezier(.22,1,.36,1),border-color .4s,box-shadow .4s;will-change:transform;
+  transition:transform .5s cubic-bezier(.22,1,.36,1),border-color .4s,box-shadow .4s;
 }
 .card:hover{border-color:rgba(255,140,60,.4);box-shadow:0 30px 60px -40px rgba(255,92,56,.35)}
 .card::before{
@@ -320,7 +343,12 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 .craft-item .idx{font-family:var(--font-d);color:var(--muted);font-size:.85rem;letter-spacing:.14em}
 .craft-item .name{font-family:var(--font-d);font-weight:700;font-size:clamp(1.3rem,2.6vw,2rem);letter-spacing:-.01em}
 .craft-item .desc{color:var(--muted);font-size:.9rem;max-width:34ch;text-align:right}
-@media(max-width:760px){.craft-item{grid-template-columns:48px 1fr}.craft-item .desc{display:none}}
+/* Below 760px the description moves under the name instead of being hidden —
+   mobile-first indexing reads this viewport, so the copy has to stay. */
+@media(max-width:760px){
+  .craft-item{grid-template-columns:48px 1fr;row-gap:6px;padding:26px 8px}
+  .craft-item .desc{grid-column:2;text-align:left;max-width:none;font-size:.85rem}
+}
 
 /* ---------- cta ---------- */
 .cta{text-align:center}
@@ -343,22 +371,39 @@ footer{border-top:1px solid var(--line);padding:70px clamp(20px,5vw,64px) 40px;o
   font-size:clamp(4rem,16vw,15rem);
   background:linear-gradient(180deg,rgba(243,239,231,.18),rgba(243,239,231,.02));
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  transition:background .5s;
 }
 .foot-word:hover{background:var(--grad);-webkit-background-clip:text;background-clip:text}
-.foot-meta{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.8rem;margin-top:44px}
+.foot-nav{
+  display:flex;justify-content:center;gap:8px 30px;flex-wrap:wrap;
+  margin-top:40px;padding-top:34px;border-top:1px solid var(--line);
+}
+.foot-nav a{
+  font-family:var(--font-d);font-weight:500;font-size:.85rem;color:var(--muted);
+  padding:10px 2px;transition:color .3s;
+}
+.foot-nav a:hover{color:var(--ink)}
+.foot-meta{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.8rem;margin-top:34px}
 .foot-meta a{color:var(--sun-text)}
 .foot-meta a:hover{color:var(--ink)}
 
 /* ---------- reveal (JS-gated: content stays visible without JS) ---------- */
 html.js .rv{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
 html.js .rv.on{opacity:1;transform:none}
+/* The hero sits above the fold behind the loader curtain, so its entrance is
+   never actually watched. It animates straight from CSS (no IntersectionObserver
+   round-trip) and slides without fading — text painted at full opacity from the
+   first frame keeps the h1 available as an early LCP candidate. */
+html.js .hero .rv{opacity:1;animation:rise-in .8s cubic-bezier(.22,1,.36,1) both}
+html.js .hero .rv.d1{animation-delay:.05s}
+html.js .hero .rv.d2{animation-delay:.1s}
+html.js .hero .rv.d3{animation-delay:.15s}
+@keyframes rise-in{from{transform:translateY(28px)}to{transform:none}}
 .rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   html{scroll-behavior:auto}
   html.js .rv{opacity:1;transform:none}
-  .manifesto .w{opacity:1}
+  .manifesto .w{color:var(--ink)}
   #loader{display:none}
 }
