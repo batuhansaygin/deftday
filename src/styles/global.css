@@ -154,6 +154,7 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
   .hero-sub{max-width:54ch}
 }
 .hero-cta{margin-top:42px;display:flex;gap:16px;flex-wrap:wrap;position:relative;z-index:2}
+@media(max-width:520px){.scroll-cue{display:none}}
 .scroll-cue{
   position:absolute;bottom:32px;left:var(--pad-x);display:flex;align-items:center;gap:12px;
   font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
@@ -164,7 +165,12 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 
 /* hero visual: floating phone + chips */
 .hero-visual{position:relative;z-index:2;display:flex;justify-content:center;perspective:1200px}
-.hero-visual .float{position:relative}
+/* Exactly the phone's width, so the chips hang off the device, not the column.
+   --chip-out is how far a chip may reach past the phone; it has to stay inside
+   the hero's right column, which is only ~55px wider than the phone at 1024. */
+.stage{position:relative;width:min(270px,64vw);--chip-out:44px}
+@media(min-width:1200px){.stage{--chip-out:78px}}
+@media(min-width:1500px){.stage{--chip-out:104px}}
 @media(max-width:1020px){.hero-visual{display:none}}
 .hero-visual .float{animation:floaty 6s ease-in-out infinite alternate}
 @keyframes floaty{to{transform:translateY(-16px)}}
@@ -175,9 +181,9 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
   box-shadow:0 20px 40px -20px rgba(0,0,0,.8);
 }
 .chip-float b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.chip-float.c1{top:9%;left:-14%;animation:floaty 5s .4s ease-in-out infinite alternate}
-.chip-float.c2{bottom:20%;right:-16%;animation:floaty 7s .8s ease-in-out infinite alternate}
-.chip-float.c3{bottom:-2%;left:-4%;animation:floaty 6s .2s ease-in-out infinite alternate}
+.chip-float.c1{top:4%;left:calc(-1 * var(--chip-out));animation:floaty 5s .4s ease-in-out infinite alternate}
+.chip-float.c2{bottom:24%;right:calc(-1 * var(--chip-out));animation:floaty 7s .8s ease-in-out infinite alternate}
+.chip-float.c3{bottom:-4%;left:calc(-1 * var(--chip-out));animation:floaty 6s .2s ease-in-out infinite alternate}
 
 /* ---------- phones (shared) ---------- */
 .phone{
@@ -282,7 +288,9 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 @keyframes scrollx{to{transform:translateX(-50%)}}
 
 /* ---------- shared sections ---------- */
-section{padding:clamp(90px,12vw,160px) var(--gutter);position:relative;max-width:var(--shell);margin:0 auto}
+/* Full-bleed like the nav and hero, with content centred in the same shell,
+   so every section's left edge lines up with the logo. */
+section{padding:clamp(90px,12vw,160px) var(--pad-x);position:relative}
 .sec-tag{
   display:flex;align-items:center;gap:14px;font-size:.78rem;font-weight:600;
   letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:56px;
@@ -290,6 +298,7 @@ section{padding:clamp(90px,12vw,160px) var(--gutter);position:relative;max-width
 .sec-tag b{font-family:var(--font-d);color:var(--sun-text);font-weight:700}
 .sec-tag::after{content:"";flex:1;height:1px;background:var(--line)}
 h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1.05;font-size:clamp(2rem,5vw,4rem)}
+.nb{white-space:nowrap} /* keeps "in-house," from splitting at the hyphen */
 
 /* ---------- manifesto ---------- */
 .manifesto p{
@@ -304,7 +313,7 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 /* ---------- build cards ---------- */
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 /* Step down 3 -> 2 -> 1 so tablets never get one absurdly wide card. */
-@media(max-width:1080px){.grid3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1080px){.grid3{grid-template-columns:repeat(2,1fr)}.grid3 .card:last-child{grid-column:1/-1}}
 @media(max-width:640px){.grid3{grid-template-columns:1fr}}
 .card{
   background:var(--panel);border:1px solid var(--line);border-radius:22px;
@@ -333,9 +342,9 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
   display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,6vw,90px);
   align-items:center;padding:64px 0;border-bottom:1px solid var(--line);
 }
-.lab-row:last-of-type{border-bottom:none}
+.lab-row:has(+ .numbers){border-bottom:none}
 .lab-row.flip .phone-wrap{order:-1}
-@media(max-width:860px){.lab-row{grid-template-columns:1fr}.lab-row.flip .phone-wrap{order:0}}
+@media(max-width:820px){.lab-row{grid-template-columns:1fr}.lab-row.flip .phone-wrap{order:0}}
 .badge{
   display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;
   letter-spacing:.14em;text-transform:uppercase;color:var(--sun2);
@@ -358,7 +367,7 @@ h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;line-height:1
 
 /* ---------- numbers ---------- */
 .numbers{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;border-top:1px solid var(--line);padding-top:56px;margin-top:20px}
-@media(max-width:860px){.numbers{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.numbers{grid-template-columns:repeat(2,1fr)}}
 .numbers .n{font-family:var(--font-d);font-weight:700;font-size:clamp(2.6rem,5vw,4.2rem);letter-spacing:-.02em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .numbers .l{color:var(--muted);font-size:.85rem;letter-spacing:.06em;margin-top:6px}
 
@@ -414,7 +423,10 @@ footer{border-top:1px solid var(--line);padding:70px var(--pad-x) 40px;overflow:
   display:inline-flex;align-items:center;min-height:44px;padding:0 2px;transition:color .3s;
 }
 .foot-nav a:hover{color:var(--ink)}
-.foot-meta{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.8rem;margin-top:34px}
+.foot-meta{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px 16px;color:var(--muted);font-size:.8rem;margin-top:34px}
+.foot-meta>:nth-child(2){justify-self:center}
+.foot-meta>:nth-child(3){justify-self:end;text-align:right}
+@media(max-width:700px){.foot-meta{grid-template-columns:1fr;justify-items:center;text-align:center}.foot-meta>:nth-child(3){justify-self:center;text-align:center}}
 .foot-meta a{color:var(--sun-text);display:inline-flex;align-items:center;min-height:44px}
 .foot-meta a:hover{color:var(--ink)}
 
