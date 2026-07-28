@@ -1,0 +1,155 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteChrome from '../../components/SiteChrome.astro';
+import Footer from '../../components/Footer.astro';
+
+/* Google Play requires a deletion route that works without installing the app,
+   which is why this page exists separately from the in-app button. */
+const updated = 'July 28, 2026';
+const mailto =
+  'mailto:privacy@deftday.com?subject=Munchview%20account%20deletion&body=' +
+  encodeURIComponent(
+    'Please delete my Munchview account and everything stored for it.\n\n' +
+      'The Google account I signed in with: \n\n' +
+      '(Send this from that same address if you can — it is how we confirm the request is yours.)',
+  );
+---
+
+<Base
+  title="Delete your Munchview account — DeftDay Studio"
+  description="How to delete your Munchview account and everything stored for it, from inside the app or by email. What is deleted, what is kept, and how long it takes."
+>
+  <SiteChrome />
+  <div class="sky" aria-hidden="true">
+    <span class="s1"></span><span class="s2"></span><span class="s3"></span>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+
+  <main id="main" class="legal">
+    <span class="eyebrow">Munchview</span>
+    <h1>Delete your account<br /><span class="serif">and everything in it.</span></h1>
+    <p class="lede">
+      Munchview only has an account if you asked for one — signing in with Google
+      is optional and exists to carry your taste to a second phone. This page is
+      how you take it back, whether or not the app is still installed.
+    </p>
+    <p class="updated">Last updated: {updated}</p>
+
+    <section class="legal-block" aria-labelledby="in-app">
+      <h2 id="in-app">From inside the app — immediate</h2>
+      <ol>
+        <li>Open Munchview.</li>
+        <li>Tap <b>You</b>, top right.</li>
+        <li>Under <b>Your account</b>, tap <b>Delete my account data</b>.</li>
+      </ol>
+      <p>
+        Everything stored for your account is erased at once. The app keeps
+        working as a guest, and the copy on that phone stays until you sign out
+        or uninstall.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="by-email">
+      <h2 id="by-email">By email — if you no longer have the app</h2>
+      <p>
+        Write to <a href={mailto}>privacy@deftday.com</a> from the Google account
+        you signed in with, or tell us which address it was. We delete it and
+        reply to confirm, within 30 days and usually the same week.
+      </p>
+      <p>
+        <a class="cta" href={mailto}>Request deletion by email<span aria-hidden="true"> →</span></a>
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="what">
+      <h2 id="what">What is deleted</h2>
+      <p>Everything we hold for the account, which is all of it:</p>
+      <ul>
+        <li>Your Google account id, name and email address</li>
+        <li>Videos you liked and videos you marked not for you</li>
+        <li>Saved keyword tags and chosen categories</li>
+        <li>Watch positions and recently-watched list</li>
+        <li>Profile names and their settings</li>
+      </ul>
+      <p>
+        Nothing is kept back, and nothing was ever shared with anyone else — we
+        have no advertising, no analytics and no third-party trackers. There is
+        no backup that survives the deletion beyond the ordinary retention of our
+        host's short-lived operational logs, which contain no account data.
+      </p>
+      <p>
+        Purchases are separate: Munchview Pro belongs to your Google Play
+        account, not to us. Deleting your Munchview account does not cancel a
+        subscription. Manage that in Google Play → Subscriptions.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="guest">
+      <h2 id="guest">If you never signed in</h2>
+      <p>
+        Then there is nothing here to delete. A guest's likes, tags and history
+        never leave the phone; uninstalling the app removes them.
+      </p>
+      <p>
+        <a href="/privacy#munchview">What Munchview stores, in full<span aria-hidden="true"> →</span></a>
+      </p>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .legal {
+    max-width: 78ch;
+    margin: 0 auto;
+    padding: 160px var(--gutter) 40px;
+  }
+  .legal h1 {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    margin-bottom: 28px;
+  }
+  .lede {
+    color: var(--muted);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    text-wrap: pretty;
+    max-width: 62ch;
+  }
+  .updated {
+    margin-top: 14px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .legal-block {
+    margin-top: 56px;
+    padding-top: 34px;
+    border-top: 1px solid var(--line);
+  }
+  .legal-block h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-bottom: 18px;
+  }
+  .legal-block p {
+    color: var(--muted);
+    text-wrap: pretty;
+    margin-bottom: 14px;
+  }
+  .legal-block b {
+    color: var(--fg);
+  }
+  ol,
+  ul {
+    color: var(--muted);
+    display: grid;
+    gap: 10px;
+    margin: 0 0 18px;
+    padding-left: 1.2rem;
+  }
+  .cta {
+    display: inline-block;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+</style>
