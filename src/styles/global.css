@@ -165,7 +165,7 @@ html:not(.js) .nav{background:rgba(8,8,13,.78);backdrop-filter:blur(16px);border
 .logo{font-family:var(--font-d);font-weight:700;font-size:1.15rem;letter-spacing:.05em;display:inline-flex;align-items:center;min-height:44px}
 .logo em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .nav-links{display:flex;gap:clamp(18px,2.4vw,34px);align-items:center}
-.nav-links a:not(.btn){display:inline-flex;align-items:center;min-height:44px;font-size:.85rem;font-weight:500;color:var(--muted);letter-spacing:.02em;transition:color .3s;padding:0 2px}
+.nav-links a:not(.btn){display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;font-size:.85rem;font-weight:500;color:var(--muted);letter-spacing:.02em;transition:color .3s;padding:0 2px}
 .nav-links a:not(.btn):hover{color:var(--ink)}
 .btn{
   display:inline-flex;align-items:center;gap:10px;
