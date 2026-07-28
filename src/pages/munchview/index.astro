@@ -7,6 +7,46 @@ import Footer from '../../components/Footer.astro';
    The day it is public, the badge and this line change together. */
 const status = 'In closed testing on Google Play';
 const updated = 'July 28, 2026';
+
+/* Real captures from the release build, not mockups — same files that go to
+   the Play listing, so the two can never drift apart. */
+const shots = [
+  {
+    src: '/munchview/shots/01-categories.webp',
+    alt: 'Munchview asking what you like to watch, with categories such as Documentary bites, Nature and travel and Cosmos selected.',
+    caption: 'Pick a few things you like. Once.',
+  },
+  {
+    src: '/munchview/shots/02-home.webp',
+    alt: 'The Munchview home screen: the question “How long have you got?”, three length presets, and a large Press to watch button.',
+    caption: 'One question. One button.',
+  },
+  {
+    src: '/munchview/shots/03-player.webp',
+    alt: 'A video playing full screen in Munchview, with the controls floating over the picture.',
+    caption: 'Controls float over the picture, then get out of the way.',
+  },
+  {
+    src: '/munchview/shots/04-corner.webp',
+    alt: 'A video continuing to play in a small movable window in the corner while the home screen is visible behind it.',
+    caption: 'Drag it down and it keeps playing in the corner.',
+  },
+  {
+    src: '/munchview/shots/05-picks.webp',
+    alt: 'The Picked for you row on the Munchview home screen, showing video thumbnails chosen from what you have watched.',
+    caption: 'Picked from what you liked — worked out on the phone.',
+  },
+  {
+    src: '/munchview/shots/06-you.webp',
+    alt: 'The You screen in Munchview, showing Munchview Pro, an optional Continue with Google button, and the profile switcher.',
+    caption: 'Signing in is optional, and it only carries your taste across.',
+  },
+  {
+    src: '/munchview/shots/07-liked.webp',
+    alt: 'The lower half of the You screen: an autoplay switch, a list of liked videos, a Not for you list, and Clear watch history.',
+    caption: 'Everything it knows about you, in one place you can empty.',
+  },
+];
 ---
 
 <Base
@@ -29,6 +69,20 @@ const updated = 'July 28, 2026';
       something worth watching is already playing.
     </p>
     <p class="status"><span class="badge testing">{status}</span></p>
+
+    <section class="shots" aria-labelledby="shots-h">
+      <h2 id="shots-h" class="sr-only">What Munchview looks like</h2>
+      <ul class="strip">
+        {
+          shots.map((shot) => (
+            <li class="shot">
+              <img src={shot.src} alt={shot.alt} width="540" height="1200" loading="lazy" decoding="async" />
+              <p>{shot.caption}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
     <section class="block" aria-labelledby="how">
       <h2 id="how">Three seconds, start to watching</h2>
@@ -187,5 +241,57 @@ const updated = 'July 28, 2026';
     font-size: 0.8rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+  }
+
+  /* Screens. A scrolling strip on a phone, a wrapping row on a desktop —
+     the images are tall, so a plain grid would leave a page of whitespace. */
+  .shots {
+    margin-top: 48px;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .strip {
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 4px 0 18px;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .shot {
+    flex: 0 0 auto;
+    width: min(232px, 62vw);
+    scroll-snap-align: center;
+  }
+  .shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    background: #12100e;
+  }
+  .shot p {
+    margin: 12px 2px 0;
+    color: var(--muted);
+    font-size: 0.86rem;
+    text-wrap: pretty;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .strip {
+      scroll-behavior: auto;
+    }
   }
 </style>
