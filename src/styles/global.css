@@ -440,6 +440,9 @@ h2{text-wrap:balance;font-family:var(--font-d);font-weight:700;letter-spacing:-.
 @keyframes pulse{50%{opacity:.3}}
 .badge.live{color:#7ee2a8;border-color:rgba(126,226,168,.4)}
 .badge.live::before{background:#7ee2a8}
+/* in a store's test track: real, installable, not public yet */
+.badge.testing{color:#8fc7ff;border-color:rgba(143,199,255,.4)}
+.badge.testing::before{background:#8fc7ff}
 .lab-link{
   display:inline-flex;align-items:center;margin-top:22px;font-family:var(--font-d);font-weight:500;
   color:var(--sun-text);padding:8px 0;min-height:44px;position:relative;

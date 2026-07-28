@@ -1,0 +1,189 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteChrome from '../components/SiteChrome.astro';
+import Footer from '../components/Footer.astro';
+
+/* Kept honest on purpose: the app is on a closed test track, not in the store.
+   The day it is public, the badge and this line change together. */
+const status = 'In closed testing on Google Play';
+const updated = 'July 28, 2026';
+---
+
+<Base
+  title="Munchview — say how long you have, and watch"
+  description="Munchview starts a good YouTube video that fits the time you have — a lunch break, a study session, something on in the workshop, winding down. No feed, no browsing. Android, in closed testing."
+>
+  <SiteChrome />
+  <div class="sky" aria-hidden="true">
+    <span class="s1"></span><span class="s2"></span><span class="s3"></span>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+
+  <main id="main" class="product">
+    <span class="eyebrow">Munchview</span>
+    <h1>Say how long you have.<br /><span class="serif">Then just watch.</span></h1>
+    <p class="lede">
+      Every app in this category opens by asking what you are in the mood for.
+      Munchview is built on the belief that the asking is the problem. Tell it
+      how long you have got — ten minutes, forty, whatever you set — and
+      something worth watching is already playing.
+    </p>
+    <p class="status"><span class="badge testing">{status}</span></p>
+
+    <section class="block" aria-labelledby="how">
+      <h2 id="how">Three seconds, start to watching</h2>
+      <p>
+        The whole app was built against a stopwatch. Open it, press one button,
+        and a video is running. There is no feed to fall into, no autoplay
+        rabbit hole, and nothing to scroll before you have chosen anything.
+      </p>
+      <ol class="steps">
+        <li><b>Open it.</b> One question, one button.</li>
+        <li><b>Say how long.</b> A preset, or any length you like.</li>
+        <li><b>Watch.</b> It is already playing.</li>
+      </ol>
+    </section>
+
+    <section class="block" aria-labelledby="whenever">
+      <h2 id="whenever">Not only at mealtimes</h2>
+      <p>
+        It started as something to watch while you eat, and it outgrew that. A
+        study break, something on in the workshop while your hands are busy, a
+        match in the background, winding down before sleep — the question is
+        always the same one, and so is the answer.
+      </p>
+    </section>
+
+    <section class="block" aria-labelledby="picks">
+      <h2 id="picks">It learns, without watching you</h2>
+      <p>
+        What it plays is ranked from what you have told it: the categories you
+        chose, the length you asked for, the channels you liked, the ones you
+        turned down, and what you have already been shown so the same few
+        videos do not come round again. All of that is worked out on the phone.
+      </p>
+      <ul class="points">
+        <li>
+          <b>Your country's categories.</b> The list comes from YouTube for
+          wherever you are, so it offers what people there actually watch.
+        </li>
+        <li>
+          <b>Type a show, keep it as a tag.</b> Write the name of something you
+          like and it joins the mix, matched to the length you asked for.
+        </li>
+        <li>
+          <b>A seat each.</b> Separate profiles keep separate tastes — two free,
+          ten with Pro.
+        </li>
+        <li>
+          <b>Keeps playing in the corner.</b> Drag the video down and it carries
+          on in a window you can move and resize while you look for the next one.
+        </li>
+      </ul>
+    </section>
+
+    <section class="block" aria-labelledby="privacy">
+      <h2 id="privacy">No ads, no tracking, no feed</h2>
+      <p>
+        Munchview is not funded by advertising, so it is not built to watch you.
+        As a guest it collects nothing at all: what you like, skip and save
+        stays on the phone. Signing in with Google is optional and does exactly
+        one thing — carries that to a second phone. It asks Google only who you
+        are, never for access to your YouTube account.
+      </p>
+      <p>
+        <a href="/privacy#munchview">Read what each app stores<span aria-hidden="true"> →</span></a>
+      </p>
+    </section>
+
+    <section class="block" aria-labelledby="status">
+      <h2 id="status">Where it is right now</h2>
+      <p>
+        Munchview is on a closed test track on Google Play. It is a finished,
+        installable app — the test track exists so it is used on real phones by
+        real people before it goes public, which is also what Google asks of a
+        new developer account.
+      </p>
+      <p>
+        Want to be one of the testers? Write to
+        <a href="mailto:hello@deftday.com?subject=Munchview%20tester">hello@deftday.com</a>
+        with the Google account you use on your Android phone, and we will add
+        you to the track.
+      </p>
+      <p class="updated">Last updated: {updated}</p>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .product {
+    max-width: 78ch;
+    margin: 0 auto;
+    padding: 160px var(--gutter) 40px;
+  }
+  .product h1 {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    margin-bottom: 28px;
+  }
+  .lede {
+    color: var(--muted);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    text-wrap: pretty;
+    max-width: 62ch;
+  }
+  .status {
+    margin-top: 26px;
+  }
+  .block {
+    margin-top: 56px;
+    padding-top: 34px;
+    border-top: 1px solid var(--line);
+  }
+  .block h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-bottom: 18px;
+  }
+  .block p {
+    color: var(--muted);
+    text-wrap: pretty;
+    margin-bottom: 14px;
+  }
+  .steps,
+  .points {
+    color: var(--muted);
+    display: grid;
+    gap: 12px;
+    margin: 18px 0 0;
+    padding-left: 1.1rem;
+  }
+  .steps b,
+  .points b {
+    color: var(--fg);
+  }
+  .points {
+    list-style: none;
+    padding-left: 0;
+  }
+  .points li {
+    padding-left: 1.1rem;
+    position: relative;
+  }
+  .points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--grad);
+  }
+  .updated {
+    margin-top: 22px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+</style>
