@@ -307,6 +307,27 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 .reel .moods span:first-child{background:rgba(255,176,58,.28);border-color:rgba(255,176,58,.5)}
 
 /* skybattlesea screen: ocean arcade */
+/* unannounced work: a mockup gives a concept away as readily as a name, so the
+   screen shows the project number and nothing that could be lifted */
+.screen.wip{
+  background:linear-gradient(185deg,#0b0a12 0%,#171320 52%,#241a1c 100%);
+  align-items:center;justify-content:center;gap:12px;padding:24px
+}
+.screen.wip::before{
+  content:"";position:absolute;left:50%;bottom:-30%;transform:translateX(-50%);
+  width:150%;height:70%;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,92,56,.28),transparent)
+}
+.screen.wip .wip-no{
+  font-family:var(--font-d);font-weight:700;font-size:3.4rem;line-height:1;
+  letter-spacing:-.03em;background:var(--grad);-webkit-background-clip:text;
+  background-clip:text;color:transparent;position:relative;z-index:2
+}
+.screen.wip .wip-tag{
+  font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);position:relative;z-index:2
+}
+
 .screen.sea{background:linear-gradient(185deg,#03101c 0%,#062a44 55%,#0a4157 100%)}
 .screen.sea .waves{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 20% 30%,#9fd8ff,transparent),radial-gradient(1px 1px at 70% 22%,#cfeaff,transparent),radial-gradient(1.5px 1.5px at 45% 55%,#ffb03a,transparent),radial-gradient(1px 1px at 85% 45%,#9fd8ff,transparent),radial-gradient(1px 1px at 30% 70%,#cfeaff,transparent);opacity:.8}
 .arcade{margin-top:auto;position:relative;z-index:2;display:grid;gap:10px}

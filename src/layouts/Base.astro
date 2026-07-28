@@ -37,39 +37,10 @@ const products = [
     author: { '@id': `${SITE}#org` },
     publisher: { '@id': `${SITE}#org` },
   },
-  {
-    '@type': 'MobileApplication',
-    '@id': `${SITE}#eatstep`,
-    name: 'EatStep',
-    description:
-      'On-demand healthy food for athletes and health-conscious eaters — customer, partner and courier apps built end to end on one shared core.',
-    applicationCategory: 'FoodAndDrinkApplication',
-    operatingSystem: 'iOS, Android',
-    author: { '@id': `${SITE}#org` },
-    publisher: { '@id': `${SITE}#org` },
-  },
-  {
-    '@type': 'MobileApplication',
-    '@id': `${SITE}#munchview`,
-    name: 'Munchview',
-    description:
-      'Open it and a good video is already playing — matched to how long your meal is. Under three seconds from tap to watching.',
-    applicationCategory: 'EntertainmentApplication',
-    operatingSystem: 'Android',
-    author: { '@id': `${SITE}#org` },
-    publisher: { '@id': `${SITE}#org` },
-  },
-  {
-    '@type': 'MobileApplication',
-    '@id': `${SITE}#pickorn`,
-    name: 'Pickorn',
-    description:
-      'An offline movie picker: choose a mood, roll the dice, watch tonight. Nineteen thousand IMDb-rated movies bundled in.',
-    applicationCategory: 'UtilitiesApplication',
-    operatingSystem: 'iOS, Android',
-    author: { '@id': `${SITE}#org` },
-    publisher: { '@id': `${SITE}#org` },
-  },
+  /* Unreleased products are deliberately absent. Structured data is the part
+     of a page that gets read, cached and republished by machines, so naming an
+     unannounced app here would put it beyond recall long before it ships. Each
+     one gets its entry on the day it reaches a store. */
 ];
 
 const jsonLd = JSON.stringify({
@@ -90,7 +61,7 @@ const jsonLd = JSON.stringify({
       },
       image: ogImage,
       description:
-        'DeftDay is an independent app and game studio building apps, games and everyday utilities for iOS, Android and the web — home of EatStep, Munchview, Pickorn and SkyBattleSea.',
+        'DeftDay is an independent app and game studio building apps, games and everyday utilities for iOS, Android and the web — home of SkyBattleSea, with three products in development.',
       foundingDate: '2026',
       knowsAbout: ['Mobile app development', 'Game development', 'iOS', 'Android', 'Product design'],
       contactPoint: {
