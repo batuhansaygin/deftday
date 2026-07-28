@@ -1,0 +1,207 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteChrome from '../../components/SiteChrome.astro';
+import Footer from '../../components/Footer.astro';
+
+/* Mirrors munchview's store/privacy-policy.md, which is the source of truth
+   and the text the Play listing is checked against. Change it there first. */
+const updated = 'July 28, 2026';
+---
+
+<Base
+  title="Munchview Privacy Policy — DeftDay Studio"
+  description="What Munchview stores on your phone, what it sends, what signing in with Google adds, and how to delete it. No analytics, no advertising, no tracking."
+>
+  <SiteChrome />
+  <div class="sky" aria-hidden="true">
+    <span class="s1"></span><span class="s2"></span><span class="s3"></span>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+
+  <main id="main" class="legal">
+    <span class="eyebrow">Munchview</span>
+    <h1>Your taste stays<br /><span class="serif">on your phone.</span></h1>
+    <p class="lede">
+      This policy explains exactly what leaves your device and what does not.
+      Munchview has no analytics, no advertising SDKs and no tracking of any
+      kind.
+    </p>
+    <p class="updated">Last updated: {updated}</p>
+
+    <section class="legal-block" aria-labelledby="sends">
+      <h2 id="sends">What Munchview sends</h2>
+      <p>
+        Signing in is optional; without it there is no account and nothing about
+        you is stored on any server. The app does use one small server of our
+        own — a content service that returns the video lists it shows you.
+      </p>
+      <p>
+        When you open the app it asks that service for videos. The request
+        carries only the category names or keyword tags you picked and the
+        length you chose. To show the YouTube categories that exist where you
+        are, the service reads the country of the incoming request at
+        Cloudflare's edge — country only, nothing finer, never stored against
+        you, and Pro users can override it by hand.
+      </p>
+      <p>
+        Like any internet request, our hosting provider sees the IP address it
+        comes from and keeps short-lived operational logs, a few days, for
+        reliability and abuse prevention. We do not use that to identify you, we
+        do not build a profile, and we do not sell or share it. The service
+        stores no per-user data at all — its cache is keyed by category or
+        keyword, never by person.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="signin">
+      <h2 id="signin">If you sign in with Google</h2>
+      <p>
+        Signing in exists for one reason: carrying what one phone knows to
+        another. It is entirely optional and the app works fully without it.
+      </p>
+      <ul>
+        <li>
+          We ask Google only who you are — your Google account id, name and
+          email address. We do <b>not</b> ask for access to your YouTube
+          account, your videos, your subscriptions or anything else.
+        </li>
+        <li>
+          Once signed in, the list below is also stored by our sync service
+          under your Google account id, so another phone signed in to the same
+          account can pick it up.
+        </li>
+        <li>
+          Our service checks with Google's public keys that a request really
+          comes from you before it will store or return anything.
+        </li>
+        <li>
+          <b>Sign out</b> stops the syncing and removes the account from the
+          phone; the phone keeps its own copy.
+        </li>
+      </ul>
+      <p>We do not sell or share any of it, and we never use it to advertise.</p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="device">
+      <h2 id="device">What stays on your device</h2>
+      <ul>
+        <li>The categories and keyword tags you picked</li>
+        <li>Your last chosen length and the autoplay setting</li>
+        <li>Likes, skips, favourites, profiles, and a short recently-watched list</li>
+        <li>The playback position of your last video, for "Continue watching"</li>
+      </ul>
+      <p>
+        If you are not signed in, none of this is ever uploaded. "Clear watch
+        history" in You, or uninstalling, removes it.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="youtube">
+      <h2 id="youtube">YouTube playback and thumbnails</h2>
+      <p>
+        Videos play inside the official YouTube embedded player, and thumbnails
+        load from YouTube's image servers. In both cases your device talks to
+        YouTube and Google directly, exactly as a browser would, and that
+        traffic is governed by their terms and privacy policy, not by ours:
+        <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms of Service</a>
+        ·
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>.
+      </p>
+      <p>
+        The player page itself is served from inside the app, so no third party
+        sees your request. Munchview adds no tracking on top of YouTube's player
+        and receives nothing back about what you watch.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="children">
+      <h2 id="children">Children</h2>
+      <p>
+        Munchview is not aimed at children and asks for no personal details from
+        anyone. Used as a guest — which is how it works unless you choose
+        otherwise — it collects nothing at all. Signing in requires a Google
+        account, which Google already age-restricts.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="delete">
+      <h2 id="delete">Deleting what we hold</h2>
+      <p>
+        <b>Delete my account data</b>, in You → Your account, erases everything
+        stored for your account, at once. If the app is no longer installed, ask
+        us and we will do it within 30 days.
+      </p>
+      <p>
+        <a class="cta" href="/munchview/delete-account">How to delete your account<span aria-hidden="true"> →</span></a>
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="changes">
+      <h2 id="changes">Changes and contact</h2>
+      <p>
+        If this policy changes, the updated version is posted at this same
+        address before the change ships.
+      </p>
+      <p>
+        Questions: <a href="mailto:privacy@deftday.com">privacy@deftday.com</a>.
+        Every DeftDay app is covered on the
+        <a href="/privacy">studio privacy page</a>.
+      </p>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .legal {
+    max-width: 78ch;
+    margin: 0 auto;
+    padding: 160px var(--gutter) 40px;
+  }
+  .legal h1 {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    margin-bottom: 28px;
+  }
+  .lede {
+    color: var(--muted);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    text-wrap: pretty;
+    max-width: 62ch;
+  }
+  .updated {
+    margin-top: 14px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .legal-block {
+    margin-top: 56px;
+    padding-top: 34px;
+    border-top: 1px solid var(--line);
+  }
+  .legal-block h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-bottom: 18px;
+  }
+  .legal-block p {
+    color: var(--muted);
+    text-wrap: pretty;
+    margin-bottom: 14px;
+  }
+  .legal-block b {
+    color: var(--fg);
+  }
+  ul {
+    color: var(--muted);
+    display: grid;
+    gap: 10px;
+    margin: 0 0 18px;
+    padding-left: 1.2rem;
+  }
+  .cta {
+    display: inline-block;
+    font-weight: 600;
+  }
+</style>
