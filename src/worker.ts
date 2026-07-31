@@ -8,6 +8,22 @@
  */
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
+  /** The studio error log's D1 (log.deftday.com). */
+  ERRORS_DB?: D1Database;
+}
+
+/** Report an error to the studio log — errors only, no IPs, fire-and-forget. */
+function logError(env: Env, event: string, message: string) {
+  try {
+    env.ERRORS_DB?.prepare(
+      'INSERT INTO events (ts, app, level, event, message, stack, country, meta) VALUES (?,?,?,?,?,?,?,?)',
+    )
+      .bind(Date.now(), 'site', 'error', event.slice(0, 64), String(message ?? '').slice(0, 2048), '', '', '')
+      .run()
+      .catch(() => {});
+  } catch {
+    // Logging is a bystander, never a participant.
+  }
 }
 
 const CANONICAL_HOST = 'deftday.com';
@@ -44,7 +60,13 @@ export default {
       });
     }
 
-    const response = await env.ASSETS.fetch(request);
+    let response: Response;
+    try {
+      response = await env.ASSETS.fetch(request);
+    } catch (err) {
+      logError(env, 'assets-fetch-failed', String(err));
+      throw err;
+    }
     const headers = new Headers(response.headers);
     headers.set('Strict-Transport-Security', HSTS);
     return new Response(response.body, {

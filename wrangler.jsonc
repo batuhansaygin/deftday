@@ -9,6 +9,14 @@
   //
   // run_worker_first lets src/worker.ts see every request so it can redirect
   // www to the apex; the zone token cannot write redirect rules.
+  // The studio error log (log.deftday.com) — errors only, no IPs.
+  "d1_databases": [
+    {
+      "binding": "ERRORS_DB",
+      "database_name": "deftday-errors",
+      "database_id": "1996ef1f-5b47-4edc-bf74-1c34914e123b"
+    }
+  ],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
