@@ -18,7 +18,10 @@ const updatedShots = 'August 2, 2026';
    cannot drift out of step with itself. */
 const proof = [
   { n: '3s', label: 'from opening it to watching' },
-  { n: '0', label: 'ads, trackers, analytics' },
+  /* "in the app" is load-bearing: this page itself is measured, cookielessly,
+     and the studio privacy page says so. The strip claims something about
+     Munchview, so it has to name what it is claiming about. */
+  { n: '0', label: 'ads, trackers or analytics in the app' },
   { n: '∞', label: 'feed to scroll — there is none' },
 ];
 ---

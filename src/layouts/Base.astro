@@ -43,6 +43,21 @@ const products = [
      one gets its entry on the day it reaches a store. */
 ];
 
+/* Google Analytics, cookieless. Consent Mode v2 starts denied and client_storage
+   is off, so gtag writes no cookie and touches no device storage — which is why
+   the privacy page can still say this site stores nothing, and why there is no
+   consent banner to dismiss. The trade is that nothing links two visits, so
+   every one counts as a first: read page views, referrers and countries from
+   this property, never "returning users".
+   Dev builds are left out so local runs stay off the property. */
+const GA_ID = 'G-BWPMVGH0RR';
+const analytics = import.meta.env.PROD;
+const gaBootstrap = `window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments)}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});
+gtag('js',new Date());
+gtag('config','${GA_ID}',{client_storage:'none'});`;
+
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
   '@graph': [
@@ -173,6 +188,15 @@ const jsonLd = JSON.stringify({
 
     {emitJsonLd && <script type="application/ld+json" set:html={jsonLd} />}
     <script is:inline>document.documentElement.classList.add('js');</script>
+
+    {
+      analytics && (
+        <Fragment>
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+          <script is:inline set:html={gaBootstrap} />
+        </Fragment>
+      )
+    }
   </head>
   <body>
     <slot />
