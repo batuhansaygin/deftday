@@ -8,45 +8,10 @@ import Footer from '../../components/Footer.astro';
 const status = 'In closed testing on Google Play';
 const updated = 'July 28, 2026';
 
-/* Real captures from the release build, not mockups — same files that go to
-   the Play listing, so the two can never drift apart. */
-const shots = [
-  {
-    src: '/munchview/shots/01-categories.webp',
-    alt: 'Munchview asking what you like to watch, with categories such as Documentary bites, Nature and travel and Cosmos selected.',
-    caption: 'Pick a few things you like. Once.',
-  },
-  {
-    src: '/munchview/shots/02-home.webp',
-    alt: 'The Munchview home screen: the question “How long have you got?”, three length presets, and a large Press to watch button.',
-    caption: 'One question. One button.',
-  },
-  {
-    src: '/munchview/shots/03-player.webp',
-    alt: 'A video playing full screen in Munchview, with the controls floating over the picture.',
-    caption: 'Controls float over the picture, then get out of the way.',
-  },
-  {
-    src: '/munchview/shots/04-corner.webp',
-    alt: 'A video continuing to play in a small movable window in the corner while the home screen is visible behind it.',
-    caption: 'Drag it down and it keeps playing in the corner.',
-  },
-  {
-    src: '/munchview/shots/05-picks.webp',
-    alt: 'The Picked for you row on the Munchview home screen, showing video thumbnails chosen from what you have watched.',
-    caption: 'Picked from what you liked — worked out on the phone.',
-  },
-  {
-    src: '/munchview/shots/06-you.webp',
-    alt: 'The You screen in Munchview, showing Munchview Pro, an optional Continue with Google button, and the profile switcher.',
-    caption: 'Signing in is optional, and it only carries your taste across.',
-  },
-  {
-    src: '/munchview/shots/07-liked.webp',
-    alt: 'The lower half of the You screen: an autoplay switch, a list of liked videos, a Not for you list, and Clear watch history.',
-    caption: 'Everything it knows about you, in one place you can empty.',
-  },
-];
+/* Real captures from the release build, not mockups. Each one sits beside the
+   thing it shows: a strip of every screen at the top told nobody anything,
+   because a screenshot with no sentence next to it is decoration. */
+const updatedShots = 'August 2, 2026';
 ---
 
 <Base
@@ -70,32 +35,158 @@ const shots = [
     </p>
     <p class="status"><span class="badge testing">{status}</span></p>
 
-    <section class="shots" aria-labelledby="shots-h">
-      <h2 id="shots-h" class="sr-only">What Munchview looks like</h2>
-      <ul class="strip">
-        {
-          shots.map((shot) => (
-            <li class="shot">
-              <img src={shot.src} alt={shot.alt} width="540" height="1200" loading="lazy" decoding="async" />
-              <p>{shot.caption}</p>
-            </li>
-          ))
-        }
-      </ul>
+    <figure class="hero-shot">
+      <img
+        src="/munchview/shots/hero-home.webp"
+        alt="The Munchview home screen: the question “How long have you got?”, a custom length of about twenty minutes, and one large amber Press to watch button."
+        width="540"
+        height="1200"
+        loading="eager"
+        decoding="async"
+      />
+      <figcaption>One question, one button. That is the whole opening screen.</figcaption>
+    </figure>
+
+    <section class="feature" aria-labelledby="how">
+      <div class="feature-text">
+        <h2 id="how">Three seconds, start to watching</h2>
+        <p>
+          The whole app was built against a stopwatch. Open it, press one
+          button, and a video is running. There is no feed to fall into, no
+          autoplay rabbit hole, and nothing to scroll before you have chosen
+          anything.
+        </p>
+        <ol class="steps">
+          <li><b>Open it.</b> One question, one button.</li>
+          <li><b>Say how long.</b> A preset, or any length you like.</li>
+          <li><b>Watch.</b> It is already playing.</li>
+        </ol>
+      </div>
+      <figure class="feature-shot">
+        <img
+          src="/munchview/shots/player-feed.webp"
+          alt="A nature documentary playing at the top of the Munchview player, with a Related to this list of further videos underneath it."
+          width="540"
+          height="1200"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>Playing immediately — and what to watch next, already lined up.</figcaption>
+      </figure>
     </section>
 
-    <section class="block" aria-labelledby="how">
-      <h2 id="how">Three seconds, start to watching</h2>
-      <p>
-        The whole app was built against a stopwatch. Open it, press one button,
-        and a video is running. There is no feed to fall into, no autoplay
-        rabbit hole, and nothing to scroll before you have chosen anything.
-      </p>
-      <ol class="steps">
-        <li><b>Open it.</b> One question, one button.</li>
-        <li><b>Say how long.</b> A preset, or any length you like.</li>
-        <li><b>Watch.</b> It is already playing.</li>
-      </ol>
+    <figure class="band">
+      <img
+        src="/munchview/shots/fullscreen.webp"
+        alt="A wildlife documentary filling an Android phone held sideways, with no controls or chrome over the picture at all."
+        width="1200"
+        height="540"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption>
+        Turn the phone and the picture takes everything. A few seconds later the
+        controls fade — even the progress line — and only the video is left.
+      </figcaption>
+    </figure>
+
+    <section class="feature reverse" aria-labelledby="shorts">
+      <div class="feature-text">
+        <h2 id="shorts">A minute, not an evening</h2>
+        <p>
+          Some breaks are ninety seconds long. Shorts are here too, chosen by the
+          same taste as everything else — swipe up for the next one, down for the
+          last, sideways to leave. Autoplay is a switch, not a decision made for
+          you.
+        </p>
+        <p>
+          The controls are the ones you already know from the full player: skip
+          five seconds either way, a scrub bar, like and not-for-me. One tap
+          brings them up, one tap takes them away.
+        </p>
+      </div>
+      <figure class="feature-shot">
+        <img
+          src="/munchview/shots/shorts.webp"
+          alt="A short vertical video playing in Munchview with the amber play control in the centre and like, not-for-me and settings buttons stacked down the right edge."
+          width="540"
+          height="1200"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>Vertical clips, the same controls, no separate app to learn.</figcaption>
+      </figure>
+    </section>
+
+    <section class="feature" aria-labelledby="picks">
+      <div class="feature-text">
+        <h2 id="picks">It learns, without watching you</h2>
+        <p>
+          What it plays is ranked from what you have told it: the categories you
+          chose, the length you asked for, the channels you liked, the ones you
+          turned down, and what you have already been shown so the same few
+          videos do not come round again. All of that is worked out on the phone.
+        </p>
+        <ul class="points">
+          <li>
+            <b>Your country's categories.</b> The list comes from YouTube for
+            wherever you are, so it offers what people there actually watch.
+          </li>
+          <li>
+            <b>Type a show, keep it as a tag.</b> Write the name of something you
+            like and it joins the mix, matched to the length you asked for.
+          </li>
+          <li>
+            <b>Pick up where you stopped.</b> Everything you started keeps its
+            place, with an amber line on the picture showing how far you got.
+          </li>
+          <li>
+            <b>Paste any link.</b> YouTube, Vimeo, Dailymotion, Twitch and the
+            rest all play inside the app. Nothing is handed off to a browser.
+          </li>
+        </ul>
+      </div>
+      <figure class="feature-shot">
+        <img
+          src="/munchview/shots/discover.webp"
+          alt="The Munchview home screen scrolled down: a Continue watching row with time remaining, a row of Shorts, category chips, and a box for pasting any video link."
+          width="540"
+          height="1200"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>Continue watching, Shorts, your categories, and a box for any link.</figcaption>
+      </figure>
+    </section>
+
+    <section class="feature reverse" aria-labelledby="youtube">
+      <div class="feature-text">
+        <h2 id="youtube">Your YouTube likes — kept separate</h2>
+        <p>
+          Connect your YouTube account and the videos you liked there come in as
+          <em>their own list</em>. They are never mixed into Munchview's own
+          likes, because the recommendations are built from what you like
+          <em>here</em> — and you should always be able to tell which app thought
+          what.
+        </p>
+        <p>
+          It is read-only. Munchview never likes, subscribes, comments or changes
+          anything on your account, and it cannot read your YouTube watch
+          history — no app can, since YouTube stopped providing it. Disconnect
+          removes the imported list from the phone.
+        </p>
+      </div>
+      <figure class="feature-shot wide-shot">
+        <img
+          src="/munchview/shots/youtube.webp"
+          alt="The Connect YouTube button in Munchview's settings, in YouTube red, above an explanation that the imported likes stay a separate list."
+          width="540"
+          height="250"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>One button in Settings. Read-only, and reversible.</figcaption>
+      </figure>
     </section>
 
     <section class="block" aria-labelledby="whenever">
@@ -108,34 +199,6 @@ const shots = [
       </p>
     </section>
 
-    <section class="block" aria-labelledby="picks">
-      <h2 id="picks">It learns, without watching you</h2>
-      <p>
-        What it plays is ranked from what you have told it: the categories you
-        chose, the length you asked for, the channels you liked, the ones you
-        turned down, and what you have already been shown so the same few
-        videos do not come round again. All of that is worked out on the phone.
-      </p>
-      <ul class="points">
-        <li>
-          <b>Your country's categories.</b> The list comes from YouTube for
-          wherever you are, so it offers what people there actually watch.
-        </li>
-        <li>
-          <b>Type a show, keep it as a tag.</b> Write the name of something you
-          like and it joins the mix, matched to the length you asked for.
-        </li>
-        <li>
-          <b>A seat each.</b> Separate profiles keep separate tastes — two free,
-          ten with Pro.
-        </li>
-        <li>
-          <b>Keeps playing in the corner.</b> Drag the video down and it carries
-          on in a window you can move and resize while you look for the next one.
-        </li>
-      </ul>
-    </section>
-
     <section class="block" aria-labelledby="privacy">
       <h2 id="privacy">No ads, no tracking, no feed</h2>
       <p>
@@ -143,7 +206,8 @@ const shots = [
         As a guest it collects nothing at all: what you like, skip and save
         stays on the phone. Signing in with Google is optional and does exactly
         one thing — carries that to a second phone. It asks Google only who you
-        are, never for access to your YouTube account.
+        are; connecting YouTube is a separate choice you make yourself, and it
+        only ever reads.
       </p>
       <p>
         <a href="/munchview/privacy">Read the full privacy policy<span aria-hidden="true"> →</span></a>
@@ -166,7 +230,7 @@ const shots = [
         with the Google account you use on your Android phone, and we will add
         you to the track.
       </p>
-      <p class="updated">Last updated: {updated}</p>
+      <p class="updated">Last updated: {updated} · Screens captured {updatedShots}</p>
     </section>
   </main>
 
@@ -243,10 +307,16 @@ const shots = [
     text-transform: uppercase;
   }
 
-  /* Screens. A scrolling strip on a phone, a wrapping row on a desktop —
-     the images are tall, so a plain grid would leave a page of whitespace. */
-  .shots {
-    margin-top: 48px;
+  /* Screens.
+     Each capture sits beside the words it belongs to. The old page put all
+     seven in one scrolling strip at the top, which asked the reader to work out
+     for themselves what they were looking at — a picture with no sentence next
+     to it is decoration, not an explanation.
+
+     The page column is text-width, so these rows are allowed to break out of it
+     on a wide screen and come back to a single column on a phone. */
+  .product {
+    max-width: 78ch;
   }
   .sr-only {
     position: absolute;
@@ -259,39 +329,98 @@ const shots = [
     white-space: nowrap;
     border: 0;
   }
-  .strip {
-    display: flex;
-    gap: 20px;
+
+  figure {
     margin: 0;
-    padding: 4px 0 18px;
-    list-style: none;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
   }
-  .shot {
-    flex: 0 0 auto;
-    width: min(232px, 62vw);
-    scroll-snap-align: center;
-  }
-  .shot img {
+  figure img {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: 18px;
+    border-radius: 20px;
     border: 1px solid var(--line);
     background: #12100e;
   }
-  .shot p {
-    margin: 12px 2px 0;
+  figcaption {
+    margin-top: 12px;
     color: var(--muted);
     font-size: 0.86rem;
     text-wrap: pretty;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .strip {
-      scroll-behavior: auto;
+
+  /* The opening screen, sized so it reads as a phone rather than a poster. */
+  .hero-shot {
+    margin: 44px auto 0;
+    max-width: 280px;
+    text-align: center;
+  }
+
+  /* A feature: words on one side, the screen that proves them on the other. */
+  .feature {
+    display: grid;
+    gap: 30px;
+    align-items: center;
+    margin-top: 64px;
+    padding-top: 38px;
+    border-top: 1px solid var(--line);
+  }
+  .feature h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-bottom: 18px;
+  }
+  .feature p {
+    color: var(--muted);
+    text-wrap: pretty;
+    margin-bottom: 14px;
+  }
+  .feature-shot {
+    max-width: 260px;
+    margin-inline: auto;
+  }
+  .feature-shot.wide-shot {
+    max-width: 420px;
+  }
+
+  /* Wide enough for two columns: alternate the side the picture lands on, so
+     the eye is not dragged down one rail. */
+  @media (min-width: 900px) {
+    .feature {
+      grid-template-columns: 1fr minmax(0, 300px);
+      gap: 56px;
+    }
+    .feature.reverse {
+      grid-template-columns: minmax(0, 300px) 1fr;
+    }
+    .feature.reverse .feature-text {
+      order: 2;
+    }
+    .feature.reverse .feature-shot {
+      order: 1;
+    }
+    .feature-shot {
+      max-width: none;
+    }
+  }
+
+  /* The landscape capture earns the full width — it is the one screen where the
+     whole point is that nothing else is on it. */
+  .band {
+    margin-top: 64px;
+    padding-top: 38px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+  }
+  .band img {
+    border-radius: 16px;
+  }
+  .band figcaption {
+    margin-inline: auto;
+    max-width: 56ch;
+  }
+  @media (min-width: 1100px) {
+    .band {
+      width: min(1100px, 92vw);
+      margin-inline: calc(50% - min(550px, 46vw));
     }
   }
 </style>
