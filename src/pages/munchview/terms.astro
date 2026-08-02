@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteChrome from '../../components/SiteChrome.astro';
+import Footer from '../../components/Footer.astro';
+
+/* Google's OAuth consent screen asks for a terms link beside the privacy one.
+   Kept deliberately short: a wall of boilerplate nobody reads is worse than a
+   page that says the few things that are actually true of this app. */
+const updated = 'August 2, 2026';
+---
+
+<Base
+  title="Munchview Terms of Service — DeftDay Studio"
+  description="The short version: Munchview is free to use, plays videos through YouTube's own player, and makes no claim over anything you watch."
+>
+  <SiteChrome />
+  <div class="sky" aria-hidden="true">
+    <span class="s1"></span><span class="s2"></span><span class="s3"></span>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+
+  <main id="main" class="legal">
+    <span class="eyebrow">Munchview</span>
+    <h1>Short terms,<br /><span class="serif">plainly put.</span></h1>
+    <p class="lede">
+      Munchview finds a video that fits the time you have. These terms cover
+      using it. They are short because the app does little that needs governing.
+    </p>
+    <p class="updated">Last updated: {updated}</p>
+
+    <section class="legal-block" aria-labelledby="use">
+      <h2 id="use">Using the app</h2>
+      <p>
+        Munchview is free to use. Some conveniences are sold as “Pro”; playback
+        itself is never behind a payment, and never will be — YouTube's own
+        terms do not permit charging to watch videos in an embedded player.
+      </p>
+      <p>
+        Use it lawfully and do not attempt to break, overload or misuse the
+        service. That is the whole of what we ask.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="youtube">
+      <h2 id="youtube">Videos come from YouTube</h2>
+      <p>
+        Munchview does not host or own any video. Everything plays through
+        YouTube's own embedded player, and by using the app you are also bound
+        by the
+        <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms of Service</a>.
+        Munchview uses YouTube API Services; Google's
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+        applies to what Google receives.
+      </p>
+      <p>
+        If you connect your YouTube account, Munchview reads the videos you have
+        liked, and nothing else. It never writes to your account. You can
+        withdraw that access at any time from your Google account's permissions
+        page, and disconnect inside the app.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="account">
+      <h2 id="account">Your account and your data</h2>
+      <p>
+        Signing in is optional and exists to carry your preferences to another
+        phone. What we store, and how to delete it, is set out in the
+        <a href="/munchview/privacy">privacy policy</a>. You can delete
+        everything we hold at any time — in the app, or at
+        <a href="/munchview/delete-account">deftday.com/munchview/delete-account</a>.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="asis">
+      <h2 id="asis">No warranty</h2>
+      <p>
+        The app is provided as it is. We work to keep it running and correct,
+        but we cannot promise it will always be available or that every video it
+        suggests will suit you. To the extent the law allows, DeftDay Studio is
+        not liable for loss arising from using it.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="changes">
+      <h2 id="changes">Changes and contact</h2>
+      <p>
+        If these terms change in a way that matters, the date above changes with
+        them. Questions:
+        <a href="mailto:privacy@deftday.com">privacy@deftday.com</a>.
+      </p>
+    </section>
+  </main>
+
+  <Footer />
+</Base>

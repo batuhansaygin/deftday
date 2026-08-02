@@ -62,8 +62,10 @@ const updated = 'July 28, 2026';
       <ul>
         <li>
           We ask Google only who you are — your Google account id, name, email
-          address and profile picture. We do <b>not</b> ask for access to your
-          YouTube account, your videos, your subscriptions or anything else.
+          address and profile picture. Signing in does <b>not</b> ask for access
+          to your YouTube account, your videos, your subscriptions or anything
+          else. Connecting YouTube is a separate, optional choice, described in
+          its own section below.
           The picture is shown to you in the app and loaded straight from
           Google, the same way any web page would load it.
         </li>
@@ -99,6 +101,48 @@ const updated = 'July 28, 2026';
     </section>
 
     <section class="legal-block" aria-labelledby="youtube">
+      <h2 id="youtube-account">If you connect your YouTube account</h2>
+      <p>
+        This is separate from signing in, and entirely optional. Signing in
+        never asks for it.
+      </p>
+      <ul>
+        <li>
+          If you tap <b>Connect YouTube</b>, Google asks you to allow one
+          read-only permission (<code>youtube.readonly</code>). We use it for
+          one thing: reading the videos you have liked on YouTube, so the app
+          can show them as their own list. Connecting also signs you in, because
+          the same consent screen covers both — the app tells you so before you
+          tap it.
+        </li>
+        <li>
+          <b>The request goes straight from your phone to YouTube</b>, using
+          your own permission. Your library does not pass through our servers
+          and we never see it. The permission token is not saved; it lasts for
+          that one import.
+        </li>
+        <li>
+          <b>Those likes stay a separate list.</b> Munchview's recommendations
+          are built from what you like <i>in Munchview</i>. Your YouTube likes
+          are shown beside them, never mixed into them.
+        </li>
+        <li>
+          <b>We never write anything to your YouTube account.</b> The permission
+          we ask for cannot: it is read-only. We do not like, dislike,
+          subscribe, comment or change anything there.
+        </li>
+        <li>
+          <b>We cannot read your YouTube watch history</b>, and we do not try.
+          YouTube's API stopped providing it, so no app can. The viewing history
+          Munchview shows is the one it recorded itself, on your phone.
+        </li>
+        <li>
+          <b>Disconnect</b>, in the app's settings, removes the imported list
+          from your phone. You can also withdraw Munchview's access at any time
+          from your Google account's permissions page.
+        </li>
+      </ul>
+
       <h2 id="youtube">YouTube playback and thumbnails</h2>
       <p>
         Videos play inside the official YouTube embedded player, and thumbnails
