@@ -75,13 +75,34 @@ const updated = 'July 27, 2026';
       <h3>If you sign in with Google</h3>
       <p>
         Optional, and only there to carry what one phone knows to another. We
-        ask Google for your account id, name and email — nothing else, and never
-        access to your YouTube account. Once signed in, the list above is also
+        ask Google for your account id, name and email — nothing else. Signing
+        in never asks for access to your YouTube account; that is a separate
+        choice, described below. Once signed in, the list above is also
         stored by our sync service under your Google account id, so a second
         phone signed in to the same account picks it up. Signing out stops it;
         <b>Delete my account data</b> in the app erases what we hold — or ask us
         at <a href="/munchview/delete-account">deftday.com/munchview/delete-account</a>
         if you no longer have the app installed.
+      </p>
+      <h3>If you connect your YouTube account</h3>
+      <p>
+        Separate from signing in, and entirely optional. If you tap
+        <b>Connect YouTube</b>, Google asks you to allow one read-only
+        permission (<code>youtube.readonly</code>), and we use it for one thing:
+        reading the videos you have liked on YouTube so the app can show them as
+        their own list. The request goes straight from your phone to YouTube
+        using your own permission — your library never passes through our
+        servers — and the permission token is not saved.
+      </p>
+      <p>
+        Those likes stay a <b>separate list</b>: Munchview's recommendations are
+        built from what you like in Munchview, never mixed with what you liked
+        on YouTube. We <b>never write anything</b> to your YouTube account — the
+        permission we ask for cannot. And we <b>cannot read your YouTube watch
+        history</b>: YouTube's API stopped providing it, so no app can. The
+        viewing history Munchview shows is the one it recorded on your phone.
+        <b>Disconnect</b> removes the imported list from your phone, and you can
+        withdraw the permission at any time in your Google account.
       </p>
       <h3>Not collected</h3>
       <p>
