@@ -1,6 +1,16 @@
 ---
 // Page furniture that sits outside <main>: loader curtain, custom cursor,
 // fixed nav — plus the site-wide interaction scripts.
+
+// The nav sections only exist on the home page. A bare "#lab" therefore does
+// nothing at all on /privacy or /munchview/*: the browser looks for that anchor
+// in the current document, fails, and stays put — the links read as broken.
+// Prefixing with "/" off the home page sends the reader home and then to the
+// section; on the home page the bare hash is kept so the CSS smooth scroll
+// still applies instead of a navigation.
+const path = Astro.url.pathname.replace(/\/index\.html$/, '/');
+const isHome = path === '/';
+const to = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 ---
 
 <div id="loader" aria-hidden="true"><div class="word"></div></div>
@@ -9,13 +19,18 @@
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="nav" id="nav">
-  <a class="logo" href="#top" aria-label="DeftDay — back to top">DEFT<em>DAY</em></a>
+  <a
+    class="logo"
+    href={isHome ? '#top' : '/'}
+    aria-label={isHome ? 'DeftDay — back to top' : 'DeftDay — back to the studio'}
+    >DEFT<em>DAY</em></a
+  >
   <nav class="nav-links" aria-label="Main">
-    <a href="#studio">Studio</a>
-    <a href="#build">What we build</a>
-    <a href="#lab">In the lab</a>
-    <a href="#craft">Craft</a>
-    <a class="btn grad" data-magnet href="#contact">Say hello</a>
+    <a href={to('studio')}>Studio</a>
+    <a href={to('build')}>What we build</a>
+    <a href={to('lab')}>In the lab</a>
+    <a href={to('craft')}>Craft</a>
+    <a class="btn grad" data-magnet href={to('contact')}>Say hello</a>
   </nav>
 </header>
 

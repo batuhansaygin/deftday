@@ -1,18 +1,29 @@
 ---
 const year = new Date().getFullYear();
+
+// Same reasoning as the nav in SiteChrome: these sections live on the home
+// page, so off it the bare hash resolves to nothing and the link is dead.
+const path = Astro.url.pathname.replace(/\/index\.html$/, '/');
+const isHome = path === '/';
+const to = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 ---
 
 <footer>
-  <a class="foot-word" href="#top" aria-label="DeftDay — back to top">DEFTDAY</a>
+  <a
+    class="foot-word"
+    href={isHome ? '#top' : '/'}
+    aria-label={isHome ? 'DeftDay — back to top' : 'DeftDay — back to the studio'}
+    >DEFTDAY</a
+  >
 
   <!-- Also the only in-page navigation below 820px, where the fixed nav
        collapses to just the contact button. -->
   <nav class="foot-nav" aria-label="Sections">
-    <a href="#studio">Studio</a>
-    <a href="#build">What we build</a>
-    <a href="#lab">In the lab</a>
-    <a href="#craft">Craft</a>
-    <a href="#contact">Contact</a>
+    <a href={to('studio')}>Studio</a>
+    <a href={to('build')}>What we build</a>
+    <a href={to('lab')}>In the lab</a>
+    <a href={to('craft')}>Craft</a>
+    <a href={to('contact')}>Contact</a>
     <a href="/munchview">Munchview</a>
     <a href="/privacy">Privacy</a>
   </nav>
