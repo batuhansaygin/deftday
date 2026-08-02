@@ -6,12 +6,21 @@ import Footer from '../../components/Footer.astro';
 /* Kept honest on purpose: the app is on a closed test track, not in the store.
    The day it is public, the badge and this line change together. */
 const status = 'In closed testing on Google Play';
-const updated = 'July 28, 2026';
+const updated = 'August 2, 2026';
 
-/* Real captures from the release build, not mockups. Each one sits beside the
-   thing it shows: a strip of every screen at the top told nobody anything,
-   because a screenshot with no sentence next to it is decoration. */
+/* Real captures from the release build, whole screens rather than crops, each
+   sitting in a phone beside the words it belongs to. A cropped fragment with no
+   sentence next to it is decoration; it never told anyone what they were
+   looking at. */
 const updatedShots = 'August 2, 2026';
+
+/* The three things worth knowing before any feature. Kept as data so the strip
+   cannot drift out of step with itself. */
+const proof = [
+  { n: '3s', label: 'from opening it to watching' },
+  { n: '0', label: 'ads, trackers, analytics' },
+  { n: '∞', label: 'feed to scroll — there is none' },
+];
 ---
 
 <Base
@@ -24,37 +33,54 @@ const updatedShots = 'August 2, 2026';
   </div>
   <div class="progress" aria-hidden="true"></div>
 
-  <main id="main" class="product">
-    <span class="eyebrow">Munchview</span>
-    <h1>Say how long you have.<br /><span class="serif">Then just watch.</span></h1>
-    <p class="lede">
-      Every app in this category opens by asking what you are in the mood for.
-      Munchview is built on the belief that the asking is the problem. Tell it
-      how long you have got — ten minutes, forty, whatever you set — and
-      something worth watching is already playing.
-    </p>
-    <p class="status"><span class="badge testing">{status}</span></p>
+  <main id="main" class="mv">
+    <!-- Hero: the promise on one side, the screen that keeps it on the other. -->
+    <section class="hero-2" aria-labelledby="top">
+      <div class="hero-copy">
+        <span class="eyebrow">Munchview · Android</span>
+        <h1 id="top">Say how long you have.<br /><span class="serif">Then just watch.</span></h1>
+        <p class="lede">
+          Every app in this category opens by asking what you are in the mood
+          for. Munchview is built on the belief that the asking is the problem.
+          Tell it how long you have got — ten minutes, forty, whatever you set —
+          and something worth watching is already playing.
+        </p>
+        <p class="status"><span class="badge testing">{status}</span></p>
+        <p class="hero-links">
+          <a class="cta" href="mailto:hello@deftday.com?subject=Munchview%20tester">Ask to be a tester</a>
+          <a class="cta ghost" href="#how">See how it works</a>
+        </p>
+      </div>
 
-    <figure class="hero-shot">
-      <img
-        src="/munchview/shots/hero-home.webp"
-        alt="The Munchview home screen: the question “How long have you got?”, a custom length of about twenty minutes, and one large amber Press to watch button."
-        width="540"
-        height="1200"
-        loading="eager"
-        decoding="async"
-      />
-      <figcaption>One question, one button. That is the whole opening screen.</figcaption>
-    </figure>
+      <div class="hero-phone">
+        <div class="phone shot">
+          <img
+            class="screen-img"
+            src="/munchview/shots/hero-home.webp"
+            alt="The Munchview home screen: the question “How long have you got?”, three length presets with about twenty minutes chosen, and one large amber Press to watch button."
+            width="648"
+            height="1440"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </section>
+
+    <ul class="proof" aria-label="What Munchview is">
+      {proof.map((p) => (
+        <li><b>{p.n}</b><span>{p.label}</span></li>
+      ))}
+    </ul>
 
     <section class="feature" aria-labelledby="how">
       <div class="feature-text">
+        <span class="kicker">The whole idea</span>
         <h2 id="how">Three seconds, start to watching</h2>
         <p>
-          The whole app was built against a stopwatch. Open it, press one
-          button, and a video is running. There is no feed to fall into, no
-          autoplay rabbit hole, and nothing to scroll before you have chosen
-          anything.
+          The app was built against a stopwatch. Open it, press one button, and
+          a video is running. There is no feed to fall into, no autoplay rabbit
+          hole, and nothing to scroll before you have chosen anything.
         </p>
         <ol class="steps">
           <li><b>Open it.</b> One question, one button.</li>
@@ -62,36 +88,43 @@ const updatedShots = 'August 2, 2026';
           <li><b>Watch.</b> It is already playing.</li>
         </ol>
       </div>
-      <figure class="feature-shot">
-        <img
-          src="/munchview/shots/player-feed.webp"
-          alt="A nature documentary playing at the top of the Munchview player, with a Related to this list of further videos underneath it."
-          width="540"
-          height="1200"
-          loading="lazy"
-          decoding="async"
-        />
-        <figcaption>Playing immediately — and what to watch next, already lined up.</figcaption>
-      </figure>
+      <div class="shot-wrap">
+        <div class="phone shot">
+          <img
+            class="screen-img"
+            src="/munchview/shots/player-feed.webp"
+            alt="A documentary playing at the top of the Munchview player, with a list of further videos to watch next underneath it."
+            width="648"
+            height="1440"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="cap">Playing immediately — and what to watch next, already lined up.</p>
+      </div>
     </section>
 
     <figure class="band">
-      <img
-        src="/munchview/shots/fullscreen.webp"
-        alt="A wildlife documentary filling an Android phone held sideways, with no controls or chrome over the picture at all."
-        width="1200"
-        height="540"
-        loading="lazy"
-        decoding="async"
-      />
+      <div class="phone shot land">
+        <img
+          class="screen-img"
+          src="/munchview/shots/fullscreen.webp"
+          alt="A wildlife documentary filling an Android phone held sideways, with no controls or chrome over the picture at all."
+          width="1440"
+          height="648"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
       <figcaption>
-        Turn the phone and the picture takes everything. A few seconds later the
+        Turn the phone and the app gets out of the way. A few seconds later the
         controls fade — even the progress line — and only the video is left.
       </figcaption>
     </figure>
 
     <section class="feature reverse" aria-labelledby="shorts">
       <div class="feature-text">
+        <span class="kicker">Short breaks</span>
         <h2 id="shorts">A minute, not an evening</h2>
         <p>
           Some breaks are ninety seconds long. Shorts are here too, chosen by the
@@ -105,27 +138,31 @@ const updatedShots = 'August 2, 2026';
           brings them up, one tap takes them away.
         </p>
       </div>
-      <figure class="feature-shot">
-        <img
-          src="/munchview/shots/shorts.webp"
-          alt="A short vertical video playing in Munchview with the amber play control in the centre and like, not-for-me and settings buttons stacked down the right edge."
-          width="540"
-          height="1200"
-          loading="lazy"
-          decoding="async"
-        />
-        <figcaption>Vertical clips, the same controls, no separate app to learn.</figcaption>
-      </figure>
+      <div class="shot-wrap">
+        <div class="phone shot">
+          <img
+            class="screen-img"
+            src="/munchview/shots/shorts.webp"
+            alt="A wildlife short playing in Munchview, with next, like, not-for-me, settings and previous controls stacked down the right edge and a scrub bar along the bottom."
+            width="648"
+            height="1440"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="cap">Vertical clips, the same controls, no separate app to learn.</p>
+      </div>
     </section>
 
     <section class="feature" aria-labelledby="picks">
       <div class="feature-text">
+        <span class="kicker">Taste, worked out on the phone</span>
         <h2 id="picks">It learns, without watching you</h2>
         <p>
           What it plays is ranked from what you have told it: the categories you
           chose, the length you asked for, the channels you liked, the ones you
           turned down, and what you have already been shown so the same few
-          videos do not come round again. All of that is worked out on the phone.
+          videos do not come round again. All of it is worked out on the phone.
         </p>
         <ul class="points">
           <li>
@@ -146,21 +183,25 @@ const updatedShots = 'August 2, 2026';
           </li>
         </ul>
       </div>
-      <figure class="feature-shot">
-        <img
-          src="/munchview/shots/discover.webp"
-          alt="The Munchview home screen scrolled down: a Continue watching row with time remaining, a row of Shorts, category chips, and a box for pasting any video link."
-          width="540"
-          height="1200"
-          loading="lazy"
-          decoding="async"
-        />
-        <figcaption>Continue watching, Shorts, your categories, and a box for any link.</figcaption>
-      </figure>
+      <div class="shot-wrap">
+        <div class="phone shot">
+          <img
+            class="screen-img"
+            src="/munchview/shots/discover.webp"
+            alt="The Munchview home screen scrolled down: a Continue watching row showing time remaining, a row of Shorts, category chips, and a box for pasting any video link."
+            width="648"
+            height="1440"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="cap">Continue watching, Shorts, your categories, and a box for any link.</p>
+      </div>
     </section>
 
     <section class="feature reverse" aria-labelledby="youtube">
       <div class="feature-text">
+        <span class="kicker">Optional, and read-only</span>
         <h2 id="youtube">Your YouTube likes — kept separate</h2>
         <p>
           Connect your YouTube account and the videos you liked there come in as
@@ -170,117 +211,272 @@ const updatedShots = 'August 2, 2026';
           what.
         </p>
         <p>
-          It is read-only. Munchview never likes, subscribes, comments or changes
-          anything on your account, and it cannot read your YouTube watch
-          history — no app can, since YouTube stopped providing it. Disconnect
-          removes the imported list from the phone.
+          Munchview never likes, subscribes, comments or changes anything on your
+          account, and it cannot read your YouTube watch history — no app can,
+          since YouTube stopped providing it. Disconnect removes the imported
+          list from the phone.
         </p>
       </div>
-      <figure class="feature-shot wide-shot">
-        <img
-          src="/munchview/shots/youtube.webp"
-          alt="The Connect YouTube button in Munchview's settings, in YouTube red, above an explanation that the imported likes stay a separate list."
-          width="540"
-          height="250"
-          loading="lazy"
-          decoding="async"
-        />
-        <figcaption>One button in Settings. Read-only, and reversible.</figcaption>
-      </figure>
+      <div class="shot-wrap">
+        <div class="phone shot">
+          <img
+            class="screen-img"
+            src="/munchview/shots/youtube.webp"
+            alt="Munchview's settings screen: a Continue with Google button, and below it a full-width red Connect YouTube button with a line explaining that the imported likes stay a separate list."
+            width="648"
+            height="1440"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="cap">One button in Settings. Read-only, and reversible.</p>
+      </div>
     </section>
 
-    <section class="block" aria-labelledby="whenever">
-      <h2 id="whenever">Not only at mealtimes</h2>
-      <p>
-        It started as something to watch while you eat, and it outgrew that. A
-        study break, something on in the workshop while your hands are busy, a
-        match in the background, winding down before sleep — the question is
-        always the same one, and so is the answer.
-      </p>
-    </section>
+    <div class="prose">
+      <section class="block" aria-labelledby="whenever">
+        <h2 id="whenever">Not only at mealtimes</h2>
+        <p>
+          It started as something to watch while you eat, and it outgrew that. A
+          study break, something on in the workshop while your hands are busy, a
+          match in the background, winding down before sleep — the question is
+          always the same one, and so is the answer.
+        </p>
+      </section>
 
-    <section class="block" aria-labelledby="privacy">
-      <h2 id="privacy">No ads, no tracking, no feed</h2>
-      <p>
-        Munchview is not funded by advertising, so it is not built to watch you.
-        As a guest it collects nothing at all: what you like, skip and save
-        stays on the phone. Signing in with Google is optional and does exactly
-        one thing — carries that to a second phone. It asks Google only who you
-        are; connecting YouTube is a separate choice you make yourself, and it
-        only ever reads.
-      </p>
-      <p>
-        <a href="/munchview/privacy">Read the full privacy policy<span aria-hidden="true"> →</span></a>
-        &nbsp;·&nbsp;
-        <a href="/munchview/delete-account">Delete your account<span aria-hidden="true"> →</span></a>
-      </p>
-    </section>
+      <section class="block" aria-labelledby="privacy">
+        <h2 id="privacy">No ads, no tracking, no feed</h2>
+        <p>
+          Munchview is not funded by advertising, so it is not built to watch
+          you. As a guest it collects nothing at all: what you like, skip and
+          save stays on the phone. Signing in with Google is optional and does
+          exactly one thing — carries that to a second phone. It asks Google only
+          who you are; connecting YouTube is a separate choice you make yourself,
+          and it only ever reads.
+        </p>
+        <p>
+          <a href="/munchview/privacy">Read the full privacy policy<span aria-hidden="true"> →</span></a>
+          &nbsp;·&nbsp;
+          <a href="/munchview/terms">Terms<span aria-hidden="true"> →</span></a>
+          &nbsp;·&nbsp;
+          <a href="/munchview/delete-account">Delete your account<span aria-hidden="true"> →</span></a>
+        </p>
+      </section>
+    </div>
 
-    <section class="block" aria-labelledby="status">
+    <section class="closer" aria-labelledby="status">
       <h2 id="status">Where it is right now</h2>
       <p>
         Munchview is on a closed test track on Google Play. It is a finished,
-        installable app — the test track exists so it is used on real phones by
-        real people before it goes public, which is also what Google asks of a
-        new developer account.
+        installable app — the track exists so it is used on real phones by real
+        people before it goes public, which is also what Google asks of a new
+        developer account.
       </p>
-      <p>
-        Want to be one of the testers? Write to
-        <a href="mailto:hello@deftday.com?subject=Munchview%20tester">hello@deftday.com</a>
-        with the Google account you use on your Android phone, and we will add
-        you to the track.
+      <p class="closer-cta">
+        <a class="cta" href="mailto:hello@deftday.com?subject=Munchview%20tester">Ask to be a tester</a>
       </p>
-      <p class="updated">Last updated: {updated} · Screens captured {updatedShots}</p>
+      <p class="fine">
+        Write from the Google account you use on your Android phone and we will
+        add you to the track.
+      </p>
     </section>
+
+    <p class="updated">Last updated: {updated} · Screens captured {updatedShots}</p>
   </main>
 
   <Footer />
 </Base>
 
 <style>
-  .product {
-    max-width: 78ch;
+  /* The page is wider than a document because half of it is pictures. Prose
+     still gets a readable measure; only the picture rows use the full width. */
+  .mv {
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 160px var(--gutter) 40px;
+    padding: 150px var(--gutter) 40px;
+    /* The glows behind the phones are absolutely positioned and reach past
+       their wrapper, which on a narrow screen widens the scrollable area and
+       drags every line of text off the right edge. They are decoration, so they
+       are the thing that gets cut. */
+    overflow-x: clip;
   }
-  .product h1 {
+  .prose {
+    max-width: none;
+  }
+  /* The site-wide `section` rule pads every section by up to 160px top and
+     bottom and a whole page gutter either side. That is right for the
+     homepage's full-bleed bands; here it wrapped each row in 320px of dead
+     space and pushed the text past the right edge on a phone. These rows set
+     their own rhythm. */
+  .mv section {
+    padding: 0;
+  }
+
+  /* ---------- hero ---------- */
+  .hero-2 {
+    display: grid;
+    gap: 44px;
+    align-items: center;
+  }
+  .hero-2 h1 {
     font-size: clamp(2.4rem, 6vw, 4.2rem);
-    margin-bottom: 28px;
+    margin-bottom: 26px;
   }
   .lede {
     color: var(--muted);
     font-size: clamp(1rem, 1.4vw, 1.15rem);
     text-wrap: pretty;
-    max-width: 62ch;
+    max-width: 56ch;
   }
   .status {
-    margin-top: 26px;
+    margin-top: 24px;
   }
-  .block {
-    margin-top: 56px;
-    padding-top: 34px;
+  .hero-links {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 46px;
+    padding: 0 22px;
+    border-radius: 100px;
+    background: var(--grad);
+    color: #1a0f08;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+  .cta.ghost {
+    background: none;
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  .cta:hover {
+    filter: brightness(1.08);
+  }
+  .cta.ghost:hover {
+    border-color: var(--sun-text);
+    filter: none;
+  }
+  .hero-phone {
+    justify-self: center;
+    width: min(250px, 66vw);
+    position: relative;
+  }
+  /* Light behind the phone, so it sits in the page instead of on top of it. */
+  .hero-phone::before {
+    content: '';
+    position: absolute;
+    inset: -14% -30%;
+    background: radial-gradient(closest-side, rgba(255, 92, 56, 0.24), transparent);
+    filter: blur(6px);
+    z-index: -1;
+  }
+
+  @media (min-width: 900px) {
+    .hero-2 {
+      grid-template-columns: 1fr minmax(0, 280px);
+      gap: 70px;
+    }
+  }
+
+  /* ---------- the proof strip ---------- */
+  .proof {
+    list-style: none;
+    margin: 46px 0 0;
+    padding: 24px 0;
+    display: grid;
+    gap: 22px;
     border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
   }
-  .block h2 {
-    font-size: clamp(1.4rem, 3vw, 2rem);
+  .proof li {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .proof b {
+    font-family: var(--font-d);
+    font-size: 1.9rem;
+    line-height: 1;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .proof span {
+    color: var(--muted);
+    font-size: 0.92rem;
+    text-wrap: pretty;
+  }
+  @media (min-width: 720px) {
+    .proof {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+  }
+
+  /* ---------- feature rows ---------- */
+  .feature {
+    display: grid;
+    gap: 34px;
+    align-items: center;
+    margin-top: 80px;
+  }
+  .kicker {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sun-text);
+    margin-bottom: 12px;
+  }
+  .feature h2 {
+    font-size: clamp(1.5rem, 3.2vw, 2.3rem);
     margin-bottom: 18px;
+    text-wrap: balance;
   }
-  .block p {
+  .feature p {
     color: var(--muted);
     text-wrap: pretty;
     margin-bottom: 14px;
+    max-width: 54ch;
   }
+  .feature .shot-wrap {
+    justify-self: center;
+    width: min(232px, 62vw);
+    position: relative;
+  }
+  .feature .shot-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -10% -26%;
+    background: radial-gradient(closest-side, rgba(255, 176, 58, 0.16), transparent);
+    z-index: -1;
+  }
+  .cap {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 0.84rem;
+    text-align: center;
+    text-wrap: pretty;
+  }
+
   .steps,
   .points {
     color: var(--muted);
     display: grid;
     gap: 12px;
-    margin: 18px 0 0;
+    margin: 20px 0 0;
     padding-left: 1.1rem;
+    max-width: 54ch;
   }
   .steps b,
   .points b {
-    color: var(--fg);
+    color: var(--ink);
   }
   .points {
     list-style: none;
@@ -300,127 +496,97 @@ const updatedShots = 'August 2, 2026';
     border-radius: 50%;
     background: var(--grad);
   }
-  .updated {
-    margin-top: 22px;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
 
-  /* Screens.
-     Each capture sits beside the words it belongs to. The old page put all
-     seven in one scrolling strip at the top, which asked the reader to work out
-     for themselves what they were looking at — a picture with no sentence next
-     to it is decoration, not an explanation.
-
-     The page column is text-width, so these rows are allowed to break out of it
-     on a wide screen and come back to a single column on a phone. */
-  .product {
-    max-width: 78ch;
-  }
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  figure {
-    margin: 0;
-  }
-  figure img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 20px;
-    border: 1px solid var(--line);
-    background: #12100e;
-  }
-  figcaption {
-    margin-top: 12px;
-    color: var(--muted);
-    font-size: 0.86rem;
-    text-wrap: pretty;
-  }
-
-  /* The opening screen, sized so it reads as a phone rather than a poster. */
-  .hero-shot {
-    margin: 44px auto 0;
-    max-width: 280px;
-    text-align: center;
-  }
-
-  /* A feature: words on one side, the screen that proves them on the other. */
-  .feature {
-    display: grid;
-    gap: 30px;
-    align-items: center;
-    margin-top: 64px;
-    padding-top: 38px;
-    border-top: 1px solid var(--line);
-  }
-  .feature h2 {
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    margin-bottom: 18px;
-  }
-  .feature p {
-    color: var(--muted);
-    text-wrap: pretty;
-    margin-bottom: 14px;
-  }
-  .feature-shot {
-    max-width: 260px;
-    margin-inline: auto;
-  }
-  .feature-shot.wide-shot {
-    max-width: 420px;
-  }
-
-  /* Wide enough for two columns: alternate the side the picture lands on, so
-     the eye is not dragged down one rail. */
   @media (min-width: 900px) {
     .feature {
-      grid-template-columns: 1fr minmax(0, 300px);
-      gap: 56px;
+      grid-template-columns: 1fr minmax(0, 260px);
+      gap: 72px;
+      margin-top: 104px;
     }
+    /* Alternate the side the phone lands on, so the eye is not dragged down
+       one rail for the length of the page. */
     .feature.reverse {
-      grid-template-columns: minmax(0, 300px) 1fr;
+      grid-template-columns: minmax(0, 260px) 1fr;
     }
     .feature.reverse .feature-text {
       order: 2;
     }
-    .feature.reverse .feature-shot {
+    .feature.reverse .shot-wrap {
       order: 1;
-    }
-    .feature-shot {
-      max-width: none;
     }
   }
 
-  /* The landscape capture earns the full width — it is the one screen where the
-     whole point is that nothing else is on it. */
+  /* ---------- the landscape band ---------- */
+  /* The one screen whose whole point is that nothing else is on it, so it gets
+     the width to say so. */
   .band {
-    margin-top: 64px;
-    padding-top: 38px;
-    border-top: 1px solid var(--line);
+    margin: 104px 0 0;
     text-align: center;
   }
-  .band img {
-    border-radius: 16px;
+  .band .phone {
+    margin-inline: auto;
+    width: min(880px, 100%);
   }
   .band figcaption {
+    margin: 20px auto 0;
+    max-width: 54ch;
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-wrap: pretty;
+  }
+
+  /* ---------- text blocks ---------- */
+  .block {
+    margin-top: 64px;
+    padding-top: 34px;
+    border-top: 1px solid var(--line);
+  }
+  .block h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-bottom: 18px;
+  }
+  .block p {
+    color: var(--muted);
+    text-wrap: pretty;
+    margin-bottom: 14px;
+    max-width: 72ch;
+  }
+
+  /* ---------- closing card ---------- */
+  .mv section.closer {
+    margin-top: 72px;
+    padding: clamp(28px, 5vw, 52px);
+    border-radius: 26px;
+    border: 1px solid var(--line);
+    background: linear-gradient(150deg, var(--panel-2), var(--panel));
+    text-align: center;
+  }
+  .closer h2 {
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+    margin-bottom: 18px;
+  }
+  .closer p {
+    color: var(--muted);
+    text-wrap: pretty;
     margin-inline: auto;
     max-width: 56ch;
   }
-  @media (min-width: 1100px) {
-    .band {
-      width: min(1100px, 92vw);
-      margin-inline: calc(50% - min(550px, 46vw));
-    }
+  .closer-cta {
+    margin-top: 28px;
   }
+  .fine {
+    margin-top: 16px;
+    font-size: 0.85rem;
+  }
+
+  .updated {
+    margin-top: 40px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Reduced motion is honoured by the shared .phone transition; nothing here
+     animates on its own. */
 </style>

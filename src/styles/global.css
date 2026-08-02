@@ -262,6 +262,41 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 .screen .app{font-family:var(--font-d);font-weight:700;font-size:1.25rem;color:#fff;letter-spacing:-.01em;position:relative;z-index:2}
 .screen .sub{font-size:.68rem;color:rgba(255,255,255,.75);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;position:relative;z-index:2}
 
+/* ---------- a real capture inside a phone (shared) ---------- */
+/* The phones above hold hand-drawn CSS screens. This variant holds a photograph
+   of the app itself, and a real capture needs a real body or it reads as a
+   picture someone pasted onto a rectangle: a Galaxy is nearly all glass, so the
+   bezel thins right down, the shape is the 9/20 Samsung actually ships, and the
+   camera is a punch-hole rather than the notch pill the mockups wear. */
+.phone.shot{
+  width:100%;aspect-ratio:9/20;border-radius:34px;padding:5px;
+  background:linear-gradient(158deg,#26262f,#0a0a10 42%,#1a1a22);
+}
+.phone.shot::before{
+  top:13px;width:10px;height:10px;border-radius:50%;
+  background:#000;box-shadow:0 0 0 1px rgba(255,255,255,.09);
+}
+.phone.shot .screen-img{
+  display:block;width:100%;height:100%;border:0;border-radius:30px;
+  object-fit:cover;object-position:top center;background:#12100e;
+}
+/* Volume rocker and power key, both on the right edge where Samsung puts them.
+   One pseudo-element draws both — the second is a shadow of the first. */
+.phone.shot::after{
+  content:"";position:absolute;right:-2px;top:21%;width:2px;height:34px;
+  border-radius:0 3px 3px 0;background:linear-gradient(180deg,#3b3b46,#1b1b24);
+  box-shadow:0 52px 0 #2b2b34;
+}
+/* Held sideways: same body, turned. The camera moves to the left edge with it. */
+.phone.shot.land{aspect-ratio:20/9;border-radius:30px}
+.phone.shot.land::before{top:50%;left:13px;transform:translateY(-50%)}
+.phone.shot.land::after{
+  right:auto;left:21%;top:-2px;width:34px;height:2px;
+  border-radius:0 0 3px 3px;background:linear-gradient(90deg,#3b3b46,#1b1b24);
+  box-shadow:52px 0 0 #2b2b34;
+}
+.phone.shot.land .screen-img{border-radius:26px;object-position:center}
+
 /* eatstep screen: delivery rows (brand green) */
 .screen.eatstep{background:linear-gradient(185deg,#04231c 0%,#00614a 48%,#009e77 82%,#2fd7a4 100%)}
 .screen.eatstep .sunball{position:absolute;left:50%;top:30%;transform:translateX(-50%);width:70px;height:70px;border-radius:50%;background:linear-gradient(120deg,#2fd7a4,#ecfdf6);box-shadow:0 0 60px 14px rgba(47,215,164,.45)}
