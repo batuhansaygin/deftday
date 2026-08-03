@@ -232,19 +232,70 @@ h1 .serif,.serif{font-family:var(--font-s);font-style:italic;font-weight:400;let
 .stage{position:relative;width:min(270px,64vw);--chip-out:44px}
 @media(min-width:1200px){.stage{--chip-out:78px}}
 @media(min-width:1500px){.stage{--chip-out:104px}}
-@media(max-width:1020px){.hero-visual{display:none}}
+/* Below 1020px the grid stacks, so the slider sits under the studio pitch
+   rather than beside it. It used to be hidden here; the project slider is worth
+   showing on a phone, where a phone mockup reads especially naturally. */
+@media(max-width:1020px){
+  .hero-visual{margin-top:52px}
+  .stage{--chip-out:0px}
+}
 .hero-visual .float{animation:floaty 6s ease-in-out infinite alternate}
 @keyframes floaty{to{transform:translateY(-16px)}}
-.chip-float{
-  position:absolute;font-family:var(--font-d);font-weight:500;font-size:.78rem;letter-spacing:.04em;
-  background:rgba(14,14,21,.85);border:1px solid var(--line);border-radius:100px;
-  padding:10px 16px;backdrop-filter:blur(8px);white-space:nowrap;z-index:3;
-  box-shadow:0 20px 40px -20px rgba(0,0,0,.8);
+
+/* ---------- hero project slider ---------- */
+/* The phone frame stays put; only the screen inside it crossfades, so the tilt,
+   shadow and float never rebuild — the four projects swap behind one device. */
+.screen-stack{position:relative;width:100%;height:100%}
+.screen-stack .slide{
+  position:absolute;inset:0;opacity:0;transform:translateX(14px);
+  transition:opacity .55s ease,transform .55s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;
 }
-.chip-float b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.chip-float.c1{top:4%;left:calc(-1 * var(--chip-out));animation:floaty 5s .4s ease-in-out infinite alternate}
-.chip-float.c2{bottom:24%;right:calc(-1 * var(--chip-out));animation:floaty 7s .8s ease-in-out infinite alternate}
-.chip-float.c3{bottom:-4%;left:calc(-1 * var(--chip-out));animation:floaty 6s .2s ease-in-out infinite alternate}
+.screen-stack .slide.is-on{opacity:1;transform:none;pointer-events:auto}
+
+/* Captions sit below the phone. Stacked and crossfaded, so the block does not
+   jump height as the text changes — the tallest caption sets the box. */
+/* Wider than the 270px phone and centred under it, so a three-line description
+   does not become five. min-height fits the tallest caption so the dots below
+   never jump or collide as slides change. */
+.hero-caps{
+  position:relative;margin-top:26px;min-height:150px;
+  width:min(330px,82vw);margin-left:50%;transform:translateX(-50%);
+}
+.hero-cap{
+  position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;
+  text-align:center;align-items:center;text-decoration:none;color:inherit;
+  opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;
+  pointer-events:none;
+}
+.hero-cap.is-on{opacity:1;transform:none;pointer-events:auto}
+.cap-status{
+  font-size:.68rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);display:inline-flex;align-items:center;gap:7px;
+}
+.cap-status.live{color:var(--sun-text)}
+.cap-status.live::before{
+  content:"";width:7px;height:7px;border-radius:50%;background:var(--grad);
+  animation:pulse 1.6s ease-in-out infinite;
+}
+.hero-cap strong{font-family:var(--font-d);font-weight:700;font-size:1.4rem;letter-spacing:-.01em}
+.cap-code{
+  font-family:var(--font-b);font-size:.58rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);border:1px solid var(--line);
+  border-radius:100px;padding:4px 9px;margin-left:8px;vertical-align:middle;white-space:nowrap;
+}
+.cap-desc{color:var(--muted);font-size:.9rem;line-height:1.5;max-width:34ch;text-wrap:pretty}
+.cap-go{color:var(--sun-text);font-weight:600;white-space:nowrap}
+a.hero-cap:hover .cap-go{text-decoration:underline;text-underline-offset:3px}
+
+.hero-dots{display:flex;gap:10px;justify-content:center;margin-top:22px}
+.hero-dots .dot{
+  width:9px;height:9px;padding:0;border:0;border-radius:50%;cursor:pointer;
+  background:var(--line);transition:background .3s,width .3s,transform .3s;
+}
+.hero-dots .dot:hover{background:var(--muted)}
+.hero-dots .dot.is-on{width:26px;border-radius:100px;background:var(--grad)}
+.hero-dots .dot:focus-visible{outline:2px solid var(--sun2);outline-offset:3px}
 
 /* ---------- phones (shared) ---------- */
 .phone{

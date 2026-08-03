@@ -22,33 +22,132 @@
     </div>
   </div>
 
-  <!-- The chips label the phone they surround, so they live in .stage, which is
-       exactly as wide as the phone — not the whole grid column. -->
-  <div class="hero-visual rv d2" aria-hidden="true">
+  <!-- A slider through the studio's four projects. SkyBattleSea, the one that
+       is live, shows its real screen; the three in development stay under wraps
+       behind their codenames — a mockup gives a concept away as fast as a name.
+       Slide 0 is the live one, so with JS disabled the fallback is the product
+       that actually exists. -->
+  <div class="hero-visual rv d2">
     <div class="stage">
       <div class="float">
         <div class="phone tilt">
-          <!-- The hero shows the one product that is actually out. The rest are
-               unannounced, and a mockup gives a concept away as fast as a name. -->
-          <div class="screen sea">
-            <div class="waves"></div>
-            <span class="app">SkyBattleSea</span>
-            <span class="sub">Deathmatch</span>
-            <div class="arcade">
-              <div class="score">×<b>2 048</b></div>
-              <div class="track"></div>
+          <div class="screen-stack" aria-hidden="true">
+            <div class="screen sea slide is-on" data-screen>
+              <div class="waves"></div>
+              <span class="app">SkyBattleSea</span>
+              <span class="sub">Deathmatch</span>
+              <div class="arcade">
+                <div class="score">×<b>2 048</b></div>
+                <div class="track"></div>
+              </div>
+            </div>
+            <div class="screen wip slide" data-screen>
+              <span class="wip-no">Dawn</span><span class="wip-tag">Under wraps</span>
+            </div>
+            <div class="screen wip slide" data-screen>
+              <span class="wip-no">Noon</span><span class="wip-tag">Under wraps</span>
+            </div>
+            <div class="screen wip slide" data-screen>
+              <span class="wip-no">Dusk</span><span class="wip-tag">Under wraps</span>
             </div>
           </div>
         </div>
       </div>
-      <span class="chip-float c1"><b>●</b>&nbsp;SkyBattleSea — live now</span>
-      <span class="chip-float c2">iOS <b>+</b> Android <b>+</b> Web</span>
-      <span class="chip-float c3">Crafted <b>in-house</b></span>
+
+      <!-- The captions are real content, so this region is not aria-hidden. -->
+      <div class="hero-caps" aria-live="polite">
+        <a class="hero-cap is-on" href="https://skybattlesea.com" target="_blank" rel="noopener" data-cap>
+          <span class="cap-status live">Live now</span>
+          <strong>SkyBattleSea</strong>
+          <span class="cap-desc">Planes vs ships in a free browser battle — five modes, real multiplayer. <span class="cap-go">Play ↗</span></span>
+        </a>
+        <div class="hero-cap" data-cap>
+          <span class="cap-status">In development · Platform</span>
+          <strong>Dawn <span class="cap-code">codename</span></strong>
+          <span class="cap-desc">Three apps for the three people at either end of one everyday transaction, on one shared core.</span>
+        </div>
+        <div class="hero-cap" data-cap>
+          <span class="cap-status">In development · App</span>
+          <strong>Noon <span class="cap-code">codename</span></strong>
+          <span class="cap-desc">Built against a three-second stopwatch. Everything else asks what you want; this one thinks the asking is the problem.</span>
+        </div>
+        <div class="hero-cap" data-cap>
+          <span class="cap-status">Coming soon · App</span>
+          <strong>Dusk <span class="cap-code">codename</span></strong>
+          <span class="cap-desc">Ends a nightly household negotiation in one tap, fully offline — everything it needs is already on the phone.</span>
+        </div>
+      </div>
+
+      <div class="hero-dots" role="tablist" aria-label="Choose a project">
+        <button class="dot is-on" type="button" role="tab" aria-selected="true" aria-label="SkyBattleSea" data-dot></button>
+        <button class="dot" type="button" role="tab" aria-selected="false" aria-label="Dawn, in development" data-dot></button>
+        <button class="dot" type="button" role="tab" aria-selected="false" aria-label="Noon, in development" data-dot></button>
+        <button class="dot" type="button" role="tab" aria-selected="false" aria-label="Dusk, coming soon" data-dot></button>
+      </div>
     </div>
   </div>
 
   <div class="scroll-cue" aria-hidden="true"><i></i><span>Scroll</span></div>
 </header>
+
+<script>
+  /* Hero project slider. Crossfades the phone screen, the caption and the dots
+     together. Auto-advances only when motion is allowed and only while the tab
+     is visible and the pointer is away; the dots always work regardless. With
+     no JS the markup already shows slide 0 (SkyBattleSea, the live one). */
+  {
+    const stage = document.querySelector('.hero-visual .stage');
+    if (stage) {
+      const screens = [...stage.querySelectorAll('[data-screen]')];
+      const caps = [...stage.querySelectorAll('[data-cap]')];
+      const dots = [...stage.querySelectorAll<HTMLButtonElement>('[data-dot]')];
+      const count = Math.min(screens.length, caps.length, dots.length);
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let i = 0;
+      let timer: ReturnType<typeof setInterval> | null = null;
+
+      const show = (n: number) => {
+        i = (n + count) % count;
+        screens.forEach((el, k) => el.classList.toggle('is-on', k === i));
+        caps.forEach((el, k) => el.classList.toggle('is-on', k === i));
+        dots.forEach((el, k) => {
+          el.classList.toggle('is-on', k === i);
+          el.setAttribute('aria-selected', k === i ? 'true' : 'false');
+        });
+      };
+
+      const stop = () => {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      };
+      const start = () => {
+        if (reduced || timer) return;
+        timer = setInterval(() => show(i + 1), 5000);
+      };
+
+      dots.forEach((dot, k) =>
+        dot.addEventListener('click', () => {
+          show(k);
+          stop();
+          start(); /* restart the clock so a manual pick gets its full dwell */
+        })
+      );
+
+      /* Pause while hovered or focused, and while the tab is hidden. */
+      stage.addEventListener('pointerenter', stop);
+      stage.addEventListener('pointerleave', start);
+      stage.addEventListener('focusin', stop);
+      stage.addEventListener('focusout', start);
+      document.addEventListener('visibilitychange', () =>
+        document.hidden ? stop() : start()
+      );
+
+      start();
+    }
+  }
+</script>
 
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track">
