@@ -1,0 +1,82 @@
+---
+import Base from '../../layouts/Base.astro';
+
+/*
+ * The OAuth landing for Munchview's account connections.
+ *
+ * Twitch refuses custom-scheme redirect URIs outright ("Redirect URIs must
+ * use HTTPS protocol"), so every platform console registers this one HTTPS
+ * address instead, and this page's only job is to hand the authorisation
+ * response straight to the app: it forwards the full query and fragment to
+ * com.munchview.app://oauthredirect, untouched and unread. Nothing here is
+ * parsed, stored or sent anywhere — the codes and tokens in the URL pass
+ * through this page's JavaScript and go nowhere else.
+ *
+ * The button exists for the browsers that block an automatic custom-scheme
+ * navigation: the person taps once and lands in the app.
+ */
+---
+
+<Base
+  title="Opening Munchview…"
+  description="Finishing a platform connection and returning to the Munchview app."
+  noindex
+>
+  <main class="bounce" id="main">
+    <img src="/munchview/icon-512.png" alt="" width="72" height="72" class="mark" />
+    <h1>Opening Munchview…</h1>
+    <p>Finishing the connection and returning to the app.</p>
+    <p><a class="cta" id="open" href="com.munchview.app://oauthredirect">Open Munchview</a></p>
+    <p class="fine">
+      Nothing from this address is stored or sent anywhere — it is handed
+      straight to the app on your phone.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .bounce {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 14px;
+    padding: 140px var(--gutter) 60px;
+  }
+  .mark {
+    border-radius: 18px;
+  }
+  .bounce h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+  }
+  .bounce p {
+    color: var(--muted);
+    max-width: 46ch;
+    text-wrap: pretty;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 46px;
+    padding: 0 24px;
+    border-radius: 100px;
+    background: var(--grad);
+    color: #1a0f08;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .fine {
+    font-size: 0.82rem;
+  }
+</style>
+
+<script>
+  // Forward the platform's answer to the app, exactly as it arrived. Both the
+  // query (code flows) and the fragment (token flows) are preserved.
+  const target = 'com.munchview.app://oauthredirect' + location.search + location.hash;
+  const open = document.getElementById('open') as HTMLAnchorElement | null;
+  if (open) open.href = target;
+  location.replace(target);
+</script>
