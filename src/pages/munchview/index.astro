@@ -6,29 +6,27 @@ import Footer from '../../components/Footer.astro';
 /* Kept honest on purpose: the app is on a closed test track, not in the store.
    The day it is public, the badge and this line change together. */
 const status = 'In closed testing on Google Play';
-const updated = 'August 2, 2026';
+const updated = 'August 7, 2026';
 
-/* Real captures from the release build, whole screens rather than crops, each
-   sitting in a phone beside the words it belongs to. A cropped fragment with no
-   sentence next to it is decoration; it never told anyone what they were
-   looking at. */
-const updatedShots = 'August 2, 2026';
+/* Real captures from the release build of 1.2.18, whole screens rather than
+   crops. The film in the hero is one continuous screen recording of the same
+   build — open, tap, watching — cut with title cards and nothing staged. */
+const updatedShots = 'August 7, 2026';
 
 /* The three things worth knowing before any feature. Kept as data so the strip
    cannot drift out of step with itself. */
 const proof = [
   { n: '3s', label: 'from opening it to watching' },
+  { n: '6', label: 'platforms, one calm player' },
   /* "in the app" is load-bearing: this page itself is measured, cookielessly,
-     and the studio privacy page says so. The strip claims something about
-     Munchview, so it has to name what it is claiming about. */
+     and the studio privacy page says so. */
   { n: '0', label: 'ads, trackers or analytics in the app' },
-  { n: '∞', label: 'feed to scroll — there is none' },
 ];
 ---
 
 <Base
   title="Munchview — say how long you have, and watch"
-  description="Munchview starts a good YouTube video that fits the time you have — a lunch break, a study session, something on in the workshop, winding down. No feed, no browsing. Android, in closed testing."
+  description="Munchview starts a good video that fits the time you have — a lunch break, a study session, something on in the workshop, winding down. Six platforms, one player, no feed. Android, in closed testing."
 >
   <SiteChrome />
   <div class="sky" aria-hidden="true">
@@ -37,7 +35,9 @@ const proof = [
   <div class="progress" aria-hidden="true"></div>
 
   <main id="main" class="mv">
-    <!-- Hero: the promise on one side, the screen that keeps it on the other. -->
+    <!-- Hero: the promise on one side; on the other, a film of the app
+         keeping it. Muted, looping, twelve seconds, captions burned in — it
+         works exactly like the demo clip Play will get. -->
     <section class="hero-2" aria-labelledby="top">
       <div class="hero-copy">
         <span class="eyebrow">Munchview · Android</span>
@@ -57,16 +57,20 @@ const proof = [
 
       <div class="hero-phone">
         <div class="phone shot">
-          <img
+          <video
             class="screen-img"
-            src="/munchview/shots/hero-home.webp"
-            alt="The Munchview home screen: the question “How long have you got?”, three length presets with about twenty minutes chosen, and one large amber Press to watch button."
+            src="/munchview/demo.mp4"
+            poster="/munchview/shots/demo-poster.webp"
             width="648"
             height="1440"
-            loading="eager"
-            decoding="async"
-          />
+            autoplay
+            muted
+            loop
+            playsinline
+            aria-label="A twelve-second screen recording: the Munchview home screen asks how long you have, a thumb presses the watch button, and a video is playing three seconds later."
+          ></video>
         </div>
+        <p class="cap">A real recording of the app — open, one press, watching.</p>
       </div>
     </section>
 
@@ -90,20 +94,57 @@ const proof = [
           <li><b>Say how long.</b> A preset, or any length you like.</li>
           <li><b>Watch.</b> It is already playing.</li>
         </ol>
+        <p>
+          Under the player, "related to this" really means it — more of the
+          programme you are watching, and the same subject from the other
+          platforms, never six thumbnails from one channel.
+        </p>
       </div>
       <div class="shot-wrap">
         <div class="phone shot">
           <img
             class="screen-img"
             src="/munchview/shots/player-feed.webp"
-            alt="A documentary playing at the top of the Munchview player, with a list of further videos to watch next underneath it."
+            alt="A cooking video playing at the top of the Munchview player. The related list underneath mixes YouTube videos with ones marked Dailymotion and PeerTube."
             width="648"
             height="1440"
             loading="lazy"
             decoding="async"
           />
         </div>
-        <p class="cap">Playing immediately — and what to watch next, already lined up.</p>
+        <p class="cap">Playing immediately — and what to watch next, from more than one place.</p>
+      </div>
+    </section>
+
+    <section class="feature reverse" aria-labelledby="platforms">
+      <div class="feature-text">
+        <span class="kicker">Six platforms, one player</span>
+        <h2 id="platforms">The whole open web of video</h2>
+        <p>
+          YouTube, Vimeo, Dailymotion, Twitch, PeerTube and the Internet
+          Archive — one warm, calm player for all of them. Every video plays
+          inside the app, and every card is marked with its platform's logo, so
+          you know where a thing lives before you tap it.
+        </p>
+        <p>
+          Pick the platforms you want in Settings, or let them all in. Paste
+          any video link and it opens in the best player for it — nothing is
+          handed off to a browser.
+        </p>
+      </div>
+      <div class="shot-wrap">
+        <div class="phone shot">
+          <img
+            class="screen-img"
+            src="/munchview/shots/anyplayer.webp"
+            alt="A Dailymotion cooking video inside Munchview's own amber player, with the app's controls over it: skip five seconds either way, next and previous, like and settings."
+            width="648"
+            height="1440"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="cap">A Dailymotion video, in Munchview's own player. Same controls everywhere.</p>
       </div>
     </section>
 
@@ -112,7 +153,7 @@ const proof = [
         <img
           class="screen-img"
           src="/munchview/shots/fullscreen.webp"
-          alt="A wildlife documentary filling an Android phone held sideways, with no controls or chrome over the picture at all."
+          alt="A PeerTube video filling an Android phone held sideways, with no controls or chrome over the picture at all."
           width="1440"
           height="648"
           loading="lazy"
@@ -125,38 +166,6 @@ const proof = [
       </figcaption>
     </figure>
 
-    <section class="feature reverse" aria-labelledby="shorts">
-      <div class="feature-text">
-        <span class="kicker">Short breaks</span>
-        <h2 id="shorts">A minute, not an evening</h2>
-        <p>
-          Some breaks are ninety seconds long. Shorts are here too, chosen by the
-          same taste as everything else — swipe up for the next one, down for the
-          last, sideways to leave. Autoplay is a switch, not a decision made for
-          you.
-        </p>
-        <p>
-          The controls are the ones you already know from the full player: skip
-          five seconds either way, a scrub bar, like and not-for-me. One tap
-          brings them up, one tap takes them away.
-        </p>
-      </div>
-      <div class="shot-wrap">
-        <div class="phone shot">
-          <img
-            class="screen-img"
-            src="/munchview/shots/shorts.webp"
-            alt="A wildlife short playing in Munchview, with next, like, not-for-me, settings and previous controls stacked down the right edge and a scrub bar along the bottom."
-            width="648"
-            height="1440"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <p class="cap">Vertical clips, the same controls, no separate app to learn.</p>
-      </div>
-    </section>
-
     <section class="feature" aria-labelledby="picks">
       <div class="feature-text">
         <span class="kicker">Taste, worked out on the phone</span>
@@ -164,8 +173,9 @@ const proof = [
         <p>
           What it plays is ranked from what you have told it: the categories you
           chose, the length you asked for, the channels you liked, the ones you
-          turned down, and what you have already been shown so the same few
-          videos do not come round again. All of it is worked out on the phone.
+          turned down, and what you have already seen — so the same few videos
+          do not come round again, and what you have already watched goes to
+          the back of every row. All of it is worked out on the phone.
         </p>
         <ul class="points">
           <li>
@@ -173,20 +183,18 @@ const proof = [
             wherever you are, so it offers what people there actually watch.
           </li>
           <li>
-            <b>Type a show, keep it as a tag.</b> Write the name of something you
-            like and it joins the mix, matched to the length you asked for.
+            <b>Type a show, keep it as a tag.</b> Write the name of something
+            you like and it joins the mix — found on every platform that has
+            it, matched to the length you asked for.
+          </li>
+          <li>
+            <b>Short breaks too.</b> A Shorts row for the ninety-second pauses,
+            picked by the same taste as everything else. Autoplay is a switch,
+            not a decision made for you.
           </li>
           <li>
             <b>Pick up where you stopped.</b> Everything you started keeps its
             place, with an amber line on the picture showing how far you got.
-          </li>
-          <li>
-            <b>Not only YouTube.</b> Dailymotion, Vimeo and Twitch are in the
-            feed too, marked so you know before you tap which player opens.
-          </li>
-          <li>
-            <b>Paste any link.</b> Anything you paste plays inside the app, in
-            the best player for it. Nothing is handed off to a browser.
           </li>
         </ul>
       </div>
@@ -195,48 +203,47 @@ const proof = [
           <img
             class="screen-img"
             src="/munchview/shots/discover.webp"
-            alt="The Munchview home screen scrolled down: a Continue watching row showing time remaining, a row of Shorts, category chips, and a box for pasting any video link."
+            alt="The Munchview home screen scrolled down: a Continue watching row with a PeerTube video and time remaining, and a Discover list labelled 'from what you actually watch'."
             width="648"
             height="1440"
             loading="lazy"
             decoding="async"
           />
         </div>
-        <p class="cap">Continue watching, Shorts, your categories, and a box for any link.</p>
+        <p class="cap">Continue watching, and a Discover list built from what you finish.</p>
       </div>
     </section>
 
-    <section class="feature reverse" aria-labelledby="youtube">
+    <section class="feature reverse" aria-labelledby="connections">
       <div class="feature-text">
         <span class="kicker">Optional, and read-only</span>
-        <h2 id="youtube">Your YouTube likes — kept separate</h2>
+        <h2 id="connections">Connections, told straight</h2>
         <p>
-          Connect your YouTube account and the videos you liked there come in as
-          <em>their own list</em>. They are never mixed into Munchview's own
-          likes, because the recommendations are built from what you like
-          <em>here</em> — and you should always be able to tell which app thought
-          what.
+          Bring the videos you already liked on a platform into your picks.
+          YouTube offers this today: one button, read-only, and the imported
+          likes stay <em>their own list</em> — never mixed into Munchview's,
+          because you should always be able to tell which app thought what.
         </p>
         <p>
-          Munchview never likes, subscribes, comments or changes anything on your
-          account, and it cannot read your YouTube watch history — no app can,
-          since YouTube stopped providing it. Disconnect removes the imported
-          list from the phone.
+          The other five platforms are listed with the honest reason each one
+          cannot connect yet. Munchview never likes, subscribes, comments or
+          changes anything on your account, and disconnecting removes the
+          imported list from the phone.
         </p>
       </div>
       <div class="shot-wrap">
         <div class="phone shot">
           <img
             class="screen-img"
-            src="/munchview/shots/youtube.webp"
-            alt="Munchview's settings screen: a Continue with Google button, and below it a full-width red Connect YouTube button with a line explaining that the imported likes stay a separate list."
+            src="/munchview/shots/connections.webp"
+            alt="Munchview's Connections screen: a Connect YouTube button, and below it Twitch, Vimeo, Dailymotion, PeerTube and Internet Archive, each with a plain sentence explaining why it cannot connect yet."
             width="648"
             height="1440"
             loading="lazy"
             decoding="async"
           />
         </div>
-        <p class="cap">One button in Settings. Read-only, and reversible.</p>
+        <p class="cap">Six platforms, and a plain sentence of truth for each.</p>
       </div>
     </section>
 
@@ -257,9 +264,9 @@ const proof = [
           Munchview is not funded by advertising, so it is not built to watch
           you. As a guest it collects nothing at all: what you like, skip and
           save stays on the phone. Signing in with Google is optional and does
-          exactly one thing — carries that to a second phone. It asks Google only
-          who you are; connecting YouTube is a separate choice you make yourself,
-          and it only ever reads.
+          exactly one thing — carries that to a second phone, and one tap wipes
+          what it stored. It asks Google only who you are; connecting YouTube
+          is a separate choice you make yourself, and it only ever reads.
         </p>
         <p>
           <a href="/munchview/privacy">Read the full privacy policy<span aria-hidden="true"> →</span></a>
@@ -288,7 +295,7 @@ const proof = [
       </p>
     </section>
 
-    <p class="updated">Last updated: {updated} · Screens captured {updatedShots}</p>
+    <p class="updated">Last updated: {updated} · Screens and film captured {updatedShots}</p>
   </main>
 
   <Footer />
@@ -381,6 +388,16 @@ const proof = [
     background: radial-gradient(closest-side, rgba(255, 92, 56, 0.24), transparent);
     filter: blur(6px);
     z-index: -1;
+  }
+  /* The film sits in the same frame the stills use; the element differs, the
+     look must not. */
+  .hero-phone video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .hero-phone .cap {
+    margin-top: 14px;
   }
 
   @media (min-width: 900px) {
@@ -480,6 +497,9 @@ const proof = [
     margin: 20px 0 0;
     padding-left: 1.1rem;
     max-width: 54ch;
+  }
+  .steps {
+    margin-bottom: 14px;
   }
   .steps b,
   .points b {
@@ -594,6 +614,29 @@ const proof = [
     text-transform: uppercase;
   }
 
-  /* Reduced motion is honoured by the shared .phone transition; nothing here
-     animates on its own. */
+  /* The film is the one thing on the page that moves; under reduced motion it
+     must not. The poster stays, which is the same first frame. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-phone video {
+      display: none;
+    }
+    .hero-phone .phone::after {
+      content: '';
+      display: block;
+      width: 100%;
+      aspect-ratio: 648 / 1440;
+      background: url('/munchview/shots/demo-poster.webp') center / cover no-repeat;
+      border-radius: inherit;
+    }
+  }
 </style>
+
+<script>
+  // Reduced motion: never autoplay the film. The CSS hides it; this also
+  // stops the download and the playback for browsers that got that far.
+  const video = document.querySelector<HTMLVideoElement>('.hero-phone video');
+  if (video && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    video.removeAttribute('autoplay');
+    video.pause();
+  }
+</script>

@@ -5,7 +5,7 @@ import Footer from '../../components/Footer.astro';
 
 /* Mirrors munchview's store/privacy-policy.md, which is the source of truth
    and the text the Play listing is checked against. Change it there first. */
-const updated = 'July 28, 2026';
+const updated = 'August 7, 2026';
 ---
 
 <Base
@@ -161,23 +161,29 @@ const updated = 'July 28, 2026';
 
       <h2 id="other-platforms">Videos from other platforms</h2>
       <p>
-        Not everything in the feed comes from YouTube. Some cards come from
-        Dailymotion, Vimeo or Twitch, and they play in that platform's own
-        embedded player inside the app — the card says which one before you tap
-        it. Their thumbnails load from their image servers the same way
-        YouTube's do.
+        Not everything in the feed comes from YouTube. Cards can come from
+        Dailymotion, Vimeo, Twitch, PeerTube or the Internet Archive, and each
+        plays inside the app — the card says which platform before you tap it.
+        Their thumbnails load from their image servers the same way YouTube's
+        do.
       </p>
       <p>
         Searching is done by our content service, not by your phone, so those
         platforms never see a search of yours. What they do see is the request
         for a thumbnail or a player, exactly as a browser would send it — no
-        account, no identifier and no history goes with it. Once one of their
-        players is open, that platform's own terms and privacy policy apply:
+        account, no identifier and no history goes with it. PeerTube is many
+        independently run sites rather than one company, so the request goes to
+        the site that hosts that video and its own policy applies; Internet
+        Archive videos load as a plain file from archive.org. Once a video is
+        playing, the platform's own terms and privacy policy apply:
         <a href="https://www.dailymotion.com/legal/privacy" target="_blank" rel="noopener">Dailymotion</a>
         ·
         <a href="https://vimeo.com/privacy" target="_blank" rel="noopener">Vimeo</a>
         ·
-        <a href="https://www.twitch.tv/p/legal/privacy-notice/" target="_blank" rel="noopener">Twitch</a>.
+        <a href="https://www.twitch.tv/p/legal/privacy-notice/" target="_blank" rel="noopener">Twitch</a>
+        ·
+        <a href="https://archive.org/about/terms.php" target="_blank" rel="noopener">Internet Archive</a>
+        · the hosting PeerTube site's own policy.
       </p>
     </section>
 
