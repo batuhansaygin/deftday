@@ -1,0 +1,109 @@
+---
+import Base from '../../layouts/Base.astro';
+
+/*
+ * Where a shared Munchview link lands.
+ *
+ * The app shares https://deftday.com/munchview/v?u=<platform URL>&t=<title>.
+ * With Munchview installed, "Open in Munchview" hands the URL to the app's
+ * own scheme and the video plays there; without it, the page explains what
+ * Munchview is, links the store listing, and still lets the person watch on
+ * the platform — a shared link must never be a dead end. Nothing here is
+ * stored or sent anywhere; both parameters live only in the address bar.
+ */
+---
+
+<Base
+  title="Watch with Munchview"
+  description="A video shared from Munchview — open it in the app, or watch it on its platform."
+  noindex
+>
+  <main class="share" id="main">
+    <img src="/munchview/icon-512.png" alt="" width="72" height="72" class="mark" />
+    <h1 id="t">A video, shared with you</h1>
+    <p class="sub">Say how long you have — Munchview plays something good that fits. No feed, no scrolling.</p>
+    <p class="actions">
+      <a class="cta" id="open" href="/munchview">Open in Munchview</a>
+      <a class="cta ghost" id="watch" href="/munchview" rel="noopener nofollow">Watch on the platform</a>
+    </p>
+    <p class="fine">
+      Munchview is in closed testing on Google Play —
+      <a href="/munchview">learn more and join</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .share {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 14px;
+    padding: 140px var(--gutter) 60px;
+  }
+  .mark {
+    border-radius: 18px;
+  }
+  .share h1 {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    max-width: 26ch;
+    text-wrap: balance;
+  }
+  .sub {
+    color: var(--muted);
+    max-width: 46ch;
+    text-wrap: pretty;
+  }
+  .actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 46px;
+    padding: 0 24px;
+    border-radius: 100px;
+    background: var(--grad);
+    color: #1a0f08;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .cta.ghost {
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid var(--line);
+  }
+  .fine {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .fine a {
+    color: inherit;
+  }
+</style>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const u = params.get('u');
+  const t = params.get('t');
+  if (t) {
+    const h = document.getElementById('t');
+    if (h) h.textContent = t;
+    document.title = `${t} — Munchview`;
+  }
+  if (u && /^https?:\/\//.test(u)) {
+    const open = document.getElementById('open') as HTMLAnchorElement | null;
+    const watch = document.getElementById('watch') as HTMLAnchorElement | null;
+    const appUrl =
+      'com.munchview.app://open?' +
+      new URLSearchParams({ u, ...(t ? { t } : {}) }).toString();
+    if (open) open.href = appUrl;
+    if (watch) watch.href = u;
+  }
+</script>
