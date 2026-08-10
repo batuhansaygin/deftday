@@ -48,8 +48,11 @@ const updated = 'August 7, 2026';
         comes from and keeps short-lived operational logs, a few days, for
         reliability and abuse prevention. We do not use that to identify you, we
         do not build a profile, and we do not sell or share it. The service
-        stores no per-user data at all — its cache is keyed by category or
-        keyword, never by person.
+        content cache is keyed by category or keyword, never by person. Two
+        things on the service are not that cache, and both are named here
+        rather than hidden behind an absolute: an abuse counter that holds the
+        request's IP address for 120 seconds, and — only if you sign in — the
+        sync record described below, stored under your Google account id.
       </p>
     </section>
 
@@ -202,8 +205,12 @@ const updated = 'August 7, 2026';
       <p>
         Munchview is not aimed at children and asks for no personal details from
         anyone. Used as a guest — which is how it works unless you choose
-        otherwise — it collects nothing at all. Signing in requires a Google
-        account, which Google already age-restricts.
+        otherwise — it asks for nothing about you and creates no
+        account. What still reaches the service is small and named: the country
+        the edge sees, the 120-second abuse counter, an error line if something
+        breaks, and the text you type into the tag box, which the service
+        forwards to a search-suggestion endpoint on your behalf. Signing in
+        requires a Google
       </p>
     </section>
 
