@@ -1,0 +1,282 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteChrome from '../components/SiteChrome.astro';
+import Footer from '../components/Footer.astro';
+
+/*
+ * The studio's terms — one document for every DeftDay app.
+ *
+ * Each app had, at most, a short page of its own. That leaves gaps the moment
+ * an app sells something or stores something, and a gap is what gets an app
+ * pulled. This covers all of them: who we are, what we sell and who sells it,
+ * whose content you are watching, what we do not promise, and what you keep
+ * whatever this page says.
+ *
+ * Written to be read. A wall of boilerplate is not protection — an unfair or
+ * unreadable term is void under EU and Turkish consumer law, so overreaching
+ * costs more than it buys. Where the law gives someone a right, this says so
+ * plainly rather than trying to sign it away.
+ */
+const updated = 'August 9, 2026';
+const apps = 'Munchview, EatStep, and the other apps published by DeftDay Studio';
+---
+
+<Base
+  title="Terms of Use — DeftDay Studio"
+  description="The terms that apply to every DeftDay app: what you may do with them, who sells subscriptions, whose content you are watching, and the rights you keep whatever this page says."
+>
+  <SiteChrome />
+
+  <main class="legal" id="main">
+    <p class="eyebrow">DeftDay Studio</p>
+    <h1>Terms of Use</h1>
+    <p class="lede">
+      These terms cover {apps}, and this website. They are written to be read:
+      if something here is unclear, write to us and we will say what it means.
+    </p>
+    <p class="updated">Last updated {updated}</p>
+
+    <h2>1. Who you are agreeing with</h2>
+    <p>
+      DeftDay Studio is run by Batuhan Saygın, in İzmir, Türkiye. Our contact
+      address for anything in this document is
+      <a href="mailto:legal@deftday.com">legal@deftday.com</a>. We publish our
+      apps as a trader, and our full identity and contact details are shown on
+      our developer page in each app store.
+    </p>
+
+    <h2>2. Using our apps</h2>
+    <p>
+      You may use our apps on any device you own or control, for as long as you
+      like. You may not resell them, rent them out, or present them as your own
+      work; you may not take them apart to rebuild them as a competing product,
+      except to the extent the law expressly allows regardless of this
+      sentence. You may not use them to break the law or someone else's rights.
+    </p>
+    <p>
+      You need to be old enough to agree to terms where you live. If you are
+      not, a parent or guardian has to agree on your behalf.
+    </p>
+
+    <h2>3. Content that is not ours</h2>
+    <p>
+      Some of our apps show or play material from other services — YouTube,
+      Dailymotion, Vimeo, Twitch, PeerTube instances, the Internet Archive, and
+      others. That material belongs to whoever made it or to the platform
+      hosting it. We do not host it, edit it, choose it on their behalf, or
+      claim any right over it, and playing it inside our app does not change
+      whose it is.
+    </p>
+    <p>
+      When a platform's own player is used, that platform's terms and privacy
+      policy apply to what happens inside it — including
+      <a href="https://www.youtube.com/t/terms" rel="noopener">YouTube's Terms of Service</a>
+      and, for anything Google does with the data,
+      <a href="https://policies.google.com/privacy" rel="noopener">Google's Privacy Policy</a>.
+      Advertising shown by those players is theirs, not ours; we neither insert
+      it nor take a share of it.
+    </p>
+    <p>
+      If you believe something reachable through one of our apps infringes your
+      rights, tell us at <a href="mailto:legal@deftday.com">legal@deftday.com</a>
+      and we will act on it and pass it to the platform that hosts it.
+    </p>
+
+    <h2>4. Paid features</h2>
+    <p>
+      Some apps offer a paid tier. <strong>You buy it from the app store, not
+      from us</strong> — Google Play or the Apple App Store is the seller of
+      record. They take the payment, issue the receipt, and hold the
+      subscription. That means:
+    </p>
+    <ul>
+      <li>
+        Subscriptions renew automatically until you cancel them, and you cancel
+        them in the store, not in our app. Cancelling stops the next renewal;
+        it does not shorten the period you have already paid for.
+      </li>
+      <li>
+        Refunds follow the store's policy, and the store decides them. We will
+        support a request you make to them, but we cannot issue a refund for a
+        purchase we did not take.
+      </li>
+      <li>
+        Prices are shown in your own currency and include the taxes the store
+        applies where you live. We may change prices for future periods; a
+        change never applies to a period you have already paid for, and the
+        store notifies you of a subscription price change before it takes
+        effect.
+      </li>
+      <li>
+        A one-off purchase (where an app offers one) is exactly that: paid
+        once, kept, no renewal.
+      </li>
+    </ul>
+    <p class="callout">
+      <strong>If you are a consumer in the EU, the EEA, the UK or Türkiye</strong>
+      you have a statutory right to withdraw from a distance purchase within 14
+      days. Where digital content or a service starts immediately at your
+      request and you acknowledge that, that right can end early — which is how
+      the app stores present it at the moment of purchase. Nothing in this
+      section removes a right the law gives you.
+    </p>
+
+    <h2>5. Accounts and your data</h2>
+    <p>
+      Most of what our apps do needs no account at all. Where an app does let
+      you sign in, you can delete that account and everything stored for it
+      from inside the app, permanently — and if you would rather not open the
+      app, from a page on this site. Deleting is deleting: we do not keep a
+      shadow copy.
+    </p>
+    <p>
+      What each app collects, and what it does not, is set out in our
+      <a href="/privacy">Privacy Policy</a>, which is part of these terms. The
+      short version, true of every app we publish: no advertising, no
+      analytics, no tracking, and nothing sold or shared with anyone.
+    </p>
+
+    <h2>6. What we do not promise</h2>
+    <p>
+      We build these apps carefully and we use them ourselves, but we offer
+      them as they are. We do not promise that an app will be available without
+      interruption, that a third-party platform will keep serving the content
+      it serves today, or that an app will suit a particular purpose you have
+      in mind. Suggestions an app makes — what to watch, how long something
+      takes — are suggestions, not advice.
+    </p>
+    <p>
+      Nothing in our apps is medical, financial, legal or professional advice.
+      Where an app helps you track something about yourself, it is a tool for
+      your own use and not a diagnosis.
+    </p>
+
+    <h2>7. Liability</h2>
+    <p>
+      To the extent the law allows, we are not liable for indirect or
+      consequential loss, for lost data you had another way of keeping, or for
+      what a third-party platform does inside its own player. Where we are
+      liable, our liability is limited to what you paid us for the app in the
+      twelve months before the claim.
+    </p>
+    <p class="callout">
+      <strong>What we never limit:</strong> liability for death or personal
+      injury caused by our negligence, for fraud, or for anything else the law
+      of your country does not allow to be limited. If you are a consumer, your
+      statutory rights stand whatever this page says, and where a term here
+      conflicts with them, they win.
+    </p>
+
+    <h2>8. Changes, and ending</h2>
+    <p>
+      We may update an app, change what it does, or stop publishing it. If we
+      discontinue an app you have paid for, we will say so in advance through
+      the store and, where a paid period is still running, work with the store
+      on a fair outcome.
+    </p>
+    <p>
+      We may update these terms — to follow a change in the law, or because an
+      app now does something these terms do not cover. The date at the top
+      always says when. If a change materially affects you, we will say so in
+      the app or on this site rather than quietly swapping the page. You can
+      stop agreeing at any time by uninstalling the app.
+    </p>
+
+    <h2>9. Law, and where a dispute goes</h2>
+    <p>
+      These terms are governed by Turkish law. If you are a consumer, this does
+      not take away the protection of the mandatory law of the country you live
+      in, and you may bring a claim in your own local courts.
+    </p>
+    <p>
+      Consumers in Türkiye may apply to the Consumer Arbitration Committee
+      (<i lang="tr">Tüketici Hakem Heyeti</i>) or the Consumer Court where they
+      live. Consumers in the EU may use the European Commission's online
+      dispute resolution platform. We would much rather hear from you first:
+      <a href="mailto:legal@deftday.com">legal@deftday.com</a>, and we answer.
+    </p>
+
+    <h2>10. The rest</h2>
+    <p>
+      If one part of these terms turns out to be unenforceable, the rest still
+      stands. Not enforcing something once does not mean giving it up. These
+      terms, with the Privacy Policy, are the whole agreement between us about
+      our apps.
+    </p>
+
+    <p class="sign">
+      Written in plain language on purpose. If any of it reads as a trick, that
+      was not the intent — tell us and we will fix the wording.
+    </p>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .legal {
+    width: min(72ch, calc(100% - var(--gutter) * 2));
+    margin: 0 auto;
+    padding: 140px 0 80px;
+  }
+  .eyebrow {
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .legal h1 {
+    font-size: clamp(2rem, 6vw, 3rem);
+    margin: 8px 0 16px;
+    text-wrap: balance;
+  }
+  .lede {
+    font-size: 1.1rem;
+    color: var(--fg);
+    text-wrap: pretty;
+  }
+  .updated {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+  .legal h2 {
+    margin: 48px 0 12px;
+    font-size: 1.25rem;
+    text-wrap: balance;
+  }
+  .legal p,
+  .legal li {
+    color: var(--muted);
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+  .legal p + p {
+    margin-top: 12px;
+  }
+  .legal ul {
+    margin: 12px 0 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 10px;
+  }
+  .legal strong {
+    color: var(--fg);
+  }
+  .legal a {
+    color: var(--fg);
+  }
+  .callout {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+  .sign {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+</style>
