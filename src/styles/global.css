@@ -606,6 +606,17 @@ footer{border-top:1px solid var(--line);padding:70px var(--pad-x) 40px;overflow:
   display:inline-flex;align-items:center;min-height:44px;padding:0 2px;transition:color .3s;
 }
 .foot-nav a:hover{color:var(--ink)}
+/* Second row: the legal documents. Same target size, quieter type, so the
+   sections stay the primary navigation and these stay findable. */
+.foot-legal{
+  display:flex;justify-content:center;gap:4px 24px;flex-wrap:wrap;
+  margin-top:6px;
+}
+.foot-legal a{
+  font-family:var(--font-b);font-size:.8rem;color:var(--muted);
+  display:inline-flex;align-items:center;min-height:44px;padding:0 2px;transition:color .3s;
+}
+.foot-legal a:hover{color:var(--ink)}
 .foot-meta{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px 16px;color:var(--muted);font-size:.8rem;margin-top:34px}
 .foot-meta>:nth-child(2){justify-self:center}
 .foot-meta>:nth-child(3){justify-self:end;text-align:right}

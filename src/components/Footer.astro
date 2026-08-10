@@ -25,7 +25,16 @@ const to = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     <a href={to('craft')}>Craft</a>
     <a href={to('contact')}>Contact</a>
     <a href="/munchview">Munchview</a>
+  </nav>
+
+  <!-- The legal pages get their own row rather than being lost among the
+       sections: /terms was previously reachable only by typing the URL, which
+       is not "reachable" for a document a store links to. -->
+  <nav class="foot-legal" aria-label="Legal">
     <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms of Use</a>
+    <a href="/refunds">Refunds &amp; withdrawal</a>
+    <a href="/kvkk" lang="tr" hreflang="tr">KVKK Aydınlatma Metni</a>
   </nav>
 
   <div class="foot-meta">

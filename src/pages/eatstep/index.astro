@@ -9,16 +9,16 @@ import Footer from '../../components/Footer.astro';
 const status = 'In development — Android APKs you can install today';
 const updated = 'August 8, 2026';
 
-/* Real captures from the release builds (customer 1.50.1, partner 1.7.7,
-   courier 1.8.5), taken on August 8, 2026 — whole screens, nothing staged.
-   The film is one continuous recording of the customer app: open, browse,
-   and the Trainer tab holding the day's real numbers. */
+/* Real captures from the release builds (customer 1.51.0, partner 1.7.8,
+   courier 1.8.6), taken on August 8, 2026 — whole screens, English UI,
+   nothing staged. The film is a guided tour cut from those same live
+   screens: browse, a real analysis, the saved meal on the Trainer tab. */
 const updatedShots = 'August 8, 2026';
 
 /* The three things worth knowing before any feature. The first one is the
    whole product in one line: it comes from the real analysis in the film. */
 const proof = [
-  { n: '380 kcal', label: 'becomes a 9,500-step goal — every meal converts to movement' },
+  { n: '260 kcal', label: 'becomes a 6,100-step goal — every meal converts to movement' },
   { n: '3', label: 'apps on one platform: customer, kitchen, courier' },
   { n: '0', label: 'ads, trackers or analytics in any of them' },
 ];
@@ -85,10 +85,10 @@ const downloads = [
             muted
             loop
             playsinline
-            aria-label="A thirty-second screen recording of the EatStep customer app: the home screen with healthy venues, a vegan kitchen's menu, and the Trainer tab showing 380 calories taken in and a one-day streak."
+            aria-label="A tour of the EatStep customer app, cut from live screens: the home feed of healthy kitchens, a plant-forward menu, a real photo analysis with its step conversion, and the Trainer tab holding the saved meal."
           ></video>
         </div>
-        <p class="cap">A real recording — browsing, and the day's balance on the Trainer tab.</p>
+        <p class="cap">Real screens, in sequence — browse, analyze, and the day's balance.</p>
       </div>
     </section>
 
@@ -110,7 +110,7 @@ const downloads = [
         </p>
         <ol class="steps">
           <li><b>Browse.</b> Restaurants, market and stores in one place.</li>
-          <li><b>Check the numbers.</b> 380 kcal · 26 g protein, on the card.</li>
+          <li><b>Check the numbers.</b> 520 kcal · 42 g protein, on the card.</li>
           <li><b>Order.</b> Delivery, pickup with a code, or the kitchen's own fleet.</li>
         </ol>
       </div>
@@ -119,7 +119,7 @@ const downloads = [
           <img
             class="screen-img"
             src="/eatstep/shots/venue.webp"
-            alt="A vegan kitchen's page in the EatStep customer app: cover photo, 4.9 rating, delivery time, vegan and gluten-free tags, and a salad listed with 380 calories and 26 grams of protein."
+            alt="Verdant Kitchen's page in the EatStep customer app: cover photo, a 4.8 rating, delivery time, and an Avocado Power Bowl listed at 520 calories and 21 grams of protein with its own photo."
             width="648"
             height="1440"
             loading="lazy"
@@ -144,7 +144,8 @@ const downloads = [
         <p>
           Under every estimate sits the same conversion: what this plate means
           in steps and walking time. The one in the picture is
-          380&nbsp;kcal&nbsp;≈&nbsp;9,500 steps&nbsp;≈&nbsp;1&nbsp;h&nbsp;35&nbsp;min.
+          260&nbsp;kcal&nbsp;≈&nbsp;6,100 steps&nbsp;≈&nbsp;about an hour's walk —
+          computed for you, from your own weight.
         </p>
       </div>
       <div class="shot-wrap">
@@ -152,7 +153,7 @@ const downloads = [
           <img
             class="screen-img"
             src="/eatstep/shots/analysis.webp"
-            alt="An analysis result in the EatStep app: avocado recognized with high confidence, an estimate of 380 calories with a 285 to 475 range, reference-value badge, macros, portion presets, and a total line converting the meal to 9,500 steps or about an hour and a half of walking."
+            alt="An analysis result in the EatStep app: lettuce and avocado recognized on one plate, a 260-calorie estimate with a 202 to 318 range, a reference-values badge, portion presets, and a total line converting the meal to 6,100 steps or about an hour of walking."
             width="648"
             height="1440"
             loading="lazy"
@@ -194,14 +195,14 @@ const downloads = [
           <img
             class="screen-img"
             src="/eatstep/shots/goal.webp"
-            alt="The sheet after saving a meal: 'Meal saved', 380 calories added to today's intake, an offer to melt it with roughly 9,500 steps in 24 hours for bonus EatStep points, and buttons to open the balance goal or just save."
+            alt="The sheet after saving a meal: 'Meal saved', 260 calories added to today's intake, an offer to melt it with roughly 6,100 steps within 24 hours for bonus EatStep points, and buttons to open a balance goal or just log it."
             width="648"
             height="1440"
             loading="lazy"
             decoding="async"
           />
         </div>
-        <p class="cap">Saved — and offered as a 9,500-step goal with a bonus at the end.</p>
+        <p class="cap">Saved — and offered as a 6,100-step goal with a bonus at the end.</p>
       </div>
     </section>
 
@@ -213,7 +214,7 @@ const downloads = [
             <img
               class="screen-img"
               src="/eatstep/shots/trainer.webp"
-              alt="The customer app's Trainer tab: today's balance ring with 380 calories in, the analyze button with two of three daily analyses left, and a history holding today's meal."
+              alt="The customer app's Trainer tab: today's balance with 260 calories in, a one-day streak, the analyze button with two of three daily analyses left, and a history holding today's lettuce-avocado-walnut meal."
               width="648"
               height="1440"
               loading="lazy"
@@ -331,7 +332,7 @@ const downloads = [
         <p>
           Meal photos are health-adjacent data, so the app treats them that
           way: before the first analysis it asks for explicit consent in plain
-          Turkish, and the decision is stored on the device. Photos are
+          words, and the decision is stored on the device. Photos are
           processed transiently for the analysis and are not kept on the
           server; location and EXIF metadata are stripped before a photo
           leaves the phone.
@@ -347,7 +348,7 @@ const downloads = [
           <img
             class="screen-img"
             src="/eatstep/shots/consent.webp"
-            alt="EatStep's photo-analysis consent sheet, in Turkish: photos are processed only for coaching, never for ads and never shared; processed transiently and not stored on the server; location and EXIF stripped on the device; consent revocable any time. Accept and not-now buttons below."
+            alt="EatStep's photo-analysis consent sheet: photos count as health-related data and are processed only for coaching, transiently, never for ads; location and EXIF are stripped on the device; consent is revocable any time. I-agree and not-now buttons below."
             width="648"
             height="1440"
             loading="lazy"

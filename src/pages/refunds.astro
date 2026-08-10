@@ -1,0 +1,379 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteChrome from '../components/SiteChrome.astro';
+import Footer from '../components/Footer.astro';
+
+/*
+ * Refunds and the right of withdrawal.
+ *
+ * Two different things that get confused with each other, so this page keeps
+ * them apart. A refund is a commercial decision made by whoever took the
+ * payment — which is never us. Withdrawal is a statutory right that exists
+ * whether or not anyone feels like honouring it, and it has a specific,
+ * citable way of ending early for digital content. Saying "digital purchases
+ * are non-refundable" would be both wrong and, being an unfair term, void.
+ *
+ * Scope note: this page is about the purchase relationship, which is the same
+ * for every app because the store is the same. It deliberately says nothing
+ * about what any app collects — that differs per app and belongs on
+ * /privacy, where each app has its own section.
+ */
+const updated = 'August 9, 2026';
+---
+
+<Base
+  title="Refunds and withdrawal — DeftDay Studio"
+  description="Who takes your money for a DeftDay app, how to ask that store for a refund, and the 14-day right of withdrawal in the EU, the UK and Türkiye — including exactly how it ends early for digital content."
+>
+  <SiteChrome />
+
+  <main class="legal" id="main">
+    <p class="eyebrow">DeftDay Studio</p>
+    <h1>Refunds and withdrawal</h1>
+    <p class="lede">
+      Two separate things, often muddled together. A <strong>refund</strong> is
+      a decision made by the shop that took your money — Google Play or the
+      Apple App Store, never us. <strong>Withdrawal</strong> is a right the law
+      gives you, and this page says plainly when it applies and when it stops
+      applying.
+    </p>
+    <p class="updated">Last updated {updated}</p>
+
+    <h2>1. We are not the shop</h2>
+    <p>
+      Everything we sell is sold through an app store. The store shows the
+      price, takes the payment, issues the receipt, holds the payment method
+      and — in most countries — is the seller of record for the purchase; your
+      receipt names the entity you contracted with. We never see your card
+      details and we have no way to move money in your store account.
+    </p>
+    <p>
+      So we cannot issue a refund for a purchase we did not take. What we can
+      do, and will: back up a request you make to the store, confirm the facts
+      to them, and tell you honestly if we think the store has got it wrong.
+      Write to <a href="mailto:legal@deftday.com">legal@deftday.com</a> and a
+      person answers.
+    </p>
+
+    <h2>2. Asking Google Play for a refund</h2>
+    <p>The route, from the device or from a browser:</p>
+    <ul>
+      <li>
+        <strong>In the Play Store app</strong> — tap your profile picture →
+        <b>Payments &amp; subscriptions</b> → <b>Budget &amp; order history</b>,
+        find the purchase, then <b>Report a problem</b> and pick the reason that
+        matches.
+      </li>
+      <li>
+        <strong>In a browser</strong> —
+        <a href="https://play.google.com/store/account/orderhistory" rel="noopener"
+          >play.google.com/store/account/orderhistory</a
+        >, then the same <b>Report a problem</b> beside the order.
+      </li>
+      <li>
+        <strong>Google's own refund page</strong> —
+        <a href="https://support.google.com/googleplay/answer/2479637" rel="noopener"
+          >support.google.com/googleplay/answer/2479637</a
+        >, which is the authoritative description of the process and the one
+        that stays current.
+      </li>
+    </ul>
+    <p>
+      Google handles the earliest requests itself and passes later ones on to
+      the developer, and the cut-off it applies has changed over time — its help
+      page above is the authority, not this one. If Google sends you to us, we
+      answer; if it refuses you and you think a statutory right of yours has
+      been ignored, tell us and we will say so to them in writing.
+    </p>
+
+    <h2>3. Asking Apple for a refund</h2>
+    <p>For anything of ours you bought on the App Store:</p>
+    <ul>
+      <li>
+        <strong>In a browser</strong> —
+        <a href="https://reportaproblem.apple.com" rel="noopener">reportaproblem.apple.com</a>,
+        sign in, pick the purchase, choose <b>Request a refund</b>.
+      </li>
+      <li>
+        <strong>On an iPhone or iPad</strong> — <b>Settings</b> → your name →
+        <b>Media &amp; Purchases</b> → <b>View Account</b> → <b>Purchase
+        History</b>, then the purchase.
+      </li>
+    </ul>
+    <p>
+      Apple decides these, on its own published policy, and does not tell us why
+      one was granted or refused.
+    </p>
+
+    <h2>4. Your 14-day right of withdrawal</h2>
+    <p>
+      If you are a consumer in the EU or the EEA, the UK, or Türkiye, buying at
+      a distance, the law gives you <strong>14 days to withdraw from the
+      contract without giving a reason and without penalty</strong>. That is a
+      right, not a courtesy, and it exists independently of any store's refund
+      policy.
+    </p>
+    <ul>
+      <li>
+        <strong>EU / EEA</strong> — the Consumer Rights Directive
+        (2011/83/EU, as amended by Directive (EU) 2019/2161), art. 9, as
+        implemented in your own country's law.
+      </li>
+      <li>
+        <strong>UK</strong> — the Consumer Contracts (Information, Cancellation
+        and Additional Charges) Regulations 2013, reg. 29–30.
+      </li>
+      <li>
+        <strong>Türkiye</strong> — Law No. 6502 on Consumer Protection, art. 48,
+        and the Distance Contracts Regulation (<i lang="tr"
+          >Mesafeli Sözleşmeler Yönetmeliği</i
+        >, Official Gazette 27 November 2014, No. 29188), art. 9.
+      </li>
+    </ul>
+
+    <h2>5. How that right ends early — and only then</h2>
+    <p>
+      For digital content that is not supplied on a physical medium, the same
+      laws let the 14 days end before they are up. It is not automatic and it is
+      not a general rule that "digital is final". Under the EU directive
+      (art. 16(1)(m)) and the UK regulations (reg. 37) all of the following have
+      to be true:
+    </p>
+    <ul>
+      <li>
+        performance has actually <strong>begun</strong> — the content or feature
+        has been delivered to you;
+      </li>
+      <li>
+        it began <strong>with your prior express consent</strong>, given before
+        the 14 days ran out;
+      </li>
+      <li>
+        you <strong>acknowledged that by consenting you lose the right of
+        withdrawal</strong>; and
+      </li>
+      <li>the trader confirmed the contract to you on a durable medium.</li>
+    </ul>
+    <p class="callout">
+      <strong>Where that happens is the store's purchase sheet.</strong> The
+      consent and the acknowledgement are what Google Play and Apple present at
+      the moment you confirm the purchase, and the receipt they email you is the
+      confirmation. We are telling you this here as well so that nobody can say
+      it was buried. If a store did not put that to you, the right did not end —
+      and you should say so when you ask for your money back.
+    </p>
+    <p>
+      One thing this never covers: a purchase that failed, an app that does not
+      work, or a feature that is not what it was described as. That is not a
+      withdrawal question at all — see §9.
+    </p>
+
+    <h2>6. Türkiye, specifically</h2>
+    <p>
+      Turkish law reaches the same place by a different route, and the
+      difference matters if you are arguing about it.
+    </p>
+    <p>
+      The Distance Contracts Regulation lists the contracts the right of
+      withdrawal does not apply to in its art. 15. The relevant one, art. 15(1)(ğ),
+      excludes <i lang="tr"
+        >“elektronik ortamda anında ifa edilen hizmetler veya tüketiciye anında
+        teslim edilen gayrimaddi mallara ilişkin sözleşmeler”</i
+      > — contracts for services performed instantly in an electronic
+      environment, or for intangible goods delivered to the consumer instantly.
+      A paid tier that unlocks in the app the moment the store confirms the
+      purchase is exactly that: an intangible good, delivered instantly, in an
+      electronic environment.
+    </p>
+    <p>
+      So the mechanism is the <em>instant delivery itself</em>, not — as in the
+      EU version — a consent plus an acknowledgement. But it is not
+      unconditional either. It depends on the pre-contractual information
+      (<i lang="tr">ön bilgilendirme</i>, art. 5) having told you before you
+      bought that this is a contract the right of withdrawal does not cover; the
+      burden of proving that is on the seller, and where that information was
+      not properly given the withdrawal period does not simply run out on day
+      14. The store's purchase sheet is where that information is given, and
+      this page repeats it so it is on the record in plain Turkish and English
+      both.
+    </p>
+    <p>
+      Nothing here waives anything. If you are in Türkiye and you think a
+      purchase should be reversed, §10 has the two places you can take it.
+    </p>
+
+    <h2>7. Cancelling a subscription is not a refund</h2>
+    <p>
+      They are different actions with different results, and cancelling by
+      mistake when you meant to ask for money back is the most common way people
+      end up with neither.
+    </p>
+    <ul>
+      <li>
+        <strong>Cancelling</strong> stops the next renewal. It does not shorten
+        the period you have already paid for and it does not return that money —
+        you keep the paid features until the period ends, and then it lapses.
+      </li>
+      <li>
+        <strong>A refund</strong> returns money for a period. You ask the store
+        for it, using §2 or §3.
+      </li>
+    </ul>
+    <p>
+      You cancel in the store, not in our app, because the store holds the
+      subscription: in the Play Store app, profile picture →
+      <b>Payments &amp; subscriptions</b> → <b>Subscriptions</b> → the
+      subscription → <b>Cancel subscription</b>; on iOS, <b>Settings</b> → your
+      name → <b>Subscriptions</b>.
+    </p>
+    <p>
+      A one-off purchase — where an app offers one instead of a subscription —
+      has nothing to cancel. It is paid once and it stays bought; the store
+      remembers it, so reinstalling or moving to a new phone restores it with no
+      account to sign into.
+    </p>
+
+    <h2>8. Prices, and changing them</h2>
+    <p>
+      Prices are set in the store and shown to you in your own currency, with
+      whatever tax applies where you live already included. We do not convert
+      anything ourselves and we never show a price the store did not give us.
+    </p>
+    <ul>
+      <li>
+        A price change <strong>never applies to a period you have already paid
+        for</strong>, and never to a one-off purchase you already own.
+      </li>
+      <li>
+        For a subscription, the store runs the notice: Google Play and Apple
+        notify subscribers in advance of an increase, by email and in the store,
+        and in a number of countries the increase does not take effect at all
+        unless you accept it — where you do not, the subscription ends at the
+        end of the current period instead of renewing at the new price. The
+        exact notice period and whether acceptance is required are the store's
+        rules and depend on where you live.
+      </li>
+      <li>
+        A promotional or introductory price lasts for the period stated at
+        purchase and then renews at the standard price, which the store shows
+        you before you buy.
+      </li>
+    </ul>
+
+    <h2>9. If it is broken, this is a different right</h2>
+    <p>
+      Withdrawal is for changing your mind. If a paid feature does not work, is
+      not what it was described as, or stops working, that is a conformity
+      problem, and consumer law gives you remedies for it that have nothing to
+      do with the 14 days — in the EU under the Digital Content Directive
+      ((EU) 2019/770), in the UK under the Consumer Rights Act 2015, and in
+      Türkiye under Law No. 6502. Typically: have it put right, or a reduction,
+      or end the contract if it cannot be put right.
+    </p>
+    <p>
+      Tell us first —
+      <a href="mailto:legal@deftday.com">legal@deftday.com</a> — because most of
+      the time we can just fix it, and a fix is faster than a refund. If we
+      cannot, we will say so rather than stall, and we will back your request to
+      the store.
+    </p>
+
+    <h2>10. If you disagree with us</h2>
+    <p>
+      Write first: <a href="mailto:legal@deftday.com">legal@deftday.com</a>. We
+      answer, and we would much rather sort it out directly.
+    </p>
+    <p>
+      If that does not settle it, consumers in Türkiye may apply to the Consumer
+      Arbitration Committee (<i lang="tr">Tüketici Hakem Heyeti</i>) or the
+      Consumer Court where they live, and consumers in the EU may use their
+      national alternative dispute resolution body. None of that is affected by
+      anything on this page — as our
+      <a href="/terms">Terms of Use</a> also say, where a term of ours conflicts
+      with your statutory rights, your rights win.
+    </p>
+
+    <p class="sign">
+      This page describes how the purchase works and what the law gives you. It
+      is not legal advice, and it cannot take away a right your own country
+      gives you.
+    </p>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .legal {
+    width: min(72ch, calc(100% - var(--gutter) * 2));
+    margin: 0 auto;
+    padding: 140px 0 80px;
+  }
+  .eyebrow {
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .legal h1 {
+    font-size: clamp(2rem, 6vw, 3rem);
+    margin: 8px 0 16px;
+    text-wrap: balance;
+  }
+  .lede {
+    font-size: 1.1rem;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .updated {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+  .legal h2 {
+    margin: 48px 0 12px;
+    font-size: 1.25rem;
+    text-wrap: balance;
+  }
+  .legal p,
+  .legal li {
+    color: var(--muted);
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+  .legal p + p {
+    margin-top: 12px;
+  }
+  .legal ul {
+    margin: 12px 0 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 10px;
+  }
+  .legal strong,
+  .legal b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .legal a {
+    color: var(--sun-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .legal a:hover {
+    color: var(--ink);
+  }
+  .callout {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+  .sign {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+</style>

@@ -6,8 +6,15 @@ interface Props {
   description: string;
   /** Set on pages that must stay out of the index (e.g. 404). */
   noindex?: boolean;
+  /**
+   * BCP 47 tag for pages not written in English — the KVKK notice is Turkish.
+   * A wrong `lang` is not cosmetic: it is what a screen reader picks a voice
+   * from and what a translation prompt keys off.
+   */
+  lang?: string;
 }
-const { title, description, noindex = false } = Astro.props;
+const { title, description, noindex = false, lang = 'en' } = Astro.props;
+const ogLocale = lang === 'tr' ? 'tr_TR' : 'en_US';
 /* The entity graph describes the studio and its products, all of which live on
    the homepage. Emitting it from another page would bind the same @id nodes to
    that page's copy. */
@@ -126,7 +133,7 @@ const jsonLd = JSON.stringify({
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -154,7 +161,7 @@ const jsonLd = JSON.stringify({
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="DeftDay Studio" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
