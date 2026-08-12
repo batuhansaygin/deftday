@@ -30,7 +30,10 @@ const to = (id: string) => (isHome ? `#${id}` : `/#${id}`);
     <a href={to('build')}>What we build</a>
     <a href={to('lab')}>In the lab</a>
     <a href={to('craft')}>Craft</a>
-    <a class="btn grad" data-magnet href={to('contact')}>Say hello</a>
+    <!-- On the home page this scrolls to the closing CTA; anywhere else there
+         is a page built for the job, and landing on it beats landing on a
+         scroll position somebody then has to read backwards from. -->
+    <a class="btn grad" data-magnet href={isHome ? '#contact' : '/contact'}>Say hello</a>
   </nav>
 </header>
 

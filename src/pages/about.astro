@@ -1,0 +1,266 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteChrome from '../components/SiteChrome.astro';
+import Footer from '../components/Footer.astro';
+
+/*
+ * Who runs this studio, where it is, and what it has actually released.
+ *
+ * The homepage says what we build; this page says what exists. Those are
+ * different claims and the site had only been making the first one — every
+ * product was described in the present tense whether it had shipped or not,
+ * and the only place the difference was written down was a comment in the
+ * layout explaining why unreleased apps stay out of the structured data.
+ *
+ * The ledger below is that difference, made visible. Each row's status is the
+ * SAME string the product's own page shows, so the two cannot drift apart:
+ * change one and the other is already wrong in an obvious place. A status is
+ * the first thing a partner, a tester or a store reviewer wants and the last
+ * thing most studio sites will say plainly.
+ */
+
+/** Kept identical to the `status` line on each product page — see the note above. */
+const ledger = [
+  {
+    name: 'SkyBattleSea',
+    status: 'Live — free, in the browser',
+    live: true,
+    blurb: 'Fast planes against tanky ships. Five modes, eight craft classes, real multiplayer.',
+    href: 'https://skybattlesea.com',
+    external: true,
+  },
+  {
+    name: 'Munchview',
+    status: 'In closed testing on Google Play',
+    live: false,
+    blurb: 'Starts a good video that fits the time you have. Six platforms, one player, no feed.',
+    href: '/munchview',
+    external: false,
+  },
+  {
+    name: 'EatStep',
+    status: 'In development — Android APKs you can install today',
+    live: false,
+    blurb: 'Healthy food, ordered by the people who care what is in it. Three apps, one core.',
+    href: '/eatstep',
+    external: false,
+  },
+];
+---
+
+<Base
+  title="About — DeftDay Studio"
+  description="DeftDay is an independent app and game studio in İzmir, Türkiye. What we have released, what is still being built, and what our apps deliberately do not do."
+>
+  <SiteChrome />
+
+  <main class="page" id="main">
+    <p class="eyebrow">DeftDay Studio</p>
+    <h1>A small studio in <span class="serif">İzmir.</span></h1>
+    <p class="lede">
+      We design, build and ship our own products — apps, games and small
+      everyday utilities for iOS, Android and the web. No clients, no
+      committees, nothing subcontracted. Everything on this site was made
+      in-house.
+    </p>
+
+    <h2>What is live, and what is not</h2>
+    <p>
+      Studios have a habit of describing everything they are working on in the
+      present tense. This is the real state of it. Each line says the same
+      thing that product's own page says, and they change on the same day.
+    </p>
+
+    <ol class="ledger" role="list">
+      {
+        ledger.map((item) => (
+          <li class="row rv">
+            <div class="row-head">
+              <h3 class="row-name">{item.name}</h3>
+              <p class={item.live ? 'row-status is-live' : 'row-status'}>{item.status}</p>
+            </div>
+            <p class="row-blurb">{item.blurb}</p>
+            <a
+              class="row-link"
+              href={item.href}
+              {...(item.external ? { rel: 'noopener' } : {})}
+              aria-label={`${item.name} — ${item.status}`}
+            >
+              {item.external ? 'Play it' : 'Read more'}
+              {/* ↗ means "this leaves the site". Two of these three rows stay
+                  on it, so they get the arrow that means "onward". */}
+              <span aria-hidden="true">{item.external ? ' ↗' : ' →'}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+
+    <h2>How the work gets done</h2>
+    <p>
+      Product design, engineering, motion and store presence all happen here,
+      which is the only reason a studio this size can hold one standard across
+      several products at once. It also means there is nobody to hand a problem
+      to: if something ships badly, it was us. The
+      <a href="/#craft">craft section</a> on the homepage sets out what that covers.
+    </p>
+    <p>
+      We would rather release one thing that behaves than three that
+      demonstrate. That is why the list above is short and why two of its three
+      rows still say they are not finished.
+    </p>
+
+    <h2>What our apps do not do</h2>
+    <p>
+      None of our apps carry trackers, and none of them build a profile of you
+      to sell. Where an app stores something, it stores it on your own device
+      unless you ask it to sync; where an account can be created, it can be
+      deleted from inside the app and from the web without writing to anyone.
+      The details, per app, are on the
+      <a href="/privacy">privacy page</a> — one section each, in plain language.
+    </p>
+    <p>
+      Some of our apps will carry advertising and some never will.
+      <strong>Munchview never will.</strong> It was promised without ads, it is
+      paid for by its Pro upgrade, and that does not change later.
+    </p>
+
+    <h2>Where we are</h2>
+    <p>
+      DeftDay Studio, İzmir, Türkiye. Founded 2026. The fastest way to reach a
+      person is <a href="mailto:hello@deftday.com">hello@deftday.com</a>; the
+      <a href="/contact">contact page</a> says which address suits which kind of
+      message.
+    </p>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page {
+    width: min(72ch, calc(100% - var(--gutter) * 2));
+    margin: 0 auto;
+    padding: 140px 0 80px;
+  }
+  .page h1 {
+    font-size: clamp(2rem, 6vw, 3rem);
+    margin: 8px 0 16px;
+    text-wrap: balance;
+  }
+  .lede {
+    font-size: 1.1rem;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .page h2 {
+    margin: 48px 0 12px;
+    font-size: 1.25rem;
+    text-wrap: balance;
+  }
+  .page p {
+    color: var(--muted);
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+  .page p + p {
+    margin-top: 12px;
+  }
+  .page strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .page a {
+    color: var(--sun-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .page a:hover {
+    color: var(--ink);
+  }
+
+  /*
+   * The ledger inverts the usual card: the STATUS is the coloured line, not
+   * the product name. On a page whose whole point is "here is what actually
+   * exists", the state is the information and the name is the label for it.
+   */
+  .ledger {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'head link'
+      'blurb link';
+    align-items: baseline;
+    gap: 4px 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .row-head {
+    grid-area: head;
+  }
+  .row-name {
+    font-family: var(--font-d);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  /*
+   * Colour carries the state, so the page can be read without reading it:
+   * warm means shipped, grey means not yet. Both statuses were warm at first
+   * and the distinction the whole ledger exists to draw was invisible from
+   * two feet away.
+   */
+  .row-status {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .row-status.is-live {
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .row-blurb {
+    grid-area: blurb;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .row-link {
+    grid-area: link;
+    align-self: center;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .row-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'head'
+        'blurb'
+        'link';
+      gap: 8px;
+    }
+    .row-link {
+      align-self: start;
+      margin-top: 4px;
+    }
+  }
+</style>

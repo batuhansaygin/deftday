@@ -1,0 +1,215 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteChrome from '../components/SiteChrome.astro';
+import Footer from '../components/Footer.astro';
+
+/*
+ * Where to write, and which address.
+ *
+ * The homepage has a contact section, but it is one line and one address at
+ * the bottom of a scroll — not something a store reviewer, a partner or
+ * somebody trying to delete their data can be sent to. This page is that URL.
+ *
+ * Three addresses already exist across the site (hello@, privacy@, legal@) and
+ * were each introduced on the page that needed them, so no one place said what
+ * the difference was. It matters: a deletion request sitting in a sales inbox
+ * is a compliance problem, not a filing problem.
+ *
+ * No form. A form on a static site means a third-party endpoint collecting
+ * names and messages, which is exactly the thing the privacy page says we do
+ * not do. A mailto costs the reader one tap and costs them nothing else.
+ */
+
+const routes = [
+  {
+    address: 'hello@deftday.com',
+    job: 'Press, partnerships, testing and everything else',
+    note: 'Ideas at the wrong hour included. If you are not sure which address to use, use this one.',
+  },
+  {
+    address: 'privacy@deftday.com',
+    job: 'Your data — what an app holds, and getting it deleted',
+    note: 'Also the address for anything under GDPR or KVKK. Tell us which app you mean and we can answer precisely.',
+  },
+  {
+    address: 'legal@deftday.com',
+    job: 'Refunds, withdrawal, terms and anything with a lawyer behind it',
+    note: 'We cannot reverse a store purchase, but we will back a request you make and say so in writing.',
+  },
+];
+---
+
+<Base
+  title="Contact — DeftDay Studio"
+  description="Three addresses, each with a job: general enquiries, data and deletion requests, and anything legal. DeftDay Studio, İzmir, Türkiye."
+>
+  <SiteChrome />
+
+  <main class="page" id="main">
+    <p class="eyebrow">DeftDay Studio</p>
+    <h1>Write to a <span class="serif">person.</span></h1>
+    <p class="lede">
+      No form, no ticket number, no autoresponder telling you how important you
+      are. Three addresses, each with a job — pick the one that matches and
+      somebody here reads it.
+    </p>
+
+    <ul class="routes" role="list">
+      {
+        routes.map((r) => (
+          <li class="route rv">
+            <a class="route-address" href={`mailto:${r.address}`}>
+              {r.address}
+              <span aria-hidden="true"> ↗</span>
+            </a>
+            <p class="route-job">{r.job}</p>
+            <p class="route-note">{r.note}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>Two things you can do without us</h2>
+    <p>
+      These are the messages we get most, and both have a faster answer than
+      waiting for a reply.
+    </p>
+    <ul class="self">
+      <li>
+        <strong>Delete your data.</strong> You do not need our permission or our
+        help. In Munchview it is in the app under Settings → Your account →
+        Delete my account data, and it works on the web too, without installing
+        anything:
+        <a href="/munchview/delete-account">deftday.com/munchview/delete-account</a>.
+        Deleting also signs you out, so nothing recreates itself on the next
+        sync.
+      </li>
+      <li>
+        <strong>Ask for a refund.</strong> The store took the payment, not us,
+        so the store is who can return it — and there is a 14-day right of
+        withdrawal that exists whatever a refund policy says.
+        <a href="/refunds">Refunds and withdrawal</a> has both routes, step by
+        step.
+      </li>
+    </ul>
+
+    <h2>The studio</h2>
+    <address class="addr">
+      DeftDay Studio<br />
+      İzmir, Türkiye
+    </address>
+    <p>
+      An independent app and game studio, founded 2026 —
+      <a href="/about">what we have released and what we have not</a>.
+    </p>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page {
+    width: min(72ch, calc(100% - var(--gutter) * 2));
+    margin: 0 auto;
+    padding: 140px 0 80px;
+  }
+  .page h1 {
+    font-size: clamp(2rem, 6vw, 3rem);
+    margin: 8px 0 16px;
+    text-wrap: balance;
+  }
+  .lede {
+    font-size: 1.1rem;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .page h2 {
+    margin: 48px 0 12px;
+    font-size: 1.25rem;
+    text-wrap: balance;
+  }
+  .page p,
+  .page li {
+    color: var(--muted);
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+  .page strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .page a {
+    color: var(--sun-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .page a:hover {
+    color: var(--ink);
+  }
+
+  /*
+   * On this page the ADDRESS is the thing the reader came for, so it is the
+   * loud line and the description sits under it — the mirror of the ledger on
+   * /about, where the status was what mattered and the name was the label.
+   */
+  .routes {
+    list-style: none;
+    margin: 28px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .route {
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  /*
+   * Kept underlined, and deliberately so: it is the one thing on the page a
+   * reader is meant to click, and `.page a` above would have underlined it
+   * anyway — a single class cannot outrank a class-plus-element selector, so
+   * the `text-decoration: none` that used to sit here never applied to
+   * anything. The colour is pinned because the gradient is painted into the
+   * glyphs, which leaves `currentColor` transparent for the underline to
+   * inherit.
+   */
+  .page .route-address {
+    display: inline-block;
+    font-family: var(--font-d);
+    font-size: clamp(1.15rem, 3.2vw, 1.5rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-decoration-color: var(--sun2);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 5px;
+  }
+  .page .route-address:hover {
+    text-decoration-color: var(--ink);
+  }
+  .route-job {
+    margin: 6px 0 0;
+    color: var(--ink);
+    font-size: 0.98rem;
+    font-weight: 600;
+  }
+  .route-note {
+    margin: 4px 0 0;
+    font-size: 0.92rem;
+  }
+
+  .self {
+    margin: 12px 0 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 12px;
+  }
+
+  .addr {
+    font-style: normal;
+    color: var(--ink);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+</style>

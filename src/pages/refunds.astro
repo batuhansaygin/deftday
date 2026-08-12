@@ -360,6 +360,13 @@ const updated = 'August 9, 2026';
     color: var(--sun-text);
     text-decoration: underline;
     text-underline-offset: 3px;
+    /* Two of the links on this page are bare URLs with no space in them
+       (play.google.com/store/account/orderhistory and Google's support URL).
+       A word that cannot break is a word the column has to widen for, and it
+       pushed the whole document 39px past a 390px phone — measured, not
+       guessed. Breaking mid-URL is ugly; a sideways scrollbar on a page the
+       Play Console links to is worse. */
+    overflow-wrap: anywhere;
   }
   .legal a:hover {
     color: var(--ink);
