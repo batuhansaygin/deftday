@@ -56,6 +56,35 @@ const updated = 'August 7, 2026';
       </p>
     </section>
 
+    <section class="legal-block" aria-labelledby="updates">
+      <h2 id="updates">Checking for a new version</h2>
+      <p>
+        There is a second request the app makes on its own, and it is the only
+        other one. Every so often Munchview asks
+        <a href="https://updates.deftday.com/store-meta.json" rel="noopener"
+          >updates.deftday.com</a
+        >
+        for a small file that says which version is the current one. If that
+        number is newer than the one you have, the app tells you.
+      </p>
+      <p>
+        Nothing about you or your phone goes with that request. It has no
+        query, no body and no identifier we attach, so the file cannot be
+        served differently to you than to anyone else — the server has no way
+        of telling one installation from another. As with the content service
+        above, the IP address reaches our hosting provider's edge, because
+        every request on the internet carries one.
+      </p>
+      <p>
+        The notice itself is made on your phone. Munchview holds no push token
+        and is not registered to receive anything, so nobody — including us —
+        can send a notification to your device; the app compares two version
+        numbers locally and raises its own. You can turn the whole thing off in
+        <strong>App settings → Update notifications</strong>, and the check
+        stops with it.
+      </p>
+    </section>
+
     <section class="legal-block" aria-labelledby="signin">
       <h2 id="signin">If you sign in with Google</h2>
       <p>
