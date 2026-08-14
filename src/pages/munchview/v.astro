@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { SHARE_NOTE } from '../../config/munchview';
 
 /*
  * Where a shared Munchview link lands.
@@ -27,7 +28,7 @@ import Base from '../../layouts/Base.astro';
       <a class="cta ghost" id="watch" href="/munchview" rel="noopener nofollow">Watch on the platform</a>
     </p>
     <p class="fine">
-      Munchview is in closed testing on Google Play —
+      {SHARE_NOTE}
       <a href="/munchview">learn more and join</a>.
     </p>
   </main>
