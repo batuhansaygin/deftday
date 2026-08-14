@@ -34,3 +34,14 @@ export const STATUS_CLAUSE = LIVE ? 'on Google Play' : 'in closed testing';
 export const SHARE_NOTE = LIVE
   ? 'Munchview is on Google Play —'
   : 'Munchview is in closed testing on Google Play —';
+
+/*
+ * Deploying this site
+ * -------------------
+ * `npx wrangler deploy` — it is a Worker (see wrangler.jsonc), not a Pages
+ * project. `wrangler pages deploy` appears to succeed, reports a Production
+ * deployment on main, and publishes to an unrelated `deftday` Pages project
+ * that nothing points at. Six days of changes sat unpublished that way before
+ * anyone noticed, on 2026-08-14, because the pages.dev URL served the new build
+ * and deftday.com served the old one.
+ */

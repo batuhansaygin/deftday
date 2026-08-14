@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.munchview.app",
+      "sha256_cert_fingerprints": [
+        "F6:89:B9:0E:90:7C:03:B8:41:21:77:AC:78:4D:A2:C1:22:B4:53:44:A8:06:C8:48:4B:93:FA:8A:B5:97:3D:B1"
+      ]
+    }
+  }
+]
