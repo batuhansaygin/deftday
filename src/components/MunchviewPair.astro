@@ -1,0 +1,187 @@
+---
+/**
+ * The fallback: signing in by confirming it in the app.
+ *
+ * Used only while there is no Google WEB OAuth client. "Continue with Google"
+ * is the intended door and MunchviewSignIn.astro is it; this keeps the page
+ * from having no door at all in the meantime.
+ *
+ * The browser never touches a Google credential. It asks the content API for a
+ * code, a person reads that code onto their phone, the app — already signed in
+ * with Google — confirms it, and the API hands this page a session it signed
+ * itself. Same account, same record, one fewer credential in the browser than
+ * the conventional flow would put there.
+ *
+ * Why not "Continue with Google" directly: Munchview has an Android OAuth
+ * client and no web one, and Google will not authenticate a browser with an
+ * Android client. See src/config/munchview.ts.
+ *
+ * The session is kept in sessionStorage — it dies with the tab, is never sent
+ * automatically with a request, and cannot be read cross-origin. A shared or
+ * borrowed computer forgets it by closing the tab, which is the behaviour
+ * somebody signing in on a machine that is not theirs would expect.
+ */
+import { CONTENT_API_URL, APP_PATH } from '../config/munchview';
+
+interface Props {
+  /** Where to go once the pairing completes. */
+  next?: string;
+}
+const { next = APP_PATH } = Astro.props as Props;
+---
+
+<div class="pair" data-api={CONTENT_API_URL} data-next={next}>
+  <button class="btn" type="button" data-step="idle">Sign in with the app</button>
+
+  <!--
+    One live region for the whole flow. Three separate ones would have a screen
+    reader announce the code, then the countdown, then the status, over each
+    other; this way the reader hears one thing at a time, in order.
+  -->
+  <div class="panel" hidden aria-live="polite">
+    <p class="lead">Open Munchview on your phone and enter this code:</p>
+    <p class="code" aria-label="Your code, one character at a time"></p>
+    <p class="hint">Settings → Sign in on the web</p>
+    <p class="expiry"></p>
+    <button class="link" type="button" data-step="cancel">Start again</button>
+  </div>
+
+  <p class="error" hidden role="alert"></p>
+
+  <noscript>
+    <p class="note">Signing in needs JavaScript. Everything else on this page works without it.</p>
+  </noscript>
+</div>
+
+<script is:inline>
+  (function () {
+    var root = document.querySelector('.pair');
+    if (!root) return;
+    var api = root.getAttribute('data-api');
+    var next = root.getAttribute('data-next') || '/app';
+    var start = root.querySelector('[data-step="idle"]');
+    var panel = root.querySelector('.panel');
+    var codeEl = root.querySelector('.code');
+    var expiryEl = root.querySelector('.expiry');
+    var errEl = root.querySelector('.error');
+    var cancel = root.querySelector('[data-step="cancel"]');
+    var timers = [];
+
+    function stop() {
+      timers.forEach(clearInterval);
+      timers = [];
+    }
+
+    function fail(message) {
+      stop();
+      panel.hidden = true;
+      start.hidden = false;
+      start.disabled = false;
+      start.textContent = 'Try again';
+      errEl.textContent = message;
+      errEl.hidden = false;
+    }
+
+    function post(path, body) {
+      return fetch(api + path, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body || {}),
+      }).then(function (r) {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json();
+      });
+    }
+
+    function begin() {
+      errEl.hidden = true;
+      start.disabled = true;
+      start.textContent = 'Getting a code…';
+      post('/link/start')
+        .then(function (data) {
+          start.hidden = true;
+          panel.hidden = false;
+          /* Spaced into two halves: eight characters read as one run is where
+             people lose their place copying it across to a phone. */
+          codeEl.textContent = data.code.slice(0, 4) + ' ' + data.code.slice(4);
+          run(data.deviceToken, data.expiresInSec);
+        })
+        .catch(function () {
+          fail('Could not reach Munchview to get a code. Check your connection and try again.');
+        });
+    }
+
+    function run(deviceToken, expiresInSec) {
+      var left = expiresInSec;
+      function tick() {
+        left -= 1;
+        if (left <= 0) return fail('That code ran out. Codes last five minutes.');
+        var m = Math.floor(left / 60);
+        var s = left % 60;
+        expiryEl.textContent = 'Expires in ' + m + ':' + (s < 10 ? '0' : '') + s;
+      }
+      tick();
+      timers.push(setInterval(tick, 1000));
+
+      /* Two seconds: the whole wait is a person typing eight characters, so
+         this is measured in a handful of requests, not a poll storm. */
+      timers.push(
+        setInterval(function () {
+          post('/link/poll', { deviceToken: deviceToken })
+            .then(function (data) {
+              if (data.status === 'pending') return;
+              if (data.status !== 'ready') return fail('That code is no longer valid. Start again.');
+              stop();
+              try {
+                sessionStorage.setItem('mv_session', data.session);
+              } catch (e) {
+                return fail('This browser is blocking storage, so the sign-in cannot be kept.');
+              }
+              expiryEl.textContent = 'Signed in. Taking you through…';
+              window.location.assign(next);
+            })
+            .catch(function () {
+              /* A single failed poll is a blip, not a failure: the interval
+                 will try again in two seconds and the countdown still governs
+                 when this gives up. */
+            });
+        }, 2000),
+      );
+    }
+
+    start.addEventListener('click', begin);
+    cancel.addEventListener('click', function () {
+      stop();
+      panel.hidden = true;
+      start.hidden = false;
+      start.disabled = false;
+      start.textContent = 'Sign in with the app';
+    });
+  })();
+</script>
+
+<style>
+  .pair { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #ffb300; color: #1a1200; font: inherit; font-weight: 800;
+    border: 0; border-radius: 100px; padding: 12px 24px;
+    min-height: 48px; font-size: 15px; cursor: pointer;
+  }
+  .btn:disabled { opacity: .6; cursor: default; }
+  .panel { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .lead { margin: 0; color: #8d949b; font-size: 14.5px; }
+  .code {
+    margin: 2px 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: clamp(28px, 9vw, 40px); font-weight: 700; letter-spacing: .12em;
+    color: #eef2f6;
+  }
+  .hint, .expiry, .note, .error { margin: 0; font-size: 13.5px; color: #8d949b; }
+  .error { color: #ffb300; max-width: 40ch; }
+  .link {
+    background: none; border: 0; color: #8d949b; font: inherit; font-size: 13.5px;
+    text-decoration: underline; cursor: pointer; padding: 12px; min-height: 44px;
+  }
+  .link:hover { color: #eef2f6; }
+  :focus-visible { outline: 3px solid #ffb300; outline-offset: 3px; border-radius: 8px; }
+</style>

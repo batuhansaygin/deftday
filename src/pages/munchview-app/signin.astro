@@ -7,6 +7,8 @@
  */
 import { APP_PATH, PLAY_URL, SIGN_IN_READY } from '../../config/munchview';
 import MunchviewSignIn from '../../components/MunchviewSignIn.astro';
+import MunchviewPair from '../../components/MunchviewPair.astro';
+import { GOOGLE_READY } from '../../config/munchview';
 ---
 
 <!doctype html>
@@ -61,11 +63,12 @@ import MunchviewSignIn from '../../components/MunchviewSignIn.astro';
         SIGN_IN_READY ? (
           <>
             <p>
-              Your phone confirms it. Your profiles, watch history, likes and interests are
-              already there — this reads them, it does not copy them.
+              {GOOGLE_READY
+                ? 'Use the same Google account as your phone. Your profiles, watch history, likes and interests are already there — signing in reads them, it does not copy them.'
+                : 'Your phone confirms it. Your profiles, watch history, likes and interests are already there — this reads them, it does not copy them.'}
             </p>
             <div class="actions">
-              <MunchviewSignIn next={APP_PATH} />
+              {GOOGLE_READY ? <MunchviewSignIn next={APP_PATH} /> : <MunchviewPair next={APP_PATH} />}
             </div>
             <p class="alt">
               Don’t have the app yet? <a href={PLAY_URL}>Get it on Google Play</a> — it’s where

@@ -57,27 +57,34 @@ export const SHARE_NOTE = LIVE
  */
 
 /**
- * The Google OAuth WEB client — not used, and here to record why.
+ * The Google OAuth WEB client. "Continue with Google" is the intended door.
  *
- * The app signs in with an ANDROID client (expo-auth-session), and an Android
- * client cannot be used from a browser: Google binds it to a package name and
- * a signing certificate, it has no authorised JavaScript origin, and the
- * dialog is refused before a person sees it. Signing in the conventional way
- * on the web would need its own client, created by hand in the Google Cloud
- * console — there is no API for it, and no such client exists.
+ * Not set yet, and it cannot be set from here. The app signs in with an
+ * ANDROID client, and Google will not accept one from a browser: it is bound
+ * to a package name and a signing certificate, has no authorised JavaScript
+ * origin, and the dialog is refused before a person sees it. A web client has
+ * to be created by hand in the Google Cloud console — there is no API for it.
  *
- * So the web does not ask Google at all. It asks the phone, which is already
- * signed in, to vouch for it: munchview.app shows a code, the app confirms it,
- * and the Worker issues a session of its own. See web/content-api/src/link.js
- * in the Munchview repo for the flow and its trade-offs.
+ * Two things on the day it exists, and BOTH in the same change:
+ *   1. PUBLIC_GOOGLE_WEB_CLIENT_ID=... at build time, here;
+ *   2. the same id appended to the content Worker's GOOGLE_CLIENT_IDS secret,
+ *      which is the audience list /sync checks. A token minted for a client
+ *      the Worker has never heard of is refused — correct behaviour, and it
+ *      looks exactly like "sign-in does nothing".
  *
- * If a web client is ever created, the shorter path opens up — set this
- * variable at build time AND append the same id to the content Worker's
- * GOOGLE_CLIENT_IDS secret, which is the audience list /sync checks. Both, in
- * the same change: a token minted for a client the Worker does not know is
- * refused, which is correct and looks exactly like "sign-in does nothing".
+ * Until then the page falls back to pairing with the phone, which needs no
+ * Google client at all. See web/content-api/src/link.js in the Munchview repo.
  */
 export const GOOGLE_WEB_CLIENT_ID = import.meta.env.PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '';
+
+/**
+ * True once a web client exists and "Continue with Google" can actually work.
+ *
+ * The intended door, and the same one the app uses. Until the id is set the
+ * page falls back to pairing with the phone — which needs no Google client at
+ * all — so nobody is locked out while this is empty.
+ */
+export const GOOGLE_READY = GOOGLE_WEB_CLIENT_ID.length > 0;
 
 /**
  * True when the web can complete a sign-in.
