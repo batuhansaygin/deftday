@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import SiteChrome from '../components/SiteChrome.astro';
 import Footer from '../components/Footer.astro';
-import { STATUS_LINE } from '../config/munchview';
+import { SITE_URL, STATUS_LINE } from '../config/munchview';
 
 /*
  * Who runs this studio, where it is, and what it has actually released.
@@ -37,6 +37,10 @@ const ledger = [
     blurb: 'Starts a good video that fits the time you have. Six platforms, one player, no feed.',
     href: '/munchview',
     external: false,
+    /* The app's own site. Named here so the studio's index links to it as
+       well as to the studio's page about it — the two properties point at each
+       other on purpose. */
+    site: SITE_URL,
   },
   {
     name: 'EatStep',
@@ -92,6 +96,12 @@ const ledger = [
                   on it, so they get the arrow that means "onward". */}
               <span aria-hidden="true">{item.external ? ' ↗' : ' →'}</span>
             </a>
+            {item.site ? (
+              <a class="row-link" href={item.site} aria-label={`${item.name}'s own site`}>
+                {new URL(item.site).hostname}
+                <span aria-hidden="true"> ↗</span>
+              </a>
+            ) : null}
           </li>
         ))
       }

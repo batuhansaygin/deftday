@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import SiteChrome from '../../components/SiteChrome.astro';
 import Footer from '../../components/Footer.astro';
-import { STATUS_LINE, STATUS_CLAUSE } from '../../config/munchview';
+import { SITE_URL, STATUS_LINE, STATUS_CLAUSE } from '../../config/munchview';
 
 /* Kept honest on purpose: the app is on a closed test track, not in the store.
    The day it is public, the badge and this line change together. */
@@ -51,9 +51,14 @@ const proof = [
         </p>
         <p class="status"><span class="badge testing">{status}</span></p>
         <p class="hero-links">
-          <a class="cta" href="mailto:hello@deftday.com?subject=Munchview%20tester">Ask to be a tester</a>
+          <a class="cta" href={SITE_URL}>Visit munchview.app</a>
+          <a class="cta ghost" href="mailto:hello@deftday.com?subject=Munchview%20tester">Ask to be a tester</a>
           <a class="cta ghost" href="#how">See how it works</a>
         </p>
+        <!-- The app has its own home now. This page stays as the studio's
+             account of it — who made it and why — and sends the reader there
+             for the product itself. Two properties that link to each other
+             read as related rather than as a site and a stranger. -->
       </div>
 
       <div class="hero-phone">

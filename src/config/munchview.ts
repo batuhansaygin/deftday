@@ -15,6 +15,16 @@
 /** True once the app is on the public Play track, not the closed test. */
 export const LIVE = false;
 
+/**
+ * The app's own site, bought 2026-08-15.
+ *
+ * Here rather than typed into each page for the usual reason this file exists,
+ * and for one more: the two sites link to each other on purpose. Search engines
+ * read that as two related properties rather than one site and a stranger, and
+ * a constant is what stops half the links going stale the day anything moves.
+ */
+export const SITE_URL = 'https://munchview.app';
+
 /** The Play listing. Correct whether the app is in testing or public. */
 export const PLAY_URL = 'https://play.google.com/store/apps/details?id=com.munchview.app';
 
