@@ -98,6 +98,17 @@ const { next = APP_PATH } = Astro.props as Props;
                 text: 'continue_with',
                 logo_alignment: 'left',
               });
+              /* renderButton draws into an iframe and reports nothing when
+                 Google refuses — a blocked script, an origin the client does
+                 not list, a client still propagating. Every one of those left
+                 an empty gap where a button should be, which is the worst way
+                 to fail: the page looks finished and does nothing. So: if
+                 nothing has been drawn shortly after, say so. */
+              setTimeout(function () {
+                if (mount.childElementCount === 0) {
+                  fail('The Google button could not be drawn. If this keeps happening, sign in on your phone — the app is where the account lives.');
+                }
+              }, 4000);
               return;
             }
             waited += 200;

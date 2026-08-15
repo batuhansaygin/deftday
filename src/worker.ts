@@ -47,6 +47,44 @@ const APP_HOST = 'munchview.app';
    extension-less path onto it. A trailing slash looks for a directory that
    does not exist and 404s. */
 const APP_ROOT = '/munchview-app';
+
+const CSP_BASE_NO_STYLE =
+  "default-src 'self'; font-src 'self'; " +
+  "frame-ancestors 'self'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests";
+
+const CSP_BASE = `style-src 'self' 'unsafe-inline'; ${CSP_BASE_NO_STYLE}`;
+
+/**
+ * Per-page policies for munchview.app. Keyed by the PUBLIC path, because that
+ * is what the request carries — the rewrite to /munchview-app/... happens
+ * after this map is read.
+ */
+const CSP_BY_PATH: Record<string, string> = {
+  /* Google Identity Services: its script, the iframe it draws the button in,
+     and the endpoint it posts the credential to. Nothing else is added, and
+     the avatar host is there because the button shows one. */
+  '/signin':
+    "script-src 'self' 'unsafe-inline' https://accounts.google.com; " +
+    /* GIS pulls its own stylesheet for the button. Without this the button
+       draws and comes out unstyled — which is worse than not drawing, because
+       it looks like a broken page rather than a missing feature. */
+    "style-src 'self' 'unsafe-inline' https://accounts.google.com; " +
+    "img-src 'self' data: https://*.googleusercontent.com; " +
+    "connect-src 'self' https://accounts.google.com; " +
+    'frame-src https://accounts.google.com; ' +
+    CSP_BASE_NO_STYLE,
+  /* Reads the signed-in person's own record, and shows thumbnails for it.
+     `img-src https:` is deliberately broad and deliberately only here: the
+     pictures come from every platform Munchview plays, and PeerTube is
+     federated — any instance. That cannot be enumerated, so a host list would
+     be a list that silently breaks. Images are the one directive where a wide
+     allowance costs little; scripts stay on this origin. */
+  '/app':
+    "script-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "connect-src 'self' https://munchview-content.bsaygin.workers.dev; " +
+    CSP_BASE,
+};
 const HSTS = 'max-age=31536000; includeSubDomains';
 
 export default {
@@ -145,6 +183,22 @@ export default {
     }
     const headers = new Headers(response.headers);
     headers.set('Strict-Transport-Security', HSTS);
+    /**
+     * The two munchview.app pages that must reach something other than this
+     * origin, given their policy HERE rather than in public/_headers.
+     *
+     * _headers appends, it does not replace — and a browser handed two
+     * Content-Security-Policy headers enforces the INTERSECTION of both, so
+     * the site-wide policy went on blocking Google's sign-in script no matter
+     * what the second one allowed. The button rendered nowhere and said
+     * nothing (reported 2026-08-15). `set` here overwrites, which is the only
+     * way to actually loosen a policy for one page.
+     *
+     * deftday.com is untouched: it keeps the tighter site-wide policy from
+     * _headers, and these two paths only exist under munchview.app.
+     */
+    const csp = CSP_BY_PATH[url.pathname];
+    if (csp != null && url.hostname === APP_HOST) headers.set('Content-Security-Policy', csp);
     return new Response(response.body, {
       status: response.status,
       statusText: response.statusText,
