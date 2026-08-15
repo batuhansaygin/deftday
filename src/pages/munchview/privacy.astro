@@ -48,11 +48,13 @@ const updated = 'August 7, 2026';
         comes from and keeps short-lived operational logs, a few days, for
         reliability and abuse prevention. We do not use that to identify you, we
         do not build a profile, and we do not sell or share it. The service
-        content cache is keyed by category or keyword, never by person. Two
-        things on the service are not that cache, and both are named here
+        content cache is keyed by category or keyword, never by person. Three
+        things on the service are not that cache, and all three are named here
         rather than hidden behind an absolute: an abuse counter that holds the
-        request's IP address for 120 seconds, and — only if you sign in — the
-        sync record described below, stored under your Google account id.
+        request's IP address for 120 seconds; the sync record described below,
+        stored under your Google account id and only if you sign in; and, only
+        while you are signing in on munchview.app, a five-minute note of the
+        code you are confirming, described in its own section.
       </p>
     </section>
 
@@ -116,6 +118,44 @@ const updated = 'August 7, 2026';
         </li>
       </ul>
       <p>We do not sell or share any of it, and we never use it to advertise.</p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="weblink">
+      <h2 id="weblink">Signing in on munchview.app</h2>
+      <p>
+        The website never asks Google anything, and no Google credential ever
+        reaches your browser. Instead it shows a code. You type that code into
+        Munchview on your phone, which is already signed in, and the app
+        confirms it — the same way a television asks you to confirm it on your
+        phone, and for the same reason.
+      </p>
+      <ul>
+        <li>
+          The browser is then given a key to the record described above. There
+          is one record and two ways of reading it; nothing is copied and no
+          second copy of anything is made.
+        </li>
+        <li>
+          While a code waits to be confirmed — at most five minutes — we hold
+          the browser's name and the town its request appears to come from,
+          along with the code itself. That is there so the app can show you
+          what you are about to approve and you can tell whether it is you. It
+          is shown to you and to nobody else.
+        </li>
+        <li>
+          It is deleted as soon as the code is used, or when the five minutes
+          run out, whichever happens first. A code works exactly once.
+        </li>
+        <li>
+          Closing the browser tab ends the browser's session. <b>Delete my
+          account data</b> in the app erases the record itself.
+        </li>
+      </ul>
+      <p>
+        Only confirm a code if you are looking at that browser yourself. It is
+        the one thing in this flow that we cannot check for you, which is why
+        the app shows you where the request came from before it asks.
+      </p>
     </section>
 
     <section class="legal-block" aria-labelledby="device">

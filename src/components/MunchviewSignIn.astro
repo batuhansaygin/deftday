@@ -1,119 +1,183 @@
 ---
 /**
- * "Continue with Google" for munchview.app.
+ * Signing in on munchview.app by confirming it in the app.
  *
- * The same account as the phone, which is the whole point: the app signs in
- * with Google and writes a snapshot to /sync keyed by the Google `sub`, so a
- * browser holding an ID token for the same person reads back the same
- * profiles, history, likes and interests. Nothing is copied between them —
- * there is one record and two readers.
+ * The browser never touches a Google credential. It asks the content API for a
+ * code, a person reads that code onto their phone, the app — already signed in
+ * with Google — confirms it, and the API hands this page a session it signed
+ * itself. Same account, same record, one fewer credential in the browser than
+ * the conventional flow would put there.
  *
- * Google Identity Services rather than a redirect dance: GIS hands back an ID
- * token in the page, which is exactly what /sync wants in the Authorization
- * header. No client secret is involved and none could be — a secret in a
- * browser is not a secret.
+ * Why not "Continue with Google" directly: Munchview has an Android OAuth
+ * client and no web one, and Google will not authenticate a browser with an
+ * Android client. See src/config/munchview.ts.
  *
- * The token is kept in sessionStorage, not localStorage and not a cookie.
- * sessionStorage dies with the tab, is not sent on any request automatically,
- * and cannot be read cross-origin — so a Google ID token, which is a bearer
- * credential for one person's own data, has the shortest life this can give
- * it. It is also short-lived at Google's end (about an hour), so the app has
- * to handle it expiring anyway.
- *
- * If the web client id is not configured this renders nothing at all. The
- * caller shows its normal CTA instead. A button that opens a Google dialog
- * and then fails is worse than no button.
+ * The session is kept in sessionStorage — it dies with the tab, is never sent
+ * automatically with a request, and cannot be read cross-origin. A shared or
+ * borrowed computer forgets it by closing the tab, which is the behaviour
+ * somebody signing in on a machine that is not theirs would expect.
  */
-import { APP_PATH, GOOGLE_WEB_CLIENT_ID, SIGN_IN_READY } from '../config/munchview';
+import { CONTENT_API_URL, APP_PATH } from '../config/munchview';
 
 interface Props {
-  /** Where to go once Google has answered. */
+  /** Where to go once the pairing completes. */
   next?: string;
-  /** Rendered when sign-in is not configured yet. */
-  label?: string;
 }
 const { next = APP_PATH } = Astro.props as Props;
 ---
 
-{
-  SIGN_IN_READY && (
-    <div class="mv-signin">
-      <div
-        id="mv-google-btn"
-        data-client-id={GOOGLE_WEB_CLIENT_ID}
-        data-next={next}
-      />
-      <noscript>
-        <p class="mv-signin-note">
-          Signing in needs JavaScript. Everything else on this page works without it.
-        </p>
-      </noscript>
-      <p class="mv-signin-note" id="mv-signin-error" hidden role="alert" />
+<div class="pair" data-api={CONTENT_API_URL} data-next={next}>
+  <button class="btn" type="button" data-step="idle">Sign in with the app</button>
 
-      <script is:inline src="https://accounts.google.com/gsi/client" async defer></script>
-      <script is:inline>
-        (function () {
-          var mount = document.getElementById('mv-google-btn');
-          if (!mount) return;
-          var clientId = mount.getAttribute('data-client-id');
-          var next = mount.getAttribute('data-next') || '/app';
-          var err = document.getElementById('mv-signin-error');
+  <!--
+    One live region for the whole flow. Three separate ones would have a screen
+    reader announce the code, then the countdown, then the status, over each
+    other; this way the reader hears one thing at a time, in order.
+  -->
+  <div class="panel" hidden aria-live="polite">
+    <p class="lead">Open Munchview on your phone and enter this code:</p>
+    <p class="code" aria-label="Your code, one character at a time"></p>
+    <p class="hint">Settings → Sign in on the web</p>
+    <p class="expiry"></p>
+    <button class="link" type="button" data-step="cancel">Start again</button>
+  </div>
 
-          function fail(message) {
-            if (!err) return;
-            err.textContent = message;
-            err.hidden = false;
-          }
+  <p class="error" hidden role="alert"></p>
 
-          function onCredential(response) {
-            var token = response && response.credential;
-            if (!token) return fail('Google did not return a sign-in. Please try again.');
-            try {
-              sessionStorage.setItem('mv_id_token', token);
-            } catch (e) {
-              /* Private mode, or storage disabled. The app can ask again;
-                 what it must not do is pretend the sign-in worked. */
-              return fail('This browser is blocking storage, so the sign-in cannot be kept.');
-            }
-            window.location.assign(next);
-          }
+  <noscript>
+    <p class="note">Signing in needs JavaScript. Everything else on this page works without it.</p>
+  </noscript>
+</div>
 
-          /* GIS loads async; wait for it rather than racing it. Ten seconds is
-             long enough for a slow network and short enough that a blocked
-             script does not leave an empty space with no explanation. */
-          var waited = 0;
-          var timer = setInterval(function () {
-            if (window.google && window.google.accounts && window.google.accounts.id) {
-              clearInterval(timer);
-              window.google.accounts.id.initialize({
-                client_id: clientId,
-                callback: onCredential,
-                auto_select: false,
-                cancel_on_tap_outside: true,
-                ux_mode: 'popup',
-              });
-              window.google.accounts.id.renderButton(mount, {
-                theme: 'filled_black',
-                size: 'large',
-                shape: 'pill',
-                text: 'continue_with',
-                logo_alignment: 'left',
-              });
-              return;
-            }
-            waited += 200;
-            if (waited >= 10000) {
-              clearInterval(timer);
-              fail('Google’s sign-in script did not load. A blocker or a network filter usually explains it.');
-            }
-          }, 200);
-        })();
-      </script>
-    </div>
-  )
-}
+<script is:inline>
+  (function () {
+    var root = document.querySelector('.pair');
+    if (!root) return;
+    var api = root.getAttribute('data-api');
+    var next = root.getAttribute('data-next') || '/app';
+    var start = root.querySelector('[data-step="idle"]');
+    var panel = root.querySelector('.panel');
+    var codeEl = root.querySelector('.code');
+    var expiryEl = root.querySelector('.expiry');
+    var errEl = root.querySelector('.error');
+    var cancel = root.querySelector('[data-step="cancel"]');
+    var timers = [];
+
+    function stop() {
+      timers.forEach(clearInterval);
+      timers = [];
+    }
+
+    function fail(message) {
+      stop();
+      panel.hidden = true;
+      start.hidden = false;
+      start.disabled = false;
+      start.textContent = 'Try again';
+      errEl.textContent = message;
+      errEl.hidden = false;
+    }
+
+    function post(path, body) {
+      return fetch(api + path, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body || {}),
+      }).then(function (r) {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json();
+      });
+    }
+
+    function begin() {
+      errEl.hidden = true;
+      start.disabled = true;
+      start.textContent = 'Getting a code…';
+      post('/link/start')
+        .then(function (data) {
+          start.hidden = true;
+          panel.hidden = false;
+          /* Spaced into two halves: eight characters read as one run is where
+             people lose their place copying it across to a phone. */
+          codeEl.textContent = data.code.slice(0, 4) + ' ' + data.code.slice(4);
+          run(data.deviceToken, data.expiresInSec);
+        })
+        .catch(function () {
+          fail('Could not reach Munchview to get a code. Check your connection and try again.');
+        });
+    }
+
+    function run(deviceToken, expiresInSec) {
+      var left = expiresInSec;
+      function tick() {
+        left -= 1;
+        if (left <= 0) return fail('That code ran out. Codes last five minutes.');
+        var m = Math.floor(left / 60);
+        var s = left % 60;
+        expiryEl.textContent = 'Expires in ' + m + ':' + (s < 10 ? '0' : '') + s;
+      }
+      tick();
+      timers.push(setInterval(tick, 1000));
+
+      /* Two seconds: the whole wait is a person typing eight characters, so
+         this is measured in a handful of requests, not a poll storm. */
+      timers.push(
+        setInterval(function () {
+          post('/link/poll', { deviceToken: deviceToken })
+            .then(function (data) {
+              if (data.status === 'pending') return;
+              if (data.status !== 'ready') return fail('That code is no longer valid. Start again.');
+              stop();
+              try {
+                sessionStorage.setItem('mv_session', data.session);
+              } catch (e) {
+                return fail('This browser is blocking storage, so the sign-in cannot be kept.');
+              }
+              expiryEl.textContent = 'Signed in. Taking you through…';
+              window.location.assign(next);
+            })
+            .catch(function () {
+              /* A single failed poll is a blip, not a failure: the interval
+                 will try again in two seconds and the countdown still governs
+                 when this gives up. */
+            });
+        }, 2000),
+      );
+    }
+
+    start.addEventListener('click', begin);
+    cancel.addEventListener('click', function () {
+      stop();
+      panel.hidden = true;
+      start.hidden = false;
+      start.disabled = false;
+      start.textContent = 'Sign in with the app';
+    });
+  })();
+</script>
 
 <style>
-  .mv-signin { display: inline-flex; flex-direction: column; gap: 8px; }
-  .mv-signin-note { margin: 0; color: #8d949b; font-size: 13.5px; max-width: 42ch; }
+  .pair { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #ffb300; color: #1a1200; font: inherit; font-weight: 800;
+    border: 0; border-radius: 100px; padding: 12px 24px;
+    min-height: 48px; font-size: 15px; cursor: pointer;
+  }
+  .btn:disabled { opacity: .6; cursor: default; }
+  .panel { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .lead { margin: 0; color: #8d949b; font-size: 14.5px; }
+  .code {
+    margin: 2px 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: clamp(28px, 9vw, 40px); font-weight: 700; letter-spacing: .12em;
+    color: #eef2f6;
+  }
+  .hint, .expiry, .note, .error { margin: 0; font-size: 13.5px; color: #8d949b; }
+  .error { color: #ffb300; max-width: 40ch; }
+  .link {
+    background: none; border: 0; color: #8d949b; font: inherit; font-size: 13.5px;
+    text-decoration: underline; cursor: pointer; padding: 12px; min-height: 44px;
+  }
+  .link:hover { color: #eef2f6; }
+  :focus-visible { outline: 3px solid #ffb300; outline-offset: 3px; border-radius: 8px; }
 </style>

@@ -19,7 +19,10 @@
  * the closed test the way five other surfaces once nearly did.
  */
 import { LIVE, PLAY_URL, SIGN_IN_READY, STATUS_BADGE, STATUS_CLAUSE } from '../../config/munchview';
-import MunchviewSignIn from '../../components/MunchviewSignIn.astro';
+/* The pairing flow itself lives on /signin, not here. It is several steps with
+   a code and a countdown — one decision per screen, the same law the app is
+   built on — and inlining a component that carries its own script in two
+   places on one page would run that script twice. */
 
 const site = 'https://munchview.app';
 
@@ -314,7 +317,7 @@ const jsonLd = {
           <div class="cta">
             {SIGN_IN_READY ? (
               <>
-                <MunchviewSignIn />
+                <a class="btn" href="/signin">Sign in</a>
                 <a class="btn ghost" href={PLAY_URL}>Get the app</a>
                 <small>Same account as your phone — your profiles, history and picks.</small>
               </>
@@ -417,7 +420,7 @@ const jsonLd = {
       <section class="wrap close">
         <h2>Say how long you’ve got.</h2>
         <div class="cta" style="justify-content:center">
-          {SIGN_IN_READY ? <MunchviewSignIn /> : null}
+          {SIGN_IN_READY ? <a class="btn" href="/signin">Sign in</a> : null}
           <a class={SIGN_IN_READY ? 'btn ghost' : 'btn'} href={PLAY_URL}>
             {LIVE ? 'Get it on Google Play' : 'Join the closed test'}
           </a>

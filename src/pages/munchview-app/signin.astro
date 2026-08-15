@@ -46,6 +46,8 @@ import MunchviewSignIn from '../../components/MunchviewSignIn.astro';
         min-height: 44px; font-size: 15px;
       }
       .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+      .alt { margin: 24px 0 0; font-size: 13.5px; }
+      .alt a { color: var(--ink); }
       .back { display: block; margin-top: 24px; color: var(--muted); font-size: 14px; text-decoration: none; }
       .back:hover { color: var(--ink); }
       :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
@@ -59,12 +61,16 @@ import MunchviewSignIn from '../../components/MunchviewSignIn.astro';
         SIGN_IN_READY ? (
           <>
             <p>
-              Use the same Google account as your phone. Your profiles, watch history, likes and
-              interests are already there — signing in reads them, it does not copy them.
+              Your phone confirms it. Your profiles, watch history, likes and interests are
+              already there — this reads them, it does not copy them.
             </p>
             <div class="actions">
               <MunchviewSignIn next={APP_PATH} />
             </div>
+            <p class="alt">
+              Don’t have the app yet? <a href={PLAY_URL}>Get it on Google Play</a> — it’s where
+              your account lives.
+            </p>
           </>
         ) : (
           <>

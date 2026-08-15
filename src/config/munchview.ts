@@ -57,32 +57,40 @@ export const SHARE_NOTE = LIVE
  */
 
 /**
- * The Google OAuth WEB client, for signing in on munchview.app.
+ * The Google OAuth WEB client — not used, and here to record why.
  *
  * The app signs in with an ANDROID client (expo-auth-session), and an Android
- * client cannot be used from a browser — Google binds it to a package name and
- * a signing certificate. Signing in on the web needs its own client, created
- * in the Google Cloud console; there is no API for it.
+ * client cannot be used from a browser: Google binds it to a package name and
+ * a signing certificate, it has no authorised JavaScript origin, and the
+ * dialog is refused before a person sees it. Signing in the conventional way
+ * on the web would need its own client, created by hand in the Google Cloud
+ * console — there is no API for it, and no such client exists.
  *
- * Read from the build environment rather than hard-coded so the value can
- * arrive without a code change:
+ * So the web does not ask Google at all. It asks the phone, which is already
+ * signed in, to vouch for it: munchview.app shows a code, the app confirms it,
+ * and the Worker issues a session of its own. See web/content-api/src/link.js
+ * in the Munchview repo for the flow and its trade-offs.
  *
- *   PUBLIC_GOOGLE_WEB_CLIENT_ID=xxxxx.apps.googleusercontent.com npx astro build
- *
- * Two things have to happen together on the day it is set:
- *   1. this variable, and
- *   2. the same id appended to the content Worker's GOOGLE_CLIENT_IDS secret,
- *      which is the list /sync verifies an ID token's audience against. A
- *      token minted for a client the Worker does not know is refused, which is
- *      the correct behaviour and would look like "sign-in does nothing".
- *
- * Until then `SIGN_IN_READY` is false and the pages keep the install CTA. A
- * button that opens a Google dialog which then fails is worse than no button.
+ * If a web client is ever created, the shorter path opens up — set this
+ * variable at build time AND append the same id to the content Worker's
+ * GOOGLE_CLIENT_IDS secret, which is the audience list /sync checks. Both, in
+ * the same change: a token minted for a client the Worker does not know is
+ * refused, which is correct and looks exactly like "sign-in does nothing".
  */
 export const GOOGLE_WEB_CLIENT_ID = import.meta.env.PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '';
 
-/** True when the web can actually complete a sign-in. */
-export const SIGN_IN_READY = GOOGLE_WEB_CLIENT_ID.length > 0;
+/**
+ * True when the web can complete a sign-in.
+ *
+ * Now always true: pairing with the phone needs no Google client, so the flag
+ * that used to gate an unbuildable button gates nothing. Kept as the single
+ * place the pages ask the question, because there is still a version of the
+ * answer that is "no" — a deployment with no content API to pair against.
+ */
+export const SIGN_IN_READY = true;
+
+/** Where the browser starts a pairing, and where it later reads the record. */
+export const CONTENT_API_URL = 'https://munchview-content.bsaygin.workers.dev';
 
 /** Where a signed-in reader lands. Served by the Next.js app. */
 export const APP_PATH = '/app';
