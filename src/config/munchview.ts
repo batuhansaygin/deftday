@@ -57,25 +57,32 @@ export const SHARE_NOTE = LIVE
  */
 
 /**
- * The Google OAuth WEB client. "Continue with Google" is the intended door.
+ * The Google OAuth WEB client, for "Continue with Google" on munchview.app.
  *
- * Not set yet, and it cannot be set from here. The app signs in with an
- * ANDROID client, and Google will not accept one from a browser: it is bound
- * to a package name and a signing certificate, has no authorised JavaScript
- * origin, and the dialog is refused before a person sees it. A web client has
- * to be created by hand in the Google Cloud console — there is no API for it.
+ * A separate client from the app's, and it has to be: the app's is an ANDROID
+ * client, bound to a package name and a signing certificate, and Google
+ * refuses one from a browser — no authorised JavaScript origin, so the dialog
+ * fails before a person sees it. This one is type "Web application" with
+ * munchview.app and www.munchview.app as its origins.
  *
- * Two things on the day it exists, and BOTH in the same change:
- *   1. PUBLIC_GOOGLE_WEB_CLIENT_ID=... at build time, here;
- *   2. the same id appended to the content Worker's GOOGLE_CLIENT_IDS secret,
- *      which is the audience list /sync checks. A token minted for a client
- *      the Worker has never heard of is refused — correct behaviour, and it
- *      looks exactly like "sign-in does nothing".
+ * Committed rather than read from a build variable, and that is deliberate.
+ * An OAuth client id is not a secret — Google Identity Services needs it in
+ * the page, so it is served in the HTML to every visitor, and the app's
+ * Android id has always shipped inside the APK the same way. Keeping it out
+ * of git would hide it from nobody while adding a real failure: a clean
+ * checkout builds with the variable unset, GOOGLE_READY goes false, and
+ * sign-in quietly reverts to the fallback with nothing to show why.
  *
- * Until then the page falls back to pairing with the phone, which needs no
- * Google client at all. See web/content-api/src/link.js in the Munchview repo.
+ * The client SECRET is a different thing entirely and is not here, not in
+ * this repo, and not needed — this flow never uses one.
+ *
+ * Paired with the content Worker's GOOGLE_CLIENT_IDS secret, which is the
+ * audience list /sync verifies an ID token against. Both hold this id; a
+ * token minted for a client the Worker has never heard of is refused, which
+ * is correct and looks exactly like "sign-in does nothing".
  */
-export const GOOGLE_WEB_CLIENT_ID = import.meta.env.PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '';
+export const GOOGLE_WEB_CLIENT_ID =
+  import.meta.env.PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '1011416955629-85ce14n62dk5n6fmjsnd2be6bmu4ltbh.apps.googleusercontent.com';
 
 /**
  * True once a web client exists and "Continue with Google" can actually work.
