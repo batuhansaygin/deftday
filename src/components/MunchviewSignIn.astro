@@ -1,0 +1,119 @@
+---
+/**
+ * "Continue with Google" for munchview.app.
+ *
+ * The same account as the phone, which is the whole point: the app signs in
+ * with Google and writes a snapshot to /sync keyed by the Google `sub`, so a
+ * browser holding an ID token for the same person reads back the same
+ * profiles, history, likes and interests. Nothing is copied between them —
+ * there is one record and two readers.
+ *
+ * Google Identity Services rather than a redirect dance: GIS hands back an ID
+ * token in the page, which is exactly what /sync wants in the Authorization
+ * header. No client secret is involved and none could be — a secret in a
+ * browser is not a secret.
+ *
+ * The token is kept in sessionStorage, not localStorage and not a cookie.
+ * sessionStorage dies with the tab, is not sent on any request automatically,
+ * and cannot be read cross-origin — so a Google ID token, which is a bearer
+ * credential for one person's own data, has the shortest life this can give
+ * it. It is also short-lived at Google's end (about an hour), so the app has
+ * to handle it expiring anyway.
+ *
+ * If the web client id is not configured this renders nothing at all. The
+ * caller shows its normal CTA instead. A button that opens a Google dialog
+ * and then fails is worse than no button.
+ */
+import { APP_PATH, GOOGLE_WEB_CLIENT_ID, SIGN_IN_READY } from '../config/munchview';
+
+interface Props {
+  /** Where to go once Google has answered. */
+  next?: string;
+  /** Rendered when sign-in is not configured yet. */
+  label?: string;
+}
+const { next = APP_PATH } = Astro.props as Props;
+---
+
+{
+  SIGN_IN_READY && (
+    <div class="mv-signin">
+      <div
+        id="mv-google-btn"
+        data-client-id={GOOGLE_WEB_CLIENT_ID}
+        data-next={next}
+      />
+      <noscript>
+        <p class="mv-signin-note">
+          Signing in needs JavaScript. Everything else on this page works without it.
+        </p>
+      </noscript>
+      <p class="mv-signin-note" id="mv-signin-error" hidden role="alert" />
+
+      <script is:inline src="https://accounts.google.com/gsi/client" async defer></script>
+      <script is:inline>
+        (function () {
+          var mount = document.getElementById('mv-google-btn');
+          if (!mount) return;
+          var clientId = mount.getAttribute('data-client-id');
+          var next = mount.getAttribute('data-next') || '/app';
+          var err = document.getElementById('mv-signin-error');
+
+          function fail(message) {
+            if (!err) return;
+            err.textContent = message;
+            err.hidden = false;
+          }
+
+          function onCredential(response) {
+            var token = response && response.credential;
+            if (!token) return fail('Google did not return a sign-in. Please try again.');
+            try {
+              sessionStorage.setItem('mv_id_token', token);
+            } catch (e) {
+              /* Private mode, or storage disabled. The app can ask again;
+                 what it must not do is pretend the sign-in worked. */
+              return fail('This browser is blocking storage, so the sign-in cannot be kept.');
+            }
+            window.location.assign(next);
+          }
+
+          /* GIS loads async; wait for it rather than racing it. Ten seconds is
+             long enough for a slow network and short enough that a blocked
+             script does not leave an empty space with no explanation. */
+          var waited = 0;
+          var timer = setInterval(function () {
+            if (window.google && window.google.accounts && window.google.accounts.id) {
+              clearInterval(timer);
+              window.google.accounts.id.initialize({
+                client_id: clientId,
+                callback: onCredential,
+                auto_select: false,
+                cancel_on_tap_outside: true,
+                ux_mode: 'popup',
+              });
+              window.google.accounts.id.renderButton(mount, {
+                theme: 'filled_black',
+                size: 'large',
+                shape: 'pill',
+                text: 'continue_with',
+                logo_alignment: 'left',
+              });
+              return;
+            }
+            waited += 200;
+            if (waited >= 10000) {
+              clearInterval(timer);
+              fail('Google’s sign-in script did not load. A blocker or a network filter usually explains it.');
+            }
+          }, 200);
+        })();
+      </script>
+    </div>
+  )
+}
+
+<style>
+  .mv-signin { display: inline-flex; flex-direction: column; gap: 8px; }
+  .mv-signin-note { margin: 0; color: #8d949b; font-size: 13.5px; max-width: 42ch; }
+</style>

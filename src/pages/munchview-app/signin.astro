@@ -1,0 +1,84 @@
+---
+/**
+ * munchview.app/signin — one screen, one decision.
+ *
+ * Deliberately not indexed: it is a door, not a page anybody should arrive at
+ * from a search. The marketing pages are what SEO is for.
+ */
+import { APP_PATH, PLAY_URL, SIGN_IN_READY } from '../../config/munchview';
+import MunchviewSignIn from '../../components/MunchviewSignIn.astro';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in — Munchview</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="theme-color" content="#0E101A" />
+    <link rel="icon" href="/munchview/brand/icon-32.png" sizes="32x32" />
+    <style>
+      :root {
+        --bg: #0e101a; --surface: #181b26; --line: #222633;
+        --accent: #ffb300; --ink: #eef2f6; --muted: #8d949b;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; min-height: 100dvh; background: var(--bg); color: var(--ink);
+        font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        display: grid; place-items: center; padding: 32px;
+        -webkit-font-smoothing: antialiased;
+      }
+      .card {
+        width: min(100%, 420px); background: var(--surface);
+        border: 1px solid var(--line); border-radius: 18px; padding: 36px 30px;
+        text-align: center;
+      }
+      img.mark { width: 56px; height: 56px; margin: 0 auto 20px; display: block; }
+      h1 { margin: 0 0 10px; font-size: 25px; letter-spacing: -.02em; }
+      p { margin: 0 0 26px; color: var(--muted); font-size: 15px; }
+      .actions { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        background: var(--accent); color: #1a1200; font-weight: 800;
+        border-radius: 100px; padding: 12px 22px; text-decoration: none;
+        min-height: 44px; font-size: 15px;
+      }
+      .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+      .back { display: block; margin-top: 24px; color: var(--muted); font-size: 14px; text-decoration: none; }
+      .back:hover { color: var(--ink); }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <img class="mark" src="/munchview/brand/mark-192.png" width="56" height="56" alt="" />
+      <h1>Sign in to Munchview</h1>
+      {
+        SIGN_IN_READY ? (
+          <>
+            <p>
+              Use the same Google account as your phone. Your profiles, watch history, likes and
+              interests are already there — signing in reads them, it does not copy them.
+            </p>
+            <div class="actions">
+              <MunchviewSignIn next={APP_PATH} />
+            </div>
+          </>
+        ) : (
+          <>
+            <p>
+              Signing in on the web is not switched on yet. The app is where everything works
+              today, and your account carries over the moment this opens.
+            </p>
+            <div class="actions">
+              <a class="btn" href={PLAY_URL}>Get the app</a>
+            </div>
+          </>
+        )
+      }
+      <a class="back" href="/">← Back to Munchview</a>
+    </main>
+  </body>
+</html>

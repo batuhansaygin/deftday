@@ -118,16 +118,27 @@ export default {
     /* munchview.app's root is the app's page, not the studio's. Rewritten
        rather than redirected: the visitor asked for munchview.app and should
        stay on it. */
-    let assetRequest = request;
-    if (url.hostname === APP_HOST && (url.pathname === '/' || url.pathname === '')) {
-      const rewritten = new URL(url);
-      rewritten.pathname = APP_ROOT;
-      assetRequest = new Request(rewritten, request);
-    }
-
+    /**
+     * munchview.app's pages live in the munchview-app folder; its ASSETS do
+     * not.
+     *
+     * Prefixing every path blindly breaks the images, which are shared with
+     * deftday.com and sit at /munchview/... — prefixed, they become
+     * /munchview-app/munchview/... and 404. So the folder is TRIED first and
+     * the plain path is the fallback. One extra lookup on a miss, against an
+     * edge cache, and no list of exceptions to keep in step with the files.
+     */
     let response: Response;
     try {
-      response = await env.ASSETS.fetch(assetRequest);
+      if (url.hostname === APP_HOST) {
+        const inFolder = new URL(url);
+        inFolder.pathname =
+          url.pathname === '/' || url.pathname === '' ? APP_ROOT : `${APP_ROOT}${url.pathname}`;
+        response = await env.ASSETS.fetch(new Request(inFolder, request));
+        if (response.status === 404) response = await env.ASSETS.fetch(request);
+      } else {
+        response = await env.ASSETS.fetch(request);
+      }
     } catch (err) {
       logError(env, 'assets-fetch-failed', String(err));
       throw err;
