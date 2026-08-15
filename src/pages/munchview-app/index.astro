@@ -1,0 +1,421 @@
+---
+/**
+ * munchview.app — the app's own front door.
+ *
+ * The owner bought the domain on 2026-08-15 and asked for the look of
+ * JustWatch: night navy, gold, a cinematic top. The LOOK is what is borrowed.
+ * The layout is not, and deliberately: JustWatch is a catalogue that tells you
+ * where a film streams and hands you to Netflix. Munchview starts something
+ * now. Copying a catalogue's shape — search bar, provider grid, rows of
+ * posters — would sell a product this is not, and `store/ASO.md` in the app
+ * repo says in as many words that competing as a finder is a fight we lose.
+ *
+ * Everything on this page is the app's own: the colours are the tokens from
+ * src/theme/tokens.ts, the mark is the icon's own foreground layer, and the
+ * screenshots are whole screens from the release build — no mockups, no
+ * device frames drawn round a render.
+ *
+ * Status text comes from ../../config/munchview so this page cannot outlive
+ * the closed test the way five other surfaces once nearly did.
+ */
+import { LIVE, PLAY_URL, STATUS_BADGE, STATUS_CLAUSE } from '../../config/munchview';
+
+const site = 'https://munchview.app';
+
+const lengths = [
+  { n: '10', unit: 'min', what: 'a coffee, a queue, a bus stop' },
+  { n: '20', unit: 'min', what: 'lunch at your desk' },
+  { n: '30+', unit: 'min', what: 'the sofa, properly' },
+];
+
+const platforms = ['YouTube', 'Vimeo', 'Dailymotion', 'Twitch', 'PeerTube', 'Internet Archive'];
+
+/* Real captures from 1.3.41, the build published the same day. Whole screens,
+   at the size the pages already expect. */
+const shots = {
+  home: '/munchview/shots/new-home.webp',
+  player: '/munchview/shots/new-player.webp',
+  discover: '/munchview/shots/new-discover.webp',
+  preferences: '/munchview/shots/new-preferences.webp',
+};
+
+const features = [
+  {
+    title: 'No feed to fall into',
+    body:
+      'There is no infinite scroll and no autoplay tunnel. A handful of picks, a list built from what you actually finish, and every one of them ends on purpose.',
+  },
+  {
+    title: 'Cut to the time you have',
+    body:
+      'Say ten minutes and you get something that fits in ten. Not a ninety-minute episode with a progress bar you will abandon at the door.',
+  },
+  {
+    title: 'It learns on your phone',
+    body:
+      'Like a video to see more of it; say “not for me” and that channel stays away. The learning lives on the device. No account is needed to use any of it.',
+  },
+  {
+    title: 'Your country, your language',
+    body:
+      'Pick a country and the whole feed follows it — the search goes out in that country’s language, not in English with a flag on it.',
+  },
+  {
+    title: 'One player for six platforms',
+    body:
+      'Everything plays inside the app, in each platform’s own official embedded player. One set of controls to learn, one place to be.',
+  },
+  {
+    title: 'Nothing watching you',
+    body:
+      'No analytics, no trackers, no advertising of ours — in either tier. The platforms run their own ads inside their players; those are theirs, and we say so rather than pretending otherwise.',
+  },
+];
+
+/* Structured data. Google reads this to build the app result; every field is
+   true of the listing it describes, which is the same rule the store copy is
+   held to. */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MobileApplication',
+  name: 'Munchview',
+  operatingSystem: 'Android',
+  applicationCategory: 'EntertainmentApplication',
+  url: site,
+  installUrl: PLAY_URL,
+  image: `${site}/munchview/brand/icon-512.png`,
+  description:
+    'Say how long you have and a good video starts playing. Six platforms, one player, no feed.',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', name: 'DeftDay Studio', url: 'https://deftday.com' },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Munchview — say how long you have, and watch</title>
+    <meta
+      name="description"
+      content={`Munchview starts a good video that fits the time you have — ten minutes, twenty, thirty and up. Six platforms, one player, no feed. Android, ${STATUS_CLAUSE}.`}
+    />
+    <meta name="theme-color" content="#0E101A" />
+    <link rel="canonical" href={`${site}/`} />
+
+    <link rel="icon" href="/munchview/brand/icon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/munchview/brand/icon-180.png" />
+
+    <meta property="og:site_name" content="Munchview" />
+    <meta property="og:title" content="Munchview — say how long you have, and watch" />
+    <meta
+      property="og:description"
+      content="A good video that fits the time you have. Six platforms, one player, no feed."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={`${site}/`} />
+    <meta property="og:image" content={`${site}/munchview/brand/icon-512.png`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Munchview — say how long you have, and watch" />
+    <meta
+      name="twitter:description"
+      content="A good video that fits the time you have. Six platforms, one player, no feed."
+    />
+    <meta name="twitter:image" content={`${site}/munchview/brand/icon-512.png`} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <style>
+      /* The app's tokens, verbatim. If these ever drift from
+         munchview/src/theme/tokens.ts the site is lying about the product. */
+      :root {
+        --bg: #0e101a;
+        --surface: #181b26;
+        --surface-high: #222633;
+        --line: #222633;
+        --accent: #ffb300;
+        --accent-pressed: #e09e00;
+        --ink: #eef2f6;
+        --muted: #8d949b;
+        --radius: 14px;
+        --page: 1120px;
+      }
+
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; }
+      img { max-width: 100%; height: auto; display: block; }
+      .wrap { width: min(100% - 40px, var(--page)); margin-inline: auto; }
+
+      .nav {
+        position: sticky; top: 0; z-index: 20;
+        background: color-mix(in srgb, var(--bg) 88%, transparent);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-in { display: flex; align-items: center; gap: 16px; height: 62px; }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .02em; text-decoration: none; }
+      .brand img { width: 28px; height: 28px; }
+      .nav .spacer { flex: 1; }
+      .nav a.quiet { color: var(--muted); text-decoration: none; font-size: 14px; }
+      .nav a.quiet:hover { color: var(--ink); }
+
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        background: var(--accent); color: #1a1200; font-weight: 800;
+        border: 0; border-radius: 100px; padding: 12px 22px;
+        text-decoration: none; cursor: pointer; font-size: 15px; min-height: 44px;
+      }
+      .btn:hover { background: var(--accent-pressed); }
+      .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+      .btn.ghost:hover { border-color: var(--muted); background: var(--surface); }
+
+      .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+      /* The cinema of the reference, built from gradients rather than a
+         photograph: nothing here has to be licensed, and it stays sharp at
+         every width. */
+      .hero::before {
+        content: ""; position: absolute; inset: -30% -10% auto -10%; height: 120%;
+        background:
+          radial-gradient(60% 55% at 78% 18%, rgba(255, 179, 0, .18), transparent 62%),
+          radial-gradient(45% 45% at 12% 8%, rgba(90, 120, 255, .15), transparent 60%);
+        filter: blur(6px); pointer-events: none;
+      }
+      .hero-in {
+        position: relative; padding: 88px 0 76px;
+        display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center;
+      }
+      .eyebrow {
+        display: inline-flex; align-items: center; gap: 9px;
+        font-size: 12.5px; letter-spacing: .13em; text-transform: uppercase;
+        color: var(--muted); margin: 0 0 20px;
+      }
+      .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+      h1 {
+        margin: 0 0 20px; font-size: clamp(36px, 5.2vw, 60px); line-height: 1.05;
+        letter-spacing: -.025em; font-weight: 800;
+      }
+      h1 em { font-style: normal; color: var(--accent); }
+      .lede { margin: 0 0 30px; font-size: clamp(16.5px, 1.5vw, 19px); color: var(--muted); max-width: 52ch; }
+      .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+      .cta small { color: var(--muted); font-size: 13.5px; }
+
+      /* The phone: the screenshot IS the frame — a real capture, edge to edge,
+         with a rounded clip and a soft lift under it. No drawn bezel. */
+      .phone {
+        justify-self: center; width: min(300px, 78vw);
+        border-radius: 26px; overflow: hidden;
+        border: 1px solid var(--line);
+        box-shadow: 0 40px 90px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .03);
+      }
+
+      .lengths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 8px 0 0; }
+      .len {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 20px 18px; transition: border-color .18s ease, transform .18s ease;
+      }
+      .len:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); transform: translateY(-2px); }
+      .len b { display: block; font-size: 30px; line-height: 1; letter-spacing: -.02em; }
+      .len b span { font-size: 14px; color: var(--muted); font-weight: 700; margin-left: 4px; }
+      .len p { margin: 9px 0 0; color: var(--muted); font-size: 14px; }
+
+      section { padding: 76px 0; border-bottom: 1px solid var(--line); }
+      h2 { margin: 0 0 10px; font-size: clamp(24px, 3.4vw, 34px); letter-spacing: -.02em; }
+      .sub { margin: 0 0 34px; color: var(--muted); max-width: 62ch; }
+
+      .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+      .shot { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+      .shot img { border-bottom: 1px solid var(--line); }
+      .shot figcaption { padding: 16px 18px; color: var(--muted); font-size: 14.5px; }
+      .shot figcaption b { color: var(--ink); display: block; margin-bottom: 4px; font-size: 15.5px; }
+
+      .rail { display: flex; flex-wrap: wrap; gap: 10px; }
+      .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 100px; padding: 10px 18px; font-size: 14.5px; }
+
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 22px; }
+      .card h3 { margin: 0 0 9px; font-size: 17.5px; letter-spacing: -.01em; }
+      .card p { margin: 0; color: var(--muted); font-size: 15px; }
+
+      .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: s; }
+      .step { position: relative; padding-left: 52px; }
+      .step::before {
+        counter-increment: s; content: counter(s);
+        position: absolute; left: 0; top: -2px; width: 36px; height: 36px; border-radius: 50%;
+        display: grid; place-items: center; background: var(--surface-high); color: var(--accent); font-weight: 800;
+      }
+      .step h3 { margin: 4px 0 6px; font-size: 17px; }
+      .step p { margin: 0; color: var(--muted); font-size: 15px; }
+
+      .close { text-align: center; padding: 84px 0; border-bottom: 0; }
+      .close h2 { margin-bottom: 22px; }
+
+      footer { padding: 40px 0 56px; color: var(--muted); font-size: 14px; }
+      .foot-in { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; }
+      footer a { color: var(--muted); text-decoration: none; }
+      footer a:hover { color: var(--ink); text-decoration: underline; }
+      footer .spacer { flex: 1; }
+
+      @media (max-width: 980px) {
+        .hero-in { grid-template-columns: 1fr; gap: 40px; padding: 64px 0 56px; }
+        .shots, .grid, .steps { grid-template-columns: 1fr; }
+        .phone { order: -1; }
+      }
+      @media (max-width: 620px) { .lengths { grid-template-columns: 1fr; } }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        * { transition: none !important; animation: none !important; }
+      }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+      .skip { position: absolute; left: -9999px; }
+      .skip:focus { left: 16px; top: 12px; z-index: 50; }
+    </style>
+  </head>
+
+  <body>
+    <a class="btn ghost skip" href="#main">Skip to content</a>
+
+    <nav class="nav">
+      <div class="wrap nav-in">
+        <a class="brand" href="/">
+          <img src="/munchview/brand/mark-96.png" width="28" height="28" alt="" />
+          Munchview
+        </a>
+        <span class="spacer"></span>
+        <a class="quiet" href="#how">How it works</a>
+        <a class="quiet" href="https://deftday.com/munchview/privacy">Privacy</a>
+        <a class="btn" href={PLAY_URL}>{LIVE ? 'Get it on Play' : 'Join the test'}</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="wrap hero-in">
+        <div>
+          <p class="eyebrow"><span class="dot"></span> Android · {STATUS_BADGE}</p>
+          <h1>Say how long you have. <em>Then just watch.</em></h1>
+          <p class="lede">
+            Every other app opens by asking what you are in the mood for. Munchview is built on
+            the belief that the asking is the problem. Tell it how long you have got, and
+            something worth watching is already playing.
+          </p>
+          <div class="cta">
+            <a class="btn" href={PLAY_URL}>{LIVE ? 'Get it on Google Play' : 'Join the closed test'}</a>
+            <a class="btn ghost" href="#how">See how it works</a>
+            <small>Free. No account needed.</small>
+          </div>
+        </div>
+        <img
+          class="phone"
+          src={shots.home}
+          width="648"
+          height="1440"
+          alt="Munchview's home screen: the question “How long have you got?”, three length buttons with ~20 min chosen, and a large WATCH button."
+          fetchpriority="high"
+        />
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="how" class="wrap">
+        <h2>Three seconds, three taps, done</h2>
+        <p class="sub">That is the whole product. Everything else exists to keep it true.</p>
+        <div class="steps">
+          <div class="step">
+            <h3>Open it</h3>
+            <p>No sign-up, no onboarding tour standing between you and a video.</p>
+          </div>
+          <div class="step">
+            <h3>Say your time</h3>
+            <p>Ten, twenty, thirty and up — or set your own length exactly.</p>
+          </div>
+          <div class="step">
+            <h3>Watch</h3>
+            <p>Something that fits starts playing. If it is not for you, one tap moves on.</p>
+          </div>
+        </div>
+
+        <div class="lengths" style="margin-top:40px">
+          {lengths.map((l) => (
+            <div class="len">
+              <b>{l.n}<span>{l.unit}</span></b>
+              <p>{l.what}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="wrap">
+        <h2>The app, as it actually looks</h2>
+        <p class="sub">
+          Whole screens from the current build — not mockups, and not a render with a phone drawn
+          around it.
+        </p>
+        <div class="shots">
+          <figure class="shot" style="margin:0">
+            <img src={shots.player} width="648" height="1440" loading="lazy"
+              alt="The player, controls showing: transport row, share and settings above the full-screen button, and the scrub bar." />
+            <figcaption><b>One player, six platforms</b>Same controls wherever the video comes from.</figcaption>
+          </figure>
+          <figure class="shot" style="margin:0">
+            <img src={shots.discover} width="648" height="1440" loading="lazy"
+              alt="The feed further down: rails of picks built from what you have actually watched." />
+            <figcaption><b>A feed that ends</b>Rails you can reach the end of, on purpose.</figcaption>
+          </figure>
+          <figure class="shot" style="margin:0">
+            <img src={shots.preferences} width="648" height="1440" loading="lazy"
+              alt="Watching preferences: a custom length in minutes, the country chip, and the platform choosers." />
+            <figcaption><b>Your length, your country</b>Set it once; the whole feed follows.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <h2>Six platforms, one player</h2>
+        <p class="sub">
+          Everything plays inside the app, in each platform’s own official embedded player — so the
+          controls, the seek bar and where you left off work the same everywhere.
+        </p>
+        <div class="rail">{platforms.map((p) => <span class="chip">{p}</span>)}</div>
+      </section>
+
+      <section class="wrap">
+        <h2>What makes it different</h2>
+        <p class="sub">Six things, each of which the app actually does today.</p>
+        <div class="grid">
+          {features.map((f) => (
+            <article class="card">
+              <h3>{f.title}</h3>
+              <p>{f.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="wrap close">
+        <h2>Say how long you’ve got.</h2>
+        <div class="cta" style="justify-content:center">
+          <a class="btn" href={PLAY_URL}>{LIVE ? 'Get it on Google Play' : 'Join the closed test'}</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap foot-in">
+        <span>© 2026 DeftDay Studio</span>
+        <span class="spacer"></span>
+        <a href="https://deftday.com/munchview/privacy">Privacy</a>
+        <a href="https://deftday.com/munchview/terms">Terms</a>
+        <a href="https://deftday.com/munchview/delete-account">Delete your account</a>
+        <a href="https://deftday.com">DeftDay</a>
+      </div>
+    </footer>
+  </body>
+</html>

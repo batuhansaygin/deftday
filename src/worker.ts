@@ -27,6 +27,26 @@ function logError(env: Env, event: string, message: string) {
 }
 
 const CANONICAL_HOST = 'deftday.com';
+/**
+ * The app's own domain, bought 2026-08-15, served by this same Worker.
+ *
+ * A second Worker would mean a second deploy to forget — and the six days of
+ * site changes that sat unpublished in August were exactly that class of
+ * mistake. One Worker, one deploy, and the hostname decides which front door
+ * the visitor gets: munchview.app is rewritten onto /munchview-app/, which is
+ * a normal page in this project and builds with everything else.
+ *
+ * Only the ROOT is rewritten. Deeper paths are left alone so the shared-video
+ * links, the privacy page and everything else keep resolving where they
+ * always have, and so a future /press or /help under munchview.app is a file
+ * rather than another branch here.
+ */
+const APP_HOST = 'munchview.app';
+/* No trailing slash: this project builds with Astro's `file` format, so the
+   page is dist/munchview-app.html and the assets handler resolves the
+   extension-less path onto it. A trailing slash looks for a directory that
+   does not exist and 404s. */
+const APP_ROOT = '/munchview-app';
 const HSTS = 'max-age=31536000; includeSubDomains';
 
 export default {
@@ -46,11 +66,13 @@ export default {
     })();
 
     const wrongScheme = visitorScheme === 'http';
-    const wrongHost = url.hostname === `www.${CANONICAL_HOST}`;
+    const wrongHost =
+      url.hostname === `www.${CANONICAL_HOST}` || url.hostname === `www.${APP_HOST}`;
 
     if (wrongScheme || wrongHost) {
       url.protocol = 'https:';
-      if (wrongHost) url.hostname = CANONICAL_HOST;
+      if (url.hostname === `www.${CANONICAL_HOST}`) url.hostname = CANONICAL_HOST;
+      if (url.hostname === `www.${APP_HOST}`) url.hostname = APP_HOST;
       return new Response(null, {
         status: 301,
         headers: {
@@ -60,9 +82,52 @@ export default {
       });
     }
 
+    /**
+     * Two hostnames, one Worker, and the crawler files have to tell them
+     * apart.
+     *
+     * `public/robots.txt` names deftday.com's sitemap. Served unchanged on
+     * munchview.app it would point crawlers at another site's index and offer
+     * none of its own — so the app domain gets its own, written here rather
+     * than as a second file, because a second file is a second thing to
+     * forget when the first one changes.
+     *
+     * The sitemap lists only what munchview.app actually serves. Astro's
+     * generated sitemap-index is deftday.com's and stays there.
+     */
+    if (url.hostname === APP_HOST) {
+      if (url.pathname === '/robots.txt') {
+        return new Response(
+          `User-agent: *\nAllow: /\nDisallow: /app/\n\nSitemap: https://${APP_HOST}/sitemap.xml\n`,
+          { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } },
+        );
+      }
+      if (url.pathname === '/sitemap.xml') {
+        const urls = [`https://${APP_HOST}/`];
+        const body =
+          '<?xml version="1.0" encoding="UTF-8"?>' +
+          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
+          urls.map((u) => `<url><loc>${u}</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`).join('') +
+          '</urlset>';
+        return new Response(body, {
+          headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=3600' },
+        });
+      }
+    }
+
+    /* munchview.app's root is the app's page, not the studio's. Rewritten
+       rather than redirected: the visitor asked for munchview.app and should
+       stay on it. */
+    let assetRequest = request;
+    if (url.hostname === APP_HOST && (url.pathname === '/' || url.pathname === '')) {
+      const rewritten = new URL(url);
+      rewritten.pathname = APP_ROOT;
+      assetRequest = new Request(rewritten, request);
+    }
+
     let response: Response;
     try {
-      response = await env.ASSETS.fetch(request);
+      response = await env.ASSETS.fetch(assetRequest);
     } catch (err) {
       logError(env, 'assets-fetch-failed', String(err));
       throw err;
