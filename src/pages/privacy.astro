@@ -1,4 +1,5 @@
 ---
+import '../styles/legal.css';
 import Base from '../layouts/Base.astro';
 import SiteChrome from '../components/SiteChrome.astro';
 import Footer from '../components/Footer.astro';
@@ -153,7 +154,7 @@ const updated = 'August 2, 2026';
         &nbsp;·&nbsp;
         <a href="/munchview/delete-account">Delete your account<span aria-hidden="true"> →</span></a>
         &nbsp;·&nbsp;
-        <a href="/kvkk" lang="tr" hreflang="tr">KVKK Aydınlatma Metni<span aria-hidden="true"> →</span></a>
+        <a href="/kvkk" hreflang="tr">Turkish data-protection notice<span aria-hidden="true"> →</span></a>
       </p>
     </section>
 
@@ -212,99 +213,3 @@ const updated = 'August 2, 2026';
   <Footer />
 </Base>
 
-<style>
-  .legal {
-    max-width: 78ch;
-    margin: 0 auto;
-    padding: 160px var(--gutter) 40px;
-  }
-  .legal h1 {
-    font-size: clamp(2.4rem, 6vw, 4.2rem);
-    margin-bottom: 28px;
-  }
-  .lede {
-    color: var(--muted);
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
-    text-wrap: pretty;
-    max-width: 60ch;
-  }
-  .updated {
-    margin-top: 14px;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .legal-block {
-    margin-top: 56px;
-    padding-top: 34px;
-    border-top: 1px solid var(--line);
-  }
-  .legal-block h2 {
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    margin-bottom: 18px;
-  }
-  .legal-block h3 {
-    font-family: var(--font-d);
-    font-size: 0.82rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--sun-text);
-    margin: 26px 0 10px;
-  }
-  .legal-block p,
-  .legal-block li {
-    color: var(--muted);
-    text-wrap: pretty;
-  }
-  .legal-block p + p {
-    margin-top: 14px;
-  }
-  .legal-block ul {
-    margin: 12px 0 0 1.1em;
-    display: grid;
-    gap: 10px;
-  }
-  .legal-block strong {
-    color: var(--ink);
-    font-weight: 500;
-  }
-  .legal-block a,
-  .mail-inline {
-    color: var(--sun-text);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-  .legal-block a:hover,
-  .mail-inline:hover {
-    color: var(--ink);
-  }
-  .tag {
-    font-family: var(--font-b);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border: 1px solid var(--line);
-    border-radius: 100px;
-    padding: 5px 12px;
-    margin-left: 10px;
-    vertical-align: 5px;
-    white-space: nowrap;
-  }
-  .back-home {
-    margin-top: 64px;
-    padding-top: 30px;
-    border-top: 1px solid var(--line);
-  }
-  .back-home a {
-    color: var(--muted);
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
-  .back-home a:hover {
-    color: var(--ink);
-  }
-</style>

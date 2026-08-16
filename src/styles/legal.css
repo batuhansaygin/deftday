@@ -1,0 +1,72 @@
+/**
+ * The look of every legal page — privacy, terms, delete-account, KVKK.
+ *
+ * One file because it was four. Astro scopes a page's <style> to that page,
+ * so each of them carried its own copy — and terms.astro carried NONE, which
+ * is why it rendered with no styling at all and the owner reported it as
+ * "the design is terrible" on 2026-08-16. It was not a design; it was the
+ * absence of one.
+ *
+ * The four copies had also already drifted apart from each other. Imported
+ * rather than duplicated, so the next edit lands on all of them.
+ */
+.legal {
+  max-width: 78ch;
+  margin: 0 auto;
+  padding: 160px var(--gutter) 40px;
+}
+.legal h1 {
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  margin-bottom: 28px;
+}
+.legal .lede {
+  color: var(--muted);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  text-wrap: pretty;
+  max-width: 62ch;
+}
+.legal .updated {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.legal-block {
+  margin-top: 56px;
+  padding-top: 34px;
+  border-top: 1px solid var(--line);
+}
+.legal-block h2 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  margin-bottom: 18px;
+}
+.legal-block p {
+  color: var(--muted);
+  text-wrap: pretty;
+  margin-bottom: 14px;
+}
+.legal-block b,
+.legal-block strong {
+  color: var(--fg);
+}
+.legal ul,
+.legal-block ul {
+  color: var(--muted);
+  display: grid;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding-left: 1.2rem;
+}
+.legal-block li {
+  text-wrap: pretty;
+}
+.legal .cta {
+  display: inline-block;
+  font-weight: 600;
+}
+/* A legal page is a document: links inside it must read as links. */
+.legal-block a {
+  color: var(--fg);
+  text-underline-offset: 3px;
+}

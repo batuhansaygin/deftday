@@ -1,4 +1,5 @@
 ---
+import '../../styles/legal.css';
 import Base from '../../layouts/Base.astro';
 import SiteChrome from '../../components/SiteChrome.astro';
 import Footer from '../../components/Footer.astro';
@@ -334,10 +335,10 @@ const updated = 'August 16, 2026';
         <a href="/privacy">studio privacy page</a>.
       </p>
       <p>
-        <b>Türkiye:</b> the disclosure notice required by KVKK art. 10 — the
-        same processing, set out in Turkish under that law — is at
-        <a href="/kvkk" lang="tr" hreflang="tr">deftday.com/kvkk</a>
-        (<span lang="tr">Munchview KVKK Aydınlatma Metni</span>).
+        <b>Turkey:</b> the disclosure notice required by Turkish data
+        protection law (KVKK art. 10) describes the same processing and is
+        published in Turkish, as that law requires, at
+        <a href="/kvkk" hreflang="tr">deftday.com/kvkk</a>.
       </p>
     </section>
   </main>
@@ -345,55 +346,3 @@ const updated = 'August 16, 2026';
   <Footer />
 </Base>
 
-<style>
-  .legal {
-    max-width: 78ch;
-    margin: 0 auto;
-    padding: 160px var(--gutter) 40px;
-  }
-  .legal h1 {
-    font-size: clamp(2.4rem, 6vw, 4.2rem);
-    margin-bottom: 28px;
-  }
-  .lede {
-    color: var(--muted);
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
-    text-wrap: pretty;
-    max-width: 62ch;
-  }
-  .updated {
-    margin-top: 14px;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .legal-block {
-    margin-top: 56px;
-    padding-top: 34px;
-    border-top: 1px solid var(--line);
-  }
-  .legal-block h2 {
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    margin-bottom: 18px;
-  }
-  .legal-block p {
-    color: var(--muted);
-    text-wrap: pretty;
-    margin-bottom: 14px;
-  }
-  .legal-block b {
-    color: var(--fg);
-  }
-  ul {
-    color: var(--muted);
-    display: grid;
-    gap: 10px;
-    margin: 0 0 18px;
-    padding-left: 1.2rem;
-  }
-  .cta {
-    display: inline-block;
-    font-weight: 600;
-  }
-</style>
