@@ -4,8 +4,16 @@ import SiteChrome from '../../components/SiteChrome.astro';
 import Footer from '../../components/Footer.astro';
 
 /* Mirrors munchview's store/privacy-policy.md, which is the source of truth
-   and the text the Play listing is checked against. Change it there first. */
-const updated = 'August 7, 2026';
+   and the text the Play listing is checked against. Change it there first.
+
+   The two HAD drifted, and it was found on 2026-08-16 while preparing the
+   YouTube compliance audit: this page carried the web sign-in section and the
+   YouTube API Services disclosure while the markdown carried neither, and
+   neither carried the address-and-password sign-in that had already shipped.
+   A policy that describes a sign-in the product no longer has, and omits one
+   it does, is the failure the studio's legal floor is written to prevent.
+   Both were corrected together. Keep them together. */
+const updated = 'August 16, 2026';
 ---
 
 <Base
@@ -51,10 +59,10 @@ const updated = 'August 7, 2026';
         content cache is keyed by category or keyword, never by person. Two
         things on the service are not that cache, and both are named here
         rather than hidden behind an absolute: an abuse counter that holds the
-        request's IP address for 120 seconds; and the sync record described
-        below, stored under your Google account id and only if you sign in.
-        Signing in on munchview.app stores nothing at all — the session it
-        hands the browser is signed rather than recorded.
+        request's IP address for 120 seconds; the sync record described below,
+        stored under your account and only if you sign in; and, if you choose
+        to sign in with an address and a password rather than with Google,
+        that address and a one-way hash of the password.
       </p>
     </section>
 
@@ -123,9 +131,27 @@ const updated = 'August 7, 2026';
     <section class="legal-block" aria-labelledby="weblink">
       <h2 id="weblink">Signing in on munchview.app</h2>
       <p>
-        The website signs you in with Google itself. It has its own web sign-in,
-        separate from the app's, and the app plays no part in it — nothing is
-        typed from one to the other and no code changes hands.
+        There are two ways in, and they end at the same record: Google, or an
+        address and a password. The website signs you in itself, separately
+        from the app — nothing is typed from one to the other and no code
+        changes hands.
+      </p>
+      <p>
+        <b>If you use an address and a password</b>, we keep the address and a
+        one-way hash of the password. We never store the password itself and
+        cannot read it: it goes through 100,000 rounds of PBKDF2-SHA256 with a
+        salt of its own and a secret that exists only on our server, so the
+        stored value is of no use to anyone who obtains it without that secret.
+        The address is kept for one reason — to know which record is yours, and
+        to stop one address becoming two accounts. We do not email you and
+        there is no mailing list.
+      </p>
+      <p>
+        Signing in with Google on an address that already has a password
+        account takes you to that same record rather than making a second one.
+        The reverse is refused: a password cannot be set on an address that is
+        already an account, because knowing somebody's address would otherwise
+        be enough to walk into it.
       </p>
       <ul>
         <li>
@@ -134,9 +160,9 @@ const updated = 'August 7, 2026';
           of its own in return, so you are not signed out an hour later.
         </li>
         <li>
-          <b>Nothing is stored to make that work.</b> The session is signed
-          rather than written down, so there is no list of sessions anywhere to
-          be lost or read.
+          <b>No session is stored.</b> The session is signed rather than
+          written down, so there is no list of sessions anywhere to be lost or
+          read — whichever way you signed in.
         </li>
         <li>
           The browser then reads the same record described above, under the same
@@ -145,7 +171,9 @@ const updated = 'August 7, 2026';
         </li>
         <li>
           <b>Sign out</b> in the browser clears its session. <b>Delete my
-          account data</b> in the app erases the record itself, for both.
+          account data</b> erases the record itself, for both — and, for a
+          password account, the address and the hash with it, so the address is
+          free to register again.
         </li>
       </ul>
     </section>
