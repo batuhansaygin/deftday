@@ -315,6 +315,14 @@ export default {
      * canonical, and it is the address the app, the store listing and the
      * data-safety document all use. One policy, one URL.
      */
+    /* /kvkk was the Turkish data-protection notice until 2026-08-16, when the
+       site moved to English throughout and it was replaced by /gdpr. Kept as a
+       redirect rather than deleted: a link that 404s is worse than one that
+       moves, and this one was in the footer of every page for weeks. */
+    if (url.pathname === '/kvkk' || url.pathname.startsWith('/kvkk/')) {
+      return Response.redirect(`https://${CANONICAL_HOST}/gdpr`, 301);
+    }
+
     if (url.hostname === APP_HOST && (url.pathname === '/privacy' || url.pathname === '/terms')) {
       return Response.redirect(`https://${CANONICAL_HOST}/munchview${url.pathname}`, 301);
     }

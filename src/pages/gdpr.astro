@@ -1,0 +1,254 @@
+---
+import '../styles/legal.css';
+import Base from '../layouts/Base.astro';
+import SiteChrome from '../components/SiteChrome.astro';
+import Footer from '../components/Footer.astro';
+
+/*
+ * The GDPR notice for Munchview, in English, and deliberately only for
+ * Munchview.
+ *
+ * It replaces the Turkish KVKK notice that stood here until 2026-08-16, at
+ * the owner's instruction: the site is to be in English throughout. Worth
+ * writing down plainly, because the next person will wonder — KVKK and the
+ * GDPR are different laws, the studio is established in Turkey, and this page
+ * does not discharge a Turkish obligation. /kvkk redirects here so nothing
+ * that linked to it breaks.
+ *
+ * Article 13 prescribes what has to be in here: the controller's identity,
+ * the purposes and the lawful basis for each, recipients and any transfer
+ * abroad, how long it is kept, and the Chapter III rights with the right to
+ * complain to a supervisory authority. Every fact below was checked against
+ * the source before it was written — the sync Worker
+ * (web/content-api/src/index.js), the snapshot shape (src/sync/snapshot.ts)
+ * and the account store (src/store/useAccountStore.ts) in the munchview repo
+ * — because a notice that overstates what we hold is as bad as one that hides
+ * it.
+ *
+ * Per-app on purpose: DeftDay's apps differ. Munchview carries no advertising
+ * and no analytics; that is a fact about Munchview and must never be copied
+ * into another app's notice without checking that app's own code.
+ */
+const updated = 'August 16, 2026';
+---
+
+<Base
+  title="Munchview — GDPR Notice — DeftDay Studio"
+  description="Who processes your data in Munchview, what is processed and on what lawful basis, how long it is kept, and the rights you have over it."
+>
+  <SiteChrome />
+  <div class="sky" aria-hidden="true">
+    <span class="s1"></span><span class="s2"></span><span class="s3"></span>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+
+  <main id="main" class="legal">
+    <span class="eyebrow">Munchview</span>
+    <h1>What we process,<br /><span class="serif">and what we do not.</span></h1>
+    <p class="lede">
+      Articles 13 and 14 of the GDPR require whoever processes your personal
+      data to tell you who they are, what they process and why, on what lawful
+      basis, and what rights you have. This page does that — for the Munchview
+      app.
+    </p>
+    <p class="updated">Last updated: {updated}</p>
+
+    <section class="legal-block" aria-labelledby="scope">
+      <h2 id="scope">What this covers</h2>
+      <p>
+        The Munchview app only, and the personal data processed for it.
+        DeftDay Studio's apps differ from one another: a sentence that is true
+        of one may not be true of the next, so each gets its own notice and no
+        single page stands in for all of them.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="controller">
+      <h2 id="controller">1. Who the controller is</h2>
+      <p>
+        <b>Controller:</b> DeftDay Studio, Izmir, Turkey.<br />
+        <b>Legal enquiries:</b>
+        <a href="mailto:legal@deftday.com">legal@deftday.com</a><br />
+        <b>Data and deletion requests:</b>
+        <a href="mailto:privacy@deftday.com">privacy@deftday.com</a>
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="what">
+      <h2 id="what">2. What is processed</h2>
+      <p>
+        An account is optional and the app works fully without one. The
+        distinction starts there.
+      </p>
+      <p><b>If you use it without an account</b></p>
+      <ul>
+        <li>
+          Nothing that identifies you reaches our servers. Categories, tags,
+          watch history, likes and profiles stay in your phone's own storage
+          and go when you uninstall.
+        </li>
+        <li>
+          The app asks our content service for a list of videos. That request
+          carries only the category names or keywords you picked, the length
+          you chose and your source preference. No user id, device id or
+          advertising id is attached — the app has none.
+        </li>
+        <li>
+          As with any internet request, the IP address it came from reaches the
+          server. It is used for one thing: limiting how many requests one
+          address may make in a minute. The counter is held under a key
+          containing that address and deletes itself after 120 seconds.
+        </li>
+        <li>
+          The country the request came from is read at our infrastructure
+          provider's edge, so the app can show the video categories that exist
+          where you are. Nothing finer than the country is read, and it is not
+          stored against you.
+        </li>
+        <li>
+          The app requests no Android runtime permissions at all: no location,
+          contacts, photos, files or microphone.
+        </li>
+      </ul>
+      <p><b>If you sign in with Google</b></p>
+      <ul>
+        <li>
+          We receive your Google account id, name, email address and profile
+          picture — who you are, and nothing about your YouTube account,
+          videos or subscriptions.
+        </li>
+        <li>
+          The list your phone keeps is then also stored by our sync service
+          under that account id, so a second device signed in to the same
+          account can pick it up.
+        </li>
+      </ul>
+    </section>
+
+    <section class="legal-block" aria-labelledby="why">
+      <h2 id="why">3. Why, and on what lawful basis</h2>
+      <ul>
+        <li>
+          <b>Returning a list of videos</b> — necessary to perform the service
+          you asked for. <b>Art. 6(1)(b)</b>.
+        </li>
+        <li>
+          <b>Carrying your preferences between your own devices</b> — the same
+          basis, and only once you have chosen to sign in. <b>Art. 6(1)(b)</b>.
+        </li>
+        <li>
+          <b>The per-address request counter, and short-lived server logs</b> —
+          our legitimate interest in keeping the service available and not
+          being overwhelmed. <b>Art. 6(1)(f)</b>.
+        </li>
+      </ul>
+      <p>
+        There is no profiling and no automated decision-making. We do not
+        advertise, and we have no analytics or tracking of any kind, so no
+        processing here rests on consent for those purposes — because none of
+        them happen.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="who">
+      <h2 id="who">4. Who else sees it</h2>
+      <p>
+        We do not sell or share personal data, and we never use it to
+        advertise. Two kinds of third party are unavoidable and both are named
+        here rather than hidden behind a general clause:
+      </p>
+      <ul>
+        <li>
+          <b>Our infrastructure provider</b> (Cloudflare) hosts the content and
+          sync services and processes requests on our behalf.
+        </li>
+        <li>
+          <b>The video platforms</b> — YouTube, Dailymotion, Vimeo, the
+          Internet Archive and PeerTube. When a video plays, your device talks
+          to that platform directly, exactly as a browser would, and that
+          traffic is governed by their terms and privacy policies rather than
+          ours.
+        </li>
+      </ul>
+      <p>
+        Both may process data outside the EEA. Transfers rely on the European
+        Commission's standard contractual clauses or an adequacy decision, as
+        applicable.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="kept">
+      <h2 id="kept">5. How long it is kept</h2>
+      <ul>
+        <li>
+          <b>The synced record</b> — for as long as the account exists. Delete
+          the account and it goes.
+        </li>
+        <li><b>The request counter</b> — 120 seconds.</li>
+        <li>
+          <b>Server logs</b> — a few days, for reliability and abuse
+          prevention, held by our infrastructure provider.
+        </li>
+        <li>
+          <b>Everything on your phone</b> — until you delete it or uninstall
+          the app. It is not ours to keep.
+        </li>
+      </ul>
+    </section>
+
+    <section class="legal-block" aria-labelledby="rights">
+      <h2 id="rights">6. Your rights</h2>
+      <p>Under Chapter III of the GDPR you have the right to:</p>
+      <ul>
+        <li>know whether we process your data, and obtain a copy — <b>Art. 15</b></li>
+        <li>have it corrected — <b>Art. 16</b></li>
+        <li>have it erased — <b>Art. 17</b></li>
+        <li>restrict how it is processed — <b>Art. 18</b></li>
+        <li>receive it in a portable form — <b>Art. 20</b></li>
+        <li>object to processing based on legitimate interests — <b>Art. 21</b></li>
+        <li>
+          complain to a supervisory authority in the country where you live or
+          work — <b>Art. 77</b>
+        </li>
+      </ul>
+      <p>
+        Write to <a href="mailto:privacy@deftday.com">privacy@deftday.com</a>
+        and we will answer within one month. You do not have to write to us to
+        delete your data: the app does it directly, in
+        <b>You → Your account → Delete my account data</b>, and there is a web
+        route at <a href="/munchview/delete-account">deftday.com/munchview/delete-account</a>
+        that works without installing anything.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="children">
+      <h2 id="children">7. Children</h2>
+      <p>
+        Munchview is not directed at children and we do not knowingly process
+        the data of anyone under 16. The app requests strict safe-search from
+        every platform it plays from.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="site">
+      <h2 id="site">8. This website</h2>
+      <p>
+        This site is separate from the app. It uses cookieless analytics that
+        set no identifier and build no profile of you. The app itself carries
+        no analytics whatsoever.
+      </p>
+    </section>
+
+    <section class="legal-block" aria-labelledby="changes">
+      <h2 id="changes">9. Changes</h2>
+      <p>
+        When this notice changes, the date at the top changes with it. The
+        fuller English description of the same processing is at
+        <a href="/munchview/privacy">the Munchview privacy policy</a>, and
+        every DeftDay app is covered on the
+        <a href="/privacy">studio privacy page</a>.
+      </p>
+    </section>
+  </main>
+  <Footer />
+</Base>
