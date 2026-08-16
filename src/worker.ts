@@ -298,6 +298,27 @@ export default {
      * it owns its own routing, its own headers and its own caching, and an
      * Assets miss here would answer with this site's 404 rather than its.
      */
+    /**
+     * munchview.app/privacy and /terms belong to MUNCHVIEW, not the studio.
+     *
+     * They resolved to the studio-wide pages, because the lookup tries
+     * /munchview-app/<path> first and falls back to the plain path — and the
+     * plain /privacy is DeftDay's. So somebody on munchview.app who went to
+     * /privacy got a policy that says nothing about this app: no YouTube API
+     * Services disclosure, no per-platform detail, and a canonical pointing
+     * at deftday.com/privacy. Found on 2026-08-16 while choosing which URL to
+     * give YouTube's compliance audit, where that disclosure is a checked
+     * item.
+     *
+     * Redirected rather than rewritten, unlike the rest of this host: the
+     * Munchview policy already declares deftday.com/munchview/privacy as its
+     * canonical, and it is the address the app, the store listing and the
+     * data-safety document all use. One policy, one URL.
+     */
+    if (url.hostname === APP_HOST && (url.pathname === '/privacy' || url.pathname === '/terms')) {
+      return Response.redirect(`https://${CANONICAL_HOST}/munchview${url.pathname}`, 301);
+    }
+
     if (url.hostname === APP_HOST && (url.pathname === '/watch' || url.pathname.startsWith('/watch/'))) {
       const gate = await watchGate(request, env, url);
       if (gate != null) return gate;
