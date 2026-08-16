@@ -10,8 +10,135 @@ interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
   /** munchview.app/watch — the signed-in Next.js app, in its own Worker. */
   WEB: { fetch(request: Request): Promise<Response> };
+  /**
+   * A shared password in front of /watch while the web app is being finished.
+   *
+   * Not a login and not pretending to be one: it is a door held shut so people
+   * who install the Android app do not wander into a half-built web version
+   * and judge the product by it. Unset means the door is open, which is what
+   * the day this is finished looks like.
+   */
+  WATCH_PASSWORD?: string;
   /** The studio error log's D1 (log.deftday.com). */
   ERRORS_DB?: D1Database;
+}
+
+/** The cookie's name and the string the secret is signed over. */
+const GATE_COOKIE = 'mv_gate';
+const GATE_MESSAGE = 'munchview-watch-gate-v1';
+
+/** Hex of HMAC(secret, message) — deterministic, so the gate holds no state. */
+async function gateToken(secret: string): Promise<string> {
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(GATE_MESSAGE));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/** Constant time: a compare that stops at the first wrong byte is a hint. */
+function sameString(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i += 1) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+function cookieValue(header: string | null, name: string): string | null {
+  for (const part of (header ?? '').split(';')) {
+    const [k, ...rest] = part.trim().split('=');
+    if (k === name) return rest.join('=');
+  }
+  return null;
+}
+
+/**
+ * The door in front of the web app while it is being finished.
+ *
+ * Server side on purpose. A check in the page would be two clicks to defeat
+ * and would look like security without being any — and the point here is that
+ * the half-built version is genuinely not reachable, not that it is hidden.
+ *
+ * Returns a response when the request should NOT reach the app, and null when
+ * it should. With no password configured it returns null always, so removing
+ * the secret is how this is switched off.
+ */
+async function watchGate(request: Request, env: Env, url: URL): Promise<Response | null> {
+  const secret = env.WATCH_PASSWORD;
+  if (!secret) return null;
+
+  const expected = await gateToken(secret);
+
+  if (request.method === 'POST' && url.pathname === '/watch/__gate') {
+    const form = await request.formData().catch(() => null);
+    const given = String(form?.get('password') ?? '');
+    if (!sameString(given, secret)) {
+      return gatePage('wrong');
+    }
+    return new Response(null, {
+      status: 303,
+      headers: {
+        location: '/watch',
+        /* HttpOnly so no script can read it, Secure so it never crosses
+           plaintext, Lax so a link from elsewhere still works, scoped to
+           /watch so nothing else on the host ever receives it. */
+        'set-cookie': `${GATE_COOKIE}=${expected}; Path=/watch; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`,
+      },
+    });
+  }
+
+  const held = cookieValue(request.headers.get('cookie'), GATE_COOKIE);
+  if (held != null && sameString(held, expected)) return null;
+  return gatePage(null);
+}
+
+/** One field, no branding beyond the mark — it is a door, not a page. */
+function gatePage(state: 'wrong' | null): Response {
+  const body = `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Munchview</title><meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0E101A">
+<style>
+:root{color-scheme:dark}
+body{margin:0;min-height:100dvh;display:grid;place-items:center;background:#0E101A;color:#EEF2F6;
+font:16px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:32px}
+form{width:min(100%,340px);text-align:center;display:flex;flex-direction:column;gap:14px}
+svg{margin:0 auto 6px}
+h1{margin:0;font-size:20px;letter-spacing:-.01em}
+p{margin:0;color:#8D949B;font-size:14px}
+input{background:#181B26;border:1px solid #222633;color:#EEF2F6;border-radius:10px;height:46px;
+padding:0 14px;font:inherit;font-size:15px}
+input:focus{border-color:#FFB300;outline:none}
+button{background:#FFB300;color:#1A1200;border:0;border-radius:100px;min-height:46px;
+font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+.err{color:#FFB300;font-size:13.5px}
+a{color:#8D949B;font-size:13.5px}
+</style></head><body>
+<form method="POST" action="/watch/__gate">
+<svg width="34" height="34" viewBox="0 0 1024 1024" aria-hidden="true">
+<mask id="b"><rect width="1024" height="1024" fill="#fff"/><circle cx="586" cy="390" r="80" fill="#000"/></mask>
+<g mask="url(#b)"><path d="M438 341 L632 459 Q700 500 632 541 L438 659 Q370 700 370 620 L370 380 Q370 300 438 341 Z" fill="#FFB300"/></g>
+<circle cx="648" cy="288" r="18" fill="#FFB300"/><circle cx="700" cy="345" r="11" fill="#FFB300"/></svg>
+<h1>Munchview on the web</h1>
+<p>Still being built. The Android app is the one to use.</p>
+<input name="password" type="password" autocomplete="current-password" autofocus
+ aria-label="Password" placeholder="Password">
+${state === 'wrong' ? '<p class="err">That is not it.</p>' : ''}
+<button type="submit">Continue</button>
+<a href="https://play.google.com/store/apps/details?id=com.munchview.app">Get the Android app</a>
+</form></body></html>`;
+  return new Response(body, {
+    status: state === 'wrong' ? 401 : 200,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': 'no-store',
+      'x-robots-tag': 'noindex, nofollow',
+    },
+  });
 }
 
 /** Report an error to the studio log — errors only, no IPs, fire-and-forget. */
@@ -79,6 +206,8 @@ const CSP_BY_PATH: Record<string, string> = {
        Munchview could not finish it", which was exactly true and gave no way
        to know why (reported 2026-08-15). A CSP has to list what a page calls,
        not what it used to call. */
+    /* Google's endpoint and the content service — the latter for both the
+       token exchange and the email/password routes, which post here too. */
     "connect-src 'self' https://accounts.google.com https://munchview-content.bsaygin.workers.dev; " +
     'frame-src https://accounts.google.com; ' +
     CSP_BASE_NO_STYLE,
@@ -170,6 +299,8 @@ export default {
      * Assets miss here would answer with this site's 404 rather than its.
      */
     if (url.hostname === APP_HOST && (url.pathname === '/watch' || url.pathname.startsWith('/watch/'))) {
+      const gate = await watchGate(request, env, url);
+      if (gate != null) return gate;
       const app = await env.WEB.fetch(request);
       /**
        * The app's HTML shell must never be cached at the edge.

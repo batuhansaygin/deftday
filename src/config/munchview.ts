@@ -94,14 +94,18 @@ export const GOOGLE_WEB_CLIENT_ID =
 export const GOOGLE_READY = GOOGLE_WEB_CLIENT_ID.length > 0;
 
 /**
- * True when the web can complete a sign-in.
+ * Whether the marketing pages offer the web app at all.
  *
- * Now always true: pairing with the phone needs no Google client, so the flag
- * that used to gate an unbuildable button gates nothing. Kept as the single
- * place the pages ask the question, because there is still a version of the
- * answer that is "no" — a deployment with no content API to pair against.
+ * FALSE on purpose while it is being finished (owner, 2026-08-16). Sign-in
+ * works and /watch works, but the web version is behind the app and somebody
+ * who installs Munchview on Android should not stumble into a half-built
+ * second version and judge the product by it. The pages stop advertising a
+ * door; a password on the Worker is what actually holds it shut, because a
+ * hidden link is not a closed door.
+ *
+ * Set it back to true on the day the web app is worth arriving at.
  */
-export const SIGN_IN_READY = true;
+export const SIGN_IN_READY = false;
 
 /** Where the browser starts a pairing, and where it later reads the record. */
 export const CONTENT_API_URL = 'https://munchview-content.bsaygin.workers.dev';

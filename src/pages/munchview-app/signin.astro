@@ -8,6 +8,7 @@
 import { APP_PATH, PLAY_URL, SIGN_IN_READY } from '../../config/munchview';
 import MunchviewSignIn from '../../components/MunchviewSignIn.astro';
 import MunchviewPair from '../../components/MunchviewPair.astro';
+import MunchviewPassword from '../../components/MunchviewPassword.astro';
 import { GOOGLE_READY } from '../../config/munchview';
 ---
 
@@ -33,7 +34,7 @@ import { GOOGLE_READY } from '../../config/munchview';
         -webkit-font-smoothing: antialiased;
       }
       .card {
-        width: min(100%, 420px); background: var(--surface);
+        width: min(100%, 400px); background: var(--surface);
         border: 1px solid var(--line); border-radius: 18px; padding: 36px 30px;
         text-align: center;
       }
@@ -66,6 +67,7 @@ import { GOOGLE_READY } from '../../config/munchview';
         SIGN_IN_READY ? (
           <div class="actions">
             {GOOGLE_READY ? <MunchviewSignIn next={APP_PATH} /> : <MunchviewPair next={APP_PATH} />}
+            <MunchviewPassword next={APP_PATH} />
           </div>
         ) : (
           <div class="actions">
