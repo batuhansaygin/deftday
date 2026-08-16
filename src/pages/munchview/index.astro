@@ -73,10 +73,13 @@ const proof = [
             muted
             loop
             playsinline
-            aria-label="A twelve-second screen recording: the Munchview home screen asks how long you have, a thumb presses the watch button, and a video is playing three seconds later."
+            aria-label="A seventeen-second screen recording: the Munchview home screen asks how long you have, a length is chosen, the watch button is pressed, and a video is playing moments later."
           ></video>
         </div>
         <p class="cap">A real recording of the app — open, one press, watching.</p>
+        <p class="cap">
+          <a href="#film">Watch the full ninety seconds &rarr;</a>
+        </p>
       </div>
     </section>
 
@@ -302,6 +305,33 @@ const proof = [
         Write from the Google account you use on your Android phone and we will
         add you to the track.
       </p>
+    </section>
+
+
+    <!-- The whole thing, once, for anyone who wants more than the loop.
+         Not autoplayed and not preloaded: a ninety-second file has no business
+         downloading itself for a reader who never scrolls this far. `controls`
+         because this one is watched deliberately rather than glanced at. -->
+    <section id="film" class="wrap film" aria-labelledby="film-h">
+      <h2 id="film-h">The whole thing, unedited</h2>
+      <p class="film-lede">
+        Ninety seconds of the release build, in one take: opening it, choosing a
+        length, a video playing in YouTube's own player, the rails it builds
+        from what you watch, and the settings underneath. Nothing staged, no
+        cuts.
+      </p>
+      <div class="film-frame">
+        <video
+          src="/munchview/film.mp4"
+          poster="/munchview/shots/demo-poster.webp"
+          width="648"
+          height="1440"
+          controls
+          playsinline
+          preload="none"
+          aria-label="A ninety-second screen recording of Munchview: the home screen, choosing a length, pressing watch, a video playing in the official YouTube player, the recommendation rails, and the settings screens."
+        ></video>
+      </div>
     </section>
 
     <p class="updated">Last updated: {updated} · Screens and film captured {updatedShots}</p>
@@ -638,6 +668,20 @@ const proof = [
       border-radius: inherit;
     }
   }
+
+  /* The full film. Narrow, because it is a phone recording and stretching it
+     across a desk-width column would say the opposite of what the app is. */
+  .film { padding-top: 8px; }
+  .film-lede { color: var(--muted); max-width: 56ch; text-wrap: pretty; }
+  .film-frame {
+    margin-top: 28px;
+    width: min(324px, 72vw);
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: #000;
+  }
+  .film-frame video { display: block; width: 100%; height: auto; }
 </style>
 
 <script>

@@ -281,7 +281,19 @@ const jsonLd = {
       :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
       .skip { position: absolute; left: -9999px; }
       .skip:focus { left: 16px; top: 12px; z-index: 50; }
-    </style>
+    
+  /* The film. Kept to a phone's width — stretching a phone recording across a
+     desk-width column would say the opposite of what this app is. */
+  .film-frame {
+    margin: 32px auto 0;
+    width: min(324px, 74vw);
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid var(--line, #222633);
+    background: #000;
+  }
+  .film-frame video { display: block; width: 100%; height: auto; }
+</style>
   </head>
 
   <body>
@@ -414,6 +426,34 @@ const jsonLd = {
               <p>{f.body}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <!-- The app, working, in one take.
+           After "how it works" and before the closing ask: a reader who has
+           just been told it takes three seconds should be able to watch that
+           being true rather than take our word for it.
+           `preload="none"` and no autoplay — a ninety-second file must not
+           download itself for somebody who never scrolls here, and the hero
+           above is already carrying the page's largest paint. -->
+      <section id="film" class="wrap film" aria-labelledby="film-h">
+        <h2 id="film-h">Watch it happen</h2>
+        <p class="sub">
+          Ninety seconds of the real build, in one take: opening it, choosing a
+          length, a video playing in YouTube's own player, and the rails it
+          builds from what you actually watch.
+        </p>
+        <div class="film-frame">
+          <video
+            src="/munchview/film.mp4"
+            poster="/munchview/shots/demo-poster.webp"
+            width="648"
+            height="1440"
+            controls
+            playsinline
+            preload="none"
+            aria-label="A ninety-second screen recording of Munchview: the home screen asking how long you have, choosing a length, pressing watch, a video playing in the official YouTube player, the recommendation rails, and the settings screens."
+          ></video>
         </div>
       </section>
 
