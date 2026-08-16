@@ -208,7 +208,7 @@ const CSP_BY_PATH: Record<string, string> = {
        not what it used to call. */
     /* Google's endpoint and the content service — the latter for both the
        token exchange and the email/password routes, which post here too. */
-    "connect-src 'self' https://accounts.google.com https://munchview-content.bsaygin.workers.dev; " +
+    "connect-src 'self' https://accounts.google.com https://content.deftday.com; " +
     'frame-src https://accounts.google.com; ' +
     CSP_BASE_NO_STYLE,
 };

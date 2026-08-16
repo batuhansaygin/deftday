@@ -108,7 +108,7 @@ export const GOOGLE_READY = GOOGLE_WEB_CLIENT_ID.length > 0;
 export const SIGN_IN_READY = false;
 
 /** Where the browser starts a pairing, and where it later reads the record. */
-export const CONTENT_API_URL = 'https://munchview-content.bsaygin.workers.dev';
+export const CONTENT_API_URL = 'https://content.deftday.com';
 
 /**
  * Where a signed-in reader lands: the Next.js app, in its own Worker.
