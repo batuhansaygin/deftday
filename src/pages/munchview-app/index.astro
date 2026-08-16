@@ -297,7 +297,7 @@ const jsonLd = {
         <a class="quiet" href="#how">How it works</a>
         <a class="quiet" href="https://deftday.com/munchview/privacy">Privacy</a>
         {SIGN_IN_READY ? (
-          <a class="btn" href="/signin">Sign in</a>
+          <a class="btn" href="/signin" data-signed-in-swap>Sign in</a>
         ) : (
           <a class="btn" href={PLAY_URL}>{LIVE ? 'Get it on Play' : 'Join the test'}</a>
         )}
@@ -317,7 +317,7 @@ const jsonLd = {
           <div class="cta">
             {SIGN_IN_READY ? (
               <>
-                <a class="btn" href="/signin">Sign in</a>
+                <a class="btn" href="/signin" data-signed-in-swap>Sign in</a>
                 <a class="btn ghost" href={PLAY_URL}>Get the app</a>
                 <small>Same account as your phone — your profiles, history and picks.</small>
               </>
@@ -420,7 +420,9 @@ const jsonLd = {
       <section class="wrap close">
         <h2>Say how long you’ve got.</h2>
         <div class="cta" style="justify-content:center">
-          {SIGN_IN_READY ? <a class="btn" href="/signin">Sign in</a> : null}
+          {SIGN_IN_READY ? (
+            <a class="btn" href="/signin" data-signed-in-swap>Sign in</a>
+          ) : null}
           <a class={SIGN_IN_READY ? 'btn ghost' : 'btn'} href={PLAY_URL}>
             {LIVE ? 'Get it on Google Play' : 'Join the closed test'}
           </a>
@@ -438,5 +440,30 @@ const jsonLd = {
         <a href="https://deftday.com">DeftDay</a>
       </div>
     </footer>
+    <script is:inline>
+      /*
+       * Somebody already signed in should not be invited to sign in again.
+       *
+       * The page is static and cached, so this cannot be decided at build
+       * time — it is decided in the browser, from the same key /watch reads.
+       * Nothing is validated here and nothing needs to be: the worst case is
+       * a link to /watch, which checks the session properly and offers a
+       * sign-in if it has expired.
+       */
+      (function () {
+        var session = null;
+        try {
+          session = localStorage.getItem('mv_session');
+        } catch (e) {
+          return;
+        }
+        if (!session) return;
+        var links = document.querySelectorAll('[data-signed-in-swap]');
+        for (var i = 0; i < links.length; i += 1) {
+          links[i].setAttribute('href', '/watch');
+          links[i].textContent = 'Watch';
+        }
+      })();
+    </script>
   </body>
 </html>

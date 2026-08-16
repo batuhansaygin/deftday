@@ -58,7 +58,7 @@ const { next = APP_PATH } = Astro.props as Props;
     var root = document.querySelector('.pair');
     if (!root) return;
     var api = root.getAttribute('data-api');
-    var next = root.getAttribute('data-next') || '/app';
+    var next = root.getAttribute('data-next') || '/watch';
     var start = root.querySelector('[data-step="idle"]');
     var panel = root.querySelector('.panel');
     var codeEl = root.querySelector('.code');

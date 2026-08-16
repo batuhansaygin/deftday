@@ -38,7 +38,7 @@ import { GOOGLE_READY } from '../../config/munchview';
         text-align: center;
       }
       img.mark { width: 56px; height: 56px; margin: 0 auto 20px; display: block; }
-      h1 { margin: 0 0 10px; font-size: 25px; letter-spacing: -.02em; }
+      h1 { margin: 0 0 30px; font-size: 25px; letter-spacing: -.02em; }
       p { margin: 0 0 26px; color: var(--muted); font-size: 15px; }
       .actions { display: flex; flex-direction: column; align-items: center; gap: 14px; }
       .btn {
@@ -59,32 +59,18 @@ import { GOOGLE_READY } from '../../config/munchview';
     <main class="card">
       <img class="mark" src="/munchview/brand/mark-192.png" width="56" height="56" alt="" />
       <h1>Sign in to Munchview</h1>
+      {/* One decision, nothing to read first. The copy that used to sit here
+            explained a mechanism the button already performs — and a person
+            arriving at a sign-in screen is not there to be told about sync. */}
       {
         SIGN_IN_READY ? (
-          <>
-            <p>
-              {GOOGLE_READY
-                ? 'Use the same Google account as your phone. Your profiles, watch history, likes and interests are already there — signing in reads them, it does not copy them.'
-                : 'Your phone confirms it. Your profiles, watch history, likes and interests are already there — this reads them, it does not copy them.'}
-            </p>
-            <div class="actions">
-              {GOOGLE_READY ? <MunchviewSignIn next={APP_PATH} /> : <MunchviewPair next={APP_PATH} />}
-            </div>
-            <p class="alt">
-              Don’t have the app yet? <a href={PLAY_URL}>Get it on Google Play</a> — it’s where
-              your account lives.
-            </p>
-          </>
+          <div class="actions">
+            {GOOGLE_READY ? <MunchviewSignIn next={APP_PATH} /> : <MunchviewPair next={APP_PATH} />}
+          </div>
         ) : (
-          <>
-            <p>
-              Signing in on the web is not switched on yet. The app is where everything works
-              today, and your account carries over the moment this opens.
-            </p>
-            <div class="actions">
-              <a class="btn" href={PLAY_URL}>Get the app</a>
-            </div>
-          </>
+          <div class="actions">
+            <a class="btn" href={PLAY_URL}>Get the app</a>
+          </div>
         )
       }
       <a class="back" href="/">← Back to Munchview</a>

@@ -106,5 +106,11 @@ export const SIGN_IN_READY = true;
 /** Where the browser starts a pairing, and where it later reads the record. */
 export const CONTENT_API_URL = 'https://munchview-content.bsaygin.workers.dev';
 
-/** Where a signed-in reader lands. Served by the Next.js app. */
-export const APP_PATH = '/app';
+/**
+ * Where a signed-in reader lands: the Next.js app, in its own Worker.
+ *
+ * Named for what happens there. It was /app, which said nothing and collided
+ * with an Astro page that used to sit at the same path — that page is gone,
+ * and this is the only thing behind the sign-in now.
+ */
+export const APP_PATH = '/watch';

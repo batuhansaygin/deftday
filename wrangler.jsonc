@@ -22,5 +22,12 @@
     "binding": "ASSETS",
     "not_found_handling": "404-page",
     "run_worker_first": true
-  }
+  },
+
+  /* munchview.app/watch is a Next.js app in its own Worker (munchview repo,
+     web/app). It is bound here rather than given a route of its own: this
+     Worker already owns the hostname, and one public entry point is one set
+     of headers, one place redirects are decided, and one thing to reason
+     about. The hop is internal — no second TLS handshake, no extra latency. */
+  "services": [{ "binding": "WEB", "service": "munchview-web" }]
 }

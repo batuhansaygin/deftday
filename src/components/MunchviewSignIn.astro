@@ -29,7 +29,7 @@
  * the phone. A button that opens a Google dialog and then fails is worse than
  * no button.
  */
-import { APP_PATH, GOOGLE_WEB_CLIENT_ID, GOOGLE_READY } from '../config/munchview';
+import { APP_PATH, CONTENT_API_URL, GOOGLE_WEB_CLIENT_ID, GOOGLE_READY } from '../config/munchview';
 
 interface Props {
   /** Where to go once Google has answered. */
@@ -41,7 +41,12 @@ const { next = APP_PATH } = Astro.props as Props;
 {
   GOOGLE_READY && (
     <div class="mv-signin">
-      <div id="mv-google-btn" data-client-id={GOOGLE_WEB_CLIENT_ID} data-next={next} />
+      <div
+        id="mv-google-btn"
+        data-client-id={GOOGLE_WEB_CLIENT_ID}
+        data-next={next}
+        data-api={CONTENT_API_URL}
+      />
       <noscript>
         <p class="mv-note">
           Signing in needs JavaScript. Everything else on this page works without it.
@@ -55,7 +60,8 @@ const { next = APP_PATH } = Astro.props as Props;
           var mount = document.getElementById('mv-google-btn');
           if (!mount) return;
           var clientId = mount.getAttribute('data-client-id');
-          var next = mount.getAttribute('data-next') || '/app';
+          var next = mount.getAttribute('data-next') || '/watch';
+          var api = mount.getAttribute('data-api');
           var err = document.getElementById('mv-signin-error');
 
           function fail(message) {
@@ -64,17 +70,45 @@ const { next = APP_PATH } = Astro.props as Props;
             err.hidden = false;
           }
 
+          /**
+           * Trade Google's credential for one of ours, then keep THAT.
+           *
+           * A Google ID token lasts about an hour and a browser gets no
+           * refresh token, so a page holding only that signs somebody out
+           * while they are still using it. The content service verifies it
+           * once and issues a 30-day session; that is what is stored.
+           *
+           * localStorage, not sessionStorage: the ask was to stay signed in
+           * until sign-out, and sessionStorage dies with the tab. It is a
+           * real trade — a bearer token that outlives the tab — and it is the
+           * behaviour every signed-in site has. Sign out clears it, and the
+           * session expires on its own either way.
+           */
           function onCredential(response) {
             var token = response && response.credential;
             if (!token) return fail('Google did not return a sign-in. Please try again.');
-            try {
-              sessionStorage.setItem('mv_session', token);
-            } catch (e) {
-              /* Private mode, or storage switched off. The page can ask again;
-                 what it must not do is pretend the sign-in worked. */
-              return fail('This browser is blocking storage, so the sign-in cannot be kept.');
-            }
-            window.location.assign(next);
+            fetch(api + '/session', {
+              method: 'POST',
+              headers: { authorization: 'Bearer ' + token },
+            })
+              .then(function (r) {
+                if (!r.ok) throw new Error(String(r.status));
+                return r.json();
+              })
+              .then(function (data) {
+                if (!data || !data.session) throw new Error('no session');
+                try {
+                  localStorage.setItem('mv_session', data.session);
+                } catch (e) {
+                  /* Private mode, or storage switched off. The page can ask
+                     again; what it must not do is pretend it worked. */
+                  return fail('This browser is blocking storage, so the sign-in cannot be kept.');
+                }
+                window.location.assign(next);
+              })
+              .catch(function () {
+                fail('Signed in with Google, but Munchview could not finish it. Try again in a moment.');
+              });
           }
 
           /* GIS loads async; wait for it rather than racing it. Ten seconds is

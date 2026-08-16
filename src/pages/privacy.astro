@@ -114,20 +114,13 @@ const updated = 'August 2, 2026';
       </p>
       <h3>If you sign in on munchview.app</h3>
       <p>
-        The website does not ask Google anything. It shows you a code, you type
-        that code into the app on your phone, and the app — already signed in —
-        confirms it. The browser is then given a key to the record described
-        above; there is one record and two ways of reading it, and nothing is
-        copied between them.
-      </p>
-      <p>
-        While a code is waiting to be confirmed, we hold it for five minutes
-        along with the browser's name and the town its request appears to come
-        from. That exists for one reason: so the app can show you what you are
-        about to approve, and you can tell whether it is you. It is shown to
-        you and to nobody else, and it is deleted the moment the code is used
-        or the five minutes are up, whichever comes first. Signing out of the
-        browser, or deleting your account data, ends it either way.
+        The website signs you in with Google itself, separately from the app —
+        nothing is typed from one to the other. Our service checks Google's
+        credential once and gives the browser a session of its own so you stay
+        signed in; that session is signed rather than stored, so there is no
+        list of sessions anywhere. The browser then reads the same record
+        described above. There is one record and two ways of reading it, and
+        nothing is copied between them. Signing out of the browser ends it.
       </p>
       <h3>If you connect your YouTube account</h3>
       <p>

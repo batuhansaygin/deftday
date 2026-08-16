@@ -8,6 +8,8 @@
  */
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
+  /** munchview.app/watch — the signed-in Next.js app, in its own Worker. */
+  WEB: { fetch(request: Request): Promise<Response> };
   /** The studio error log's D1 (log.deftday.com). */
   ERRORS_DB?: D1Database;
 }
@@ -70,20 +72,16 @@ const CSP_BY_PATH: Record<string, string> = {
        it looks like a broken page rather than a missing feature. */
     "style-src 'self' 'unsafe-inline' https://accounts.google.com; " +
     "img-src 'self' data: https://*.googleusercontent.com; " +
-    "connect-src 'self' https://accounts.google.com; " +
+    /* Google's endpoint AND the content service. The page trades Google's
+       credential for a session of ours the moment the button returns, and the
+       first version of this list had only Google in it — so the browser
+       blocked that exchange and the card said "Signed in with Google, but
+       Munchview could not finish it", which was exactly true and gave no way
+       to know why (reported 2026-08-15). A CSP has to list what a page calls,
+       not what it used to call. */
+    "connect-src 'self' https://accounts.google.com https://munchview-content.bsaygin.workers.dev; " +
     'frame-src https://accounts.google.com; ' +
     CSP_BASE_NO_STYLE,
-  /* Reads the signed-in person's own record, and shows thumbnails for it.
-     `img-src https:` is deliberately broad and deliberately only here: the
-     pictures come from every platform Munchview plays, and PeerTube is
-     federated — any instance. That cannot be enumerated, so a host list would
-     be a list that silently breaks. Images are the one directive where a wide
-     allowance costs little; scripts stay on this origin. */
-  '/app':
-    "script-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data: https:; " +
-    "connect-src 'self' https://munchview-content.bsaygin.workers.dev; " +
-    CSP_BASE,
 };
 const HSTS = 'max-age=31536000; includeSubDomains';
 
@@ -166,6 +164,33 @@ export default {
      * the plain path is the fallback. One extra lookup on a miss, against an
      * edge cache, and no list of exceptions to keep in step with the files.
      */
+    /**
+     * The signed-in application. Forwarded whole, before any asset lookup:
+     * it owns its own routing, its own headers and its own caching, and an
+     * Assets miss here would answer with this site's 404 rather than its.
+     */
+    if (url.hostname === APP_HOST && (url.pathname === '/watch' || url.pathname.startsWith('/watch/'))) {
+      const app = await env.WEB.fetch(request);
+      /**
+       * The app's HTML shell must never be cached at the edge.
+       *
+       * It arrived with `s-maxage=31536000` — a year — because Next prerenders
+       * it and OpenNext caches prerendered routes hard. For a document that
+       * boots a client application that is exactly wrong: every deploy became
+       * invisible to anyone whose edge already held a copy, and two rounds of
+       * fixes were reported as "still the same" while the new bundle sat there
+       * unreferenced (2026-08-15).
+       *
+       * Only the document. Everything under /watch/_next/static is content
+       * hashed and keeps whatever long life it was given.
+       */
+      const type = app.headers.get('content-type') ?? '';
+      if (!type.includes('text/html')) return app;
+      const headers = new Headers(app.headers);
+      headers.set('cache-control', 'no-store, must-revalidate');
+      return new Response(app.body, { status: app.status, statusText: app.statusText, headers });
+    }
+
     let response: Response;
     try {
       if (url.hostname === APP_HOST) {
