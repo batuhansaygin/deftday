@@ -327,6 +327,19 @@ export default {
       return Response.redirect(`https://${CANONICAL_HOST}/munchview${url.pathname}`, 301);
     }
 
+    /**
+     * munchview.app/v — the address the app now writes into a share
+     * (owner, 2026-08-18: the shared text should carry the app's own name,
+     * not the studio's). The landing page itself stays at its canonical
+     * deftday.com/munchview/v — same pattern as /privacy above: one page,
+     * one URL — and the query rides the redirect whole, because `u` and `t`
+     * ARE the share. Android never sees this hop: the app claims
+     * munchview.app/v as an App Link and opens directly.
+     */
+    if (url.hostname === APP_HOST && url.pathname === '/v') {
+      return Response.redirect(`https://${CANONICAL_HOST}/munchview/v${url.search}`, 301);
+    }
+
     if (url.hostname === APP_HOST && (url.pathname === '/watch' || url.pathname.startsWith('/watch/'))) {
       const gate = await watchGate(request, env, url);
       if (gate != null) return gate;
