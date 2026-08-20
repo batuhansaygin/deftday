@@ -13,7 +13,7 @@
  */
 
 /** True once the app is on the public Play track, not the closed test. */
-export const LIVE = false;
+export const LIVE = true;
 
 /**
  * The app's own site, bought 2026-08-15.
