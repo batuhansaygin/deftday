@@ -2,83 +2,111 @@
 /**
  * munchview.app — the app's own front door.
  *
- * The owner bought the domain on 2026-08-15 and asked for the look of
- * JustWatch: night navy, gold, a cinematic top. The LOOK is what is borrowed.
- * The layout is not, and deliberately: JustWatch is a catalogue that tells you
- * where a film streams and hands you to Netflix. Munchview starts something
- * now. Copying a catalogue's shape — search bar, provider grid, rows of
- * posters — would sell a product this is not, and `store/ASO.md` in the app
- * repo says in as many words that competing as a finder is a fight we lose.
+ * Redesigned 2026-08-22. The first version borrowed JustWatch's cinema look;
+ * the owner didn't warm to it and asked for a page that matches the app
+ * ("bu uygulama ile uyumlu"). So the page now IS the app, blown up:
  *
- * Everything on this page is the app's own: the colours are the tokens from
- * src/theme/tokens.ts, the mark is the icon's own foreground layer, and the
- * screenshots are whole screens from the release build — no mockups, no
- * device frames drawn round a render.
+ * - It opens the way the app opens — "WHAT TO WATCH:" with a suggestion chip,
+ *   then the question the whole product is built on, then the length row,
+ *   then one big amber button. A visitor who later installs the app finds a
+ *   home screen they have already met.
+ * - The section headings borrow the store screenshots' caption style — first
+ *   line white, second line amber — set in Jost, an OFL geometric that reads
+ *   like the Futura those captions are set in. Self-hosted (~26 KB, latin);
+ *   the CSP allows no font CDNs and should stay that way.
+ * - Every screenshot is a whole screen from the current release build,
+ *   captured today, in the same device slab the store tablet frames use.
+ *
+ * Everything on this page is the app's own: colours are the tokens from
+ * munchview/src/theme/tokens.ts, the mark is the icon's foreground layer,
+ * the Pro list is the app's Pro sheet verbatim (pro-truth rule: the benefits
+ * list always matches the shipped gates).
  *
  * Status text comes from ../../config/munchview so this page cannot outlive
- * the closed test the way five other surfaces once nearly did.
+ * a track change the way five other surfaces once nearly did.
  */
-import { LIVE, PLAY_URL, SIGN_IN_READY, STATUS_BADGE, STATUS_CLAUSE } from '../../config/munchview';
-/* The pairing flow itself lives on /signin, not here. It is several steps with
-   a code and a countdown — one decision per screen, the same law the app is
-   built on — and inlining a component that carries its own script in two
-   places on one page would run that script twice. */
+import { LIVE, PLAY_URL, SIGN_IN_READY } from '../../config/munchview';
 
 const site = 'https://munchview.app';
 
+/* The app's own three presets, captions and all. Display only — a row of
+   "controls" that controlled nothing would be a small lie. The middle one
+   carries the selected state, like the screenshot beside it. */
 const lengths = [
-  { n: '10', unit: 'min', what: 'a coffee, a queue, a bus stop' },
-  { n: '20', unit: 'min', what: 'lunch at your desk' },
-  { n: '30+', unit: 'min', what: 'the sofa, properly' },
+  { n: '10', unit: 'min', what: 'a coffee, a queue, a bus stop', on: false },
+  { n: '20', unit: 'min', what: 'lunch at your desk', on: true },
+  { n: '30+', unit: 'min', what: 'the sofa, properly', on: false },
 ];
+
+/* What the suggestion chip cycles through — the moments from the app's own
+   store copy, not invented occasions. */
+const moments = ['a lunch break', 'a study session', 'the workshop', 'winding down'];
 
 const platforms = ['YouTube', 'Vimeo', 'Dailymotion', 'Twitch', 'PeerTube', 'Internet Archive'];
 
-/* Real captures from 1.3.41, the build published the same day. Whole screens,
-   at the size the pages already expect. */
+/* The app's Pro sheet, verbatim. If this drifts from the shipped gates the
+   pro-truth rule is being broken on a marketing page, which is worse. */
+const pro = [
+  'Your own keyword tags — name it, the feed finds it',
+  'Browse any country’s feed, in its own language',
+  'Any length you like — a bar from 1 to 90 minutes, not three presets',
+  'Multiple taste profiles — one phone, everyone who uses it',
+  'See where you stopped and how much is left, right on the card',
+];
+
+/* The languages the app actually ships, each in its own name. */
+const languages = [
+  'English', 'Türkçe', 'Deutsch', 'Español', 'Français', 'Italiano',
+  'Русский', 'العربية', '日本語', '简体中文', '繁體中文',
+];
+
+/* Whole screens from today's release build, one idea each. */
 const shots = {
-  home: '/munchview/shots/new-home.webp',
-  player: '/munchview/shots/new-player.webp',
-  discover: '/munchview/shots/new-discover.webp',
-  preferences: '/munchview/shots/new-preferences.webp',
+  home: '/munchview/shots/v2-home.webp',
+  player: '/munchview/shots/v2-player.webp',
+  corner: '/munchview/shots/v2-corner.webp',
+  discover: '/munchview/shots/v2-discover.webp',
+  platforms: '/munchview/shots/v2-platforms.webp',
+  pro: '/munchview/shots/v2-pro.webp',
 };
 
-const features = [
+const story = [
   {
-    title: 'No feed to fall into',
-    body:
-      'There is no infinite scroll and no autoplay tunnel. A handful of picks, a list built from what you actually finish, and every one of them ends on purpose.',
+    id: 'player',
+    w: 'One press.',
+    a: 'No feed on the way.',
+    body: 'The pick is made before you’ve sat down, and it’s already playing. Not for you? One tap moves on.',
+    shot: shots.player,
+    alt: 'A Champions League final playing in Munchview, with a related list under it.',
   },
   {
-    title: 'Cut to the time you have',
-    body:
-      'Say ten minutes and you get something that fits in ten. Not a ninety-minute episode with a progress bar you will abandon at the door.',
+    id: 'corner',
+    w: 'Keep it playing,',
+    a: 'in the corner.',
+    body: 'Pull the video down and it shrinks to a little window that keeps playing while you look around the rest of the app.',
+    shot: shots.corner,
+    alt: 'Munchview’s home screen with a small corner window still playing a video.',
   },
   {
-    title: 'It learns on your phone',
-    body:
-      'Like a video to see more of it; say “not for me” and that channel stays away. The learning lives on the device. No account is needed to use any of it.',
+    id: 'discover',
+    w: 'A feed that ends.',
+    a: 'On purpose.',
+    body: 'Short rails built from what you actually finish — never an infinite scroll, never an autoplay tunnel.',
+    shot: shots.discover,
+    alt: 'Munchview’s discover rails: Just Slide and You might also like.',
   },
   {
-    title: 'Your country, your language',
-    body:
-      'Pick a country and the whole feed follows it — the search goes out in that country’s language, not in English with a flag on it.',
-  },
-  {
-    title: 'One player for six platforms',
-    body:
-      'Everything plays inside the app, in each platform’s own official embedded player. One set of controls to learn, one place to be.',
-  },
-  {
-    title: 'Nothing watching you',
-    body:
-      'No analytics, no trackers, no advertising of ours — in either tier. The platforms run their own ads inside their players; those are theirs, and we say so rather than pretending otherwise.',
+    id: 'platforms',
+    w: 'Six platforms.',
+    a: 'One player.',
+    body: 'YouTube, Vimeo, Dailymotion, Twitch, PeerTube and the Internet Archive — each in its own official embedded player, inside the app.',
+    shot: shots.platforms,
+    alt: 'Munchview’s platforms screen: six platform cards, all switched on.',
   },
 ];
 
 /* Structured data. Google reads this to build the app result; every field is
-   true of the listing it describes, which is the same rule the store copy is
-   held to. */
+   true of the listing it describes, the same rule the store copy is held to. */
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'MobileApplication',
@@ -88,6 +116,7 @@ const jsonLd = {
   url: site,
   installUrl: PLAY_URL,
   image: `${site}/munchview/brand/icon-512.png`,
+  screenshot: `${site}/munchview/shots/v2-home.webp`,
   description:
     'Say how long you have and a good video starts playing. Six platforms, one player, no feed.',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -103,13 +132,20 @@ const jsonLd = {
     <title>Munchview — say how long you have, and watch</title>
     <meta
       name="description"
-      content={`Munchview starts a good video that fits the time you have — ten minutes, twenty, thirty and up. Six platforms, one player, no feed. Android, ${STATUS_CLAUSE}.`}
+      content="Munchview starts a good video that fits the time you have — ten minutes, twenty, an hour. Six platforms, one player, no feed. Free on Google Play."
     />
     <meta name="theme-color" content="#0E101A" />
     <link rel="canonical" href={`${site}/`} />
 
     <link rel="icon" href="/munchview/brand/icon-32.png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/munchview/brand/icon-180.png" />
+    <link
+      rel="preload"
+      href="/munchview/font/jost.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
 
     <meta property="og:site_name" content="Munchview" />
     <meta property="og:title" content="Munchview — say how long you have, and watch" />
@@ -119,31 +155,43 @@ const jsonLd = {
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={`${site}/`} />
-    <meta property="og:image" content={`${site}/munchview/brand/icon-512.png`} />
+    <meta property="og:image" content={`${site}/munchview/brand/og-card.png`} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Munchview — say how long you have, and watch" />
     <meta
       name="twitter:description"
       content="A good video that fits the time you have. Six platforms, one player, no feed."
     />
-    <meta name="twitter:image" content={`${site}/munchview/brand/icon-512.png`} />
+    <meta name="twitter:image" content={`${site}/munchview/brand/og-card.png`} />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
     <style>
+      /* Jost — an OFL geometric close enough to the Futura the store captions
+         are set in that the site and the screenshots read as one voice.
+         Self-hosted; the CSP allows no font hosts and should stay that way. */
+      @font-face {
+        font-family: 'Jost';
+        font-style: normal;
+        font-weight: 400 800;
+        font-display: swap;
+        src: url('/munchview/font/jost.woff2') format('woff2');
+      }
+
       /* The app's tokens, verbatim. If these ever drift from
          munchview/src/theme/tokens.ts the site is lying about the product. */
       :root {
         --bg: #0e101a;
         --surface: #181b26;
         --surface-high: #222633;
-        --line: #222633;
+        --line: #232838;
         --accent: #ffb300;
         --accent-pressed: #e09e00;
+        --on-accent: #1a1200;
         --ink: #eef2f6;
         --muted: #8d949b;
-        --radius: 14px;
         --page: 1120px;
+        --display: 'Jost', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       }
 
       * { box-sizing: border-box; }
@@ -152,378 +200,537 @@ const jsonLd = {
         margin: 0;
         background: var(--bg);
         color: var(--ink);
-        font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        font: 16.5px/1.65 ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         -webkit-font-smoothing: antialiased;
       }
       a { color: inherit; }
       img { max-width: 100%; height: auto; display: block; }
-      .wrap { width: min(100% - 40px, var(--page)); margin-inline: auto; }
+      .wrap { width: min(100% - 44px, var(--page)); margin-inline: auto; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+      .sr-only {
+        position: absolute; width: 1px; height: 1px;
+        overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+      }
+      .skip { position: absolute; left: -9999px; }
+      .skip:focus { left: 16px; top: 12px; z-index: 60; }
 
+      /* ---------- nav ---------- */
       .nav {
-        position: sticky; top: 0; z-index: 20;
-        background: color-mix(in srgb, var(--bg) 88%, transparent);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid var(--line);
+        position: sticky; top: 0; z-index: 40;
+        background: rgba(14, 16, 26, .92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(35, 40, 56, .6);
       }
-      .nav-in { display: flex; align-items: center; gap: 16px; height: 62px; }
-      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .02em; text-decoration: none; }
-      .brand img { width: 28px; height: 28px; }
+      .nav-in { display: flex; align-items: center; gap: 18px; height: 66px; }
+      .brand {
+        display: flex; align-items: center; gap: 11px; text-decoration: none;
+        font-family: var(--display); font-weight: 600; font-size: 17px; letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+      .brand img { width: 30px; height: 30px; }
       .nav .spacer { flex: 1; }
-      .nav a.quiet { color: var(--muted); text-decoration: none; font-size: 14px; }
-      .nav a.quiet:hover { color: var(--ink); }
-
-      .btn {
-        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-        background: var(--accent); color: #1a1200; font-weight: 800;
-        border: 0; border-radius: 100px; padding: 12px 22px;
-        text-decoration: none; cursor: pointer; font-size: 15px; min-height: 44px;
+      .nav a.quiet {
+        color: var(--muted); text-decoration: none; font-size: 14.5px;
       }
-      .btn:hover { background: var(--accent-pressed); }
-      .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
-      .btn.ghost:hover { border-color: var(--muted); background: var(--surface); }
+      .nav a.quiet:hover { color: var(--ink); }
+      .pill {
+        display: inline-flex; align-items: center; justify-content: center;
+        background: var(--accent); color: var(--on-accent);
+        font-family: var(--display); font-weight: 700; font-size: 14.5px; letter-spacing: .04em;
+        border-radius: 100px; padding: 10px 20px; min-height: 42px; text-decoration: none;
+      }
+      .pill:hover { background: var(--accent-pressed); }
 
-      .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
-      /* The cinema of the reference, built from gradients rather than a
-         photograph: nothing here has to be licensed, and it stays sharp at
-         every width. */
+      /* ---------- the app-button ----------
+         The product's signature control: a small tracked line above one big
+         word, on amber. The site's version says what it honestly does. */
+      .watch-btn {
+        display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 2px; background: var(--accent); color: var(--on-accent);
+        border-radius: 26px; padding: 18px 46px 20px; min-width: 300px;
+        text-decoration: none; text-align: center;
+        box-shadow: 0 18px 50px rgba(255, 179, 0, .22), 0 4px 14px rgba(0, 0, 0, .5);
+        transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+      }
+      .watch-btn:hover {
+        background: var(--accent-pressed); transform: translateY(-1px);
+        box-shadow: 0 22px 60px rgba(255, 179, 0, .26), 0 6px 16px rgba(0, 0, 0, .5);
+      }
+      .watch-btn .press {
+        font-family: var(--display); font-weight: 600; font-size: 12.5px; letter-spacing: .34em;
+        text-transform: uppercase; opacity: .78; text-indent: .34em;
+      }
+      .watch-btn .word {
+        font-family: var(--display); font-weight: 800; font-size: clamp(22px, 2.6vw, 28px);
+        letter-spacing: .1em; text-transform: uppercase; text-indent: .1em; line-height: 1.15;
+      }
+
+      /* ---------- hero ---------- */
+      .hero { position: relative; overflow: clip; }
       .hero::before {
-        content: ""; position: absolute; inset: -30% -10% auto -10%; height: 120%;
+        content: ''; position: absolute; inset: -20% -20% auto;
+        height: 130%; pointer-events: none;
         background:
-          radial-gradient(60% 55% at 78% 18%, rgba(255, 179, 0, .18), transparent 62%),
-          radial-gradient(45% 45% at 12% 8%, rgba(90, 120, 255, .15), transparent 60%);
-        filter: blur(6px); pointer-events: none;
+          radial-gradient(46% 42% at 76% 30%, rgba(255, 179, 0, .16), transparent 68%),
+          radial-gradient(34% 30% at 10% 4%, rgba(84, 110, 255, .12), transparent 62%);
+        filter: blur(4px);
       }
       .hero-in {
-        position: relative; padding: 88px 0 76px;
-        display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center;
+        position: relative;
+        display: grid; grid-template-columns: 1.08fr .92fr; gap: 48px; align-items: center;
+        padding: 84px 0 92px;
       }
       .eyebrow {
-        display: inline-flex; align-items: center; gap: 9px;
-        font-size: 12.5px; letter-spacing: .13em; text-transform: uppercase;
-        color: var(--muted); margin: 0 0 20px;
+        display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+        margin: 0 0 26px;
+        font-family: var(--display); font-weight: 600; font-size: 14px;
+        letter-spacing: .3em; text-transform: uppercase; color: var(--accent);
       }
-      .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+      .chip-swap {
+        display: inline-flex; align-items: center;
+        border: 1.5px solid rgba(255, 179, 0, .75);
+        border-radius: 100px; padding: 7px 18px;
+        font-family: var(--display); font-weight: 500; font-size: 15px;
+        letter-spacing: .02em; text-transform: none; color: var(--ink);
+        min-width: 172px; justify-content: center;
+      }
+      .chip-swap span { transition: opacity .3s ease; }
+      .chip-swap span.out { opacity: 0; }
       h1 {
-        margin: 0 0 20px; font-size: clamp(36px, 5.2vw, 60px); line-height: 1.05;
-        letter-spacing: -.025em; font-weight: 800;
+        margin: 0 0 22px;
+        font-family: var(--display); font-weight: 700;
+        font-size: clamp(46px, 7.2vw, 86px);
+        line-height: .98; letter-spacing: -.02em;
       }
-      h1 em { font-style: normal; color: var(--accent); }
-      .lede { margin: 0 0 30px; font-size: clamp(16.5px, 1.5vw, 19px); color: var(--muted); max-width: 52ch; }
-      .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-      .cta small { color: var(--muted); font-size: 13.5px; }
-
-      /* The phone: the screenshot IS the frame — a real capture, edge to edge,
-         with a rounded clip and a soft lift under it. No drawn bezel. */
-      .phone {
-        justify-self: center; width: min(300px, 78vw);
-        border-radius: 26px; overflow: hidden;
-        border: 1px solid var(--line);
-        box-shadow: 0 40px 90px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .03);
+      .lede {
+        margin: 0 0 34px; color: var(--muted); max-width: 46ch;
+        font-size: clamp(16.5px, 1.5vw, 19px);
       }
+      .lede strong { color: var(--ink); font-weight: 600; }
 
-      .lengths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 8px 0 0; }
+      .lengths { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 36px; }
       .len {
-        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-        padding: 20px 18px; transition: border-color .18s ease, transform .18s ease;
+        flex: 1 1 150px; max-width: 190px;
+        background: var(--surface);
+        border: 1.5px solid var(--line); border-radius: 20px;
+        padding: 14px 18px 13px;
       }
-      .len:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); transform: translateY(-2px); }
-      .len b { display: block; font-size: 30px; line-height: 1; letter-spacing: -.02em; }
-      .len b span { font-size: 14px; color: var(--muted); font-weight: 700; margin-left: 4px; }
-      .len p { margin: 9px 0 0; color: var(--muted); font-size: 14px; }
-
-      section { padding: 76px 0; border-bottom: 1px solid var(--line); }
-      h2 { margin: 0 0 10px; font-size: clamp(24px, 3.4vw, 34px); letter-spacing: -.02em; }
-      .sub { margin: 0 0 34px; color: var(--muted); max-width: 62ch; }
-
-      .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-      .shot { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-      .shot img { border-bottom: 1px solid var(--line); }
-      .shot figcaption { padding: 16px 18px; color: var(--muted); font-size: 14.5px; }
-      .shot figcaption b { color: var(--ink); display: block; margin-bottom: 4px; font-size: 15.5px; }
-
-      .rail { display: flex; flex-wrap: wrap; gap: 10px; }
-      .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 100px; padding: 10px 18px; font-size: 14.5px; }
-
-      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-      .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 22px; }
-      .card h3 { margin: 0 0 9px; font-size: 17.5px; letter-spacing: -.01em; }
-      .card p { margin: 0; color: var(--muted); font-size: 15px; }
-
-      .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: s; }
-      .step { position: relative; padding-left: 52px; }
-      .step::before {
-        counter-increment: s; content: counter(s);
-        position: absolute; left: 0; top: -2px; width: 36px; height: 36px; border-radius: 50%;
-        display: grid; place-items: center; background: var(--surface-high); color: var(--accent); font-weight: 800;
+      .len b {
+        display: block;
+        font-family: var(--display); font-weight: 700; font-size: 27px;
+        line-height: 1.05; letter-spacing: -.01em;
       }
-      .step h3 { margin: 4px 0 6px; font-size: 17px; }
-      .step p { margin: 0; color: var(--muted); font-size: 15px; }
+      .len b span { font-size: 14px; color: var(--muted); font-weight: 600; margin-left: 3px; }
+      .len p { margin: 3px 0 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+      .len.on { border-color: var(--accent); }
+      .len.on b span { color: var(--accent); }
 
-      .close { text-align: center; padding: 84px 0; border-bottom: 0; }
-      .close h2 { margin-bottom: 22px; }
+      .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+      .cta small { color: var(--muted); font-size: 14px; line-height: 1.5; }
 
-      footer { padding: 40px 0 56px; color: var(--muted); font-size: 14px; }
+      /* the device slab, from the store tablet frames */
+      .stage { position: relative; justify-self: center; }
+      .stage-glow {
+        position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%);
+        width: min(620px, 86vw); aspect-ratio: 1; border-radius: 50%; pointer-events: none;
+        background: radial-gradient(closest-side, rgba(255, 179, 0, .17), rgba(255, 179, 0, .05) 46%, transparent 72%);
+        filter: blur(8px);
+      }
+      .slab {
+        position: relative; width: min(316px, 76vw); aspect-ratio: 648 / 1440;
+        padding: 10px; border-radius: 40px;
+        background: linear-gradient(155deg, #3b4058, #0a0c14 26% 74%, #3b4058);
+        box-shadow:
+          inset 0 3px 8px rgba(255, 255, 255, .18),
+          0 44px 90px rgba(0, 0, 0, .55),
+          0 12px 28px rgba(0, 0, 0, .45);
+      }
+      .slab img { width: 100%; height: 100%; border-radius: 30px; object-fit: cover; }
+
+      /* ---------- proof strip ---------- */
+      .proof { padding: 0 0 8px; }
+      .proof-in {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+      }
+      .stat {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+        padding: 22px 24px 20px;
+      }
+      .stat b {
+        display: block; font-family: var(--display); font-weight: 700;
+        font-size: 40px; line-height: 1; letter-spacing: -.01em; color: var(--accent);
+      }
+      .stat p { margin: 7px 0 0; color: var(--muted); font-size: 14.5px; }
+
+      /* ---------- shared section bits ---------- */
+      section { padding: 104px 0 0; }
+      .cap {
+        margin: 0 0 14px;
+        font-family: var(--display); font-weight: 700;
+        font-size: clamp(30px, 4.4vw, 52px); line-height: 1.02; letter-spacing: -.02em;
+      }
+      .cap .a { display: block; color: var(--accent); }
+      .sub { margin: 0 0 40px; color: var(--muted); max-width: 58ch; font-size: 17px; }
+
+      /* ---------- story ---------- */
+      .story-grid {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: clamp(28px, 5vw, 80px); align-items: start;
+      }
+      .panel {
+        min-height: 72vh; display: flex; flex-direction: column; justify-content: center;
+        opacity: .3; transition: opacity .4s ease;
+      }
+      .panel.on { opacity: 1; }
+      .panel h3 {
+        margin: 0;
+        font-family: var(--display); font-weight: 700;
+        font-size: clamp(30px, 3.6vw, 46px); line-height: 1.04; letter-spacing: -.02em;
+      }
+      .panel h3 .a { display: block; color: var(--accent); }
+      .panel p {
+        margin: 16px 0 0; color: var(--muted);
+        font-size: clamp(15.5px, 1.6vw, 18.5px); max-width: 36ch;
+      }
+      .panel-shot { display: none; margin: 28px 0 0; }
+      .story-stage {
+        position: sticky; top: 11vh; height: 78vh;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .story-stage .slab img {
+        position: absolute; inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px);
+        opacity: 0; transform: scale(1.012);
+        transition: opacity .45s ease, transform .45s ease;
+      }
+      .story-stage .slab img.on { opacity: 1; transform: none; }
+
+      /* ---------- platform cards (the app's own screen) ---------- */
+      .plat-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 780px;
+      }
+      .plat {
+        background: #fff; color: #14161f;
+        border-radius: 18px; padding: 20px 14px;
+        font-family: var(--display); font-weight: 700; font-size: 16.5px; letter-spacing: .01em;
+        text-align: center;
+      }
+      .plat-note { margin: 22px 0 0; color: var(--muted); font-size: 15px; max-width: 58ch; }
+      .plat-note b { color: var(--ink); font-weight: 600; }
+
+      /* ---------- languages ---------- */
+      .lang-rail { display: flex; flex-wrap: wrap; gap: 10px; max-width: 820px; }
+      .lang {
+        border: 1px solid var(--line); background: var(--surface);
+        border-radius: 100px; padding: 9px 18px; font-size: 15px;
+      }
+
+      /* ---------- pro ---------- */
+      .pro-grid {
+        display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(28px, 5vw, 72px);
+        align-items: center;
+      }
+      .pro-title {
+        margin: 0 0 8px;
+        font-family: var(--display); font-weight: 700; color: var(--accent);
+        font-size: clamp(34px, 4.6vw, 54px); line-height: 1; letter-spacing: -.02em;
+      }
+      .pro-tag { margin: 0 0 30px; color: var(--muted); font-size: 18px; max-width: 40ch; }
+      .pro-list { list-style: none; margin: 0 0 28px; padding: 0; display: grid; gap: 15px; }
+      .pro-list li { position: relative; padding-left: 38px; font-size: 16.5px; }
+      .pro-list li::before {
+        content: '✓'; position: absolute; left: 0; top: 1px;
+        width: 24px; height: 24px; border-radius: 50%;
+        background: var(--accent); color: var(--on-accent);
+        font-weight: 800; font-size: 14px; display: grid; place-items: center;
+      }
+      .pro-fine { color: var(--muted); font-size: 14.5px; margin: 0; max-width: 46ch; }
+      .pro-fine b { color: var(--ink); font-weight: 600; }
+
+      /* ---------- film ---------- */
+      .film-frame {
+        margin: 0; width: min(324px, 76vw); border-radius: 34px; overflow: hidden;
+        border: 1px solid var(--line); background: #000;
+        box-shadow: 0 34px 80px rgba(0, 0, 0, .5);
+      }
+      .film-frame video { display: block; width: 100%; height: auto; }
+      .film-grid {
+        display: grid; grid-template-columns: 1fr auto; gap: clamp(28px, 5vw, 80px);
+        align-items: center;
+      }
+
+      /* ---------- quiet privacy ---------- */
+      .privacy-card {
+        border: 1px solid var(--line); border-radius: 20px;
+        background: var(--surface); padding: 26px 28px; max-width: 720px;
+      }
+      .privacy-card h2 {
+        margin: 0 0 10px; font-family: var(--display); font-weight: 700;
+        font-size: 19px; letter-spacing: .01em;
+      }
+      .privacy-card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+      .privacy-card a { color: var(--ink); }
+
+      /* ---------- close + footer ---------- */
+      .close { text-align: center; padding: 120px 0 110px; }
+      .close .cap { margin-bottom: 34px; }
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 36px 0 52px; color: var(--muted); font-size: 14px;
+      }
       .foot-in { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; }
       footer a { color: var(--muted); text-decoration: none; }
       footer a:hover { color: var(--ink); text-decoration: underline; }
       footer .spacer { flex: 1; }
 
+      /* ---------- responsive ---------- */
       @media (max-width: 980px) {
-        .hero-in { grid-template-columns: 1fr; gap: 40px; padding: 64px 0 56px; }
-        .shots, .grid, .steps { grid-template-columns: 1fr; }
-        .phone { order: -1; }
+        .hero-in { grid-template-columns: 1fr; gap: 52px; padding: 56px 0 72px; }
+        .stage { justify-self: center; }
+        .proof-in { grid-template-columns: 1fr; }
+        .story-grid { grid-template-columns: 1fr; }
+        .story-stage { display: none; }
+        .panel { min-height: 0; opacity: 1; padding: clamp(34px, 7vh, 64px) 0; }
+        .panel-shot { display: flex; justify-content: center; }
+        .panel-shot img { width: min(280px, 72vw); border-radius: 26px; }
+        .pro-grid { grid-template-columns: 1fr; }
+        .film-grid { grid-template-columns: 1fr; }
+        .film-frame { margin-inline: auto; }
+        section { padding-top: 84px; }
       }
-      @media (max-width: 620px) { .lengths { grid-template-columns: 1fr; } }
+      @media (max-width: 720px) {
+        /* Brand + one button. The quiet links all have in-page homes —
+           story, Pro, the footer's privacy — and a nav that wraps to three
+           lines is worse than a nav with less in it. */
+        .nav a.quiet { display: none; }
+      }
+      @media (max-width: 560px) {
+        .plat-grid { grid-template-columns: repeat(2, 1fr); }
+        .watch-btn { width: 100%; }
+      }
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto; }
         * { transition: none !important; animation: none !important; }
+        .panel { opacity: 1; }
       }
-      :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
-      .skip { position: absolute; left: -9999px; }
-      .skip:focus { left: 16px; top: 12px; z-index: 50; }
-    
-  /* The film. Kept to a phone's width — stretching a phone recording across a
-     desk-width column would say the opposite of what this app is. */
-  .film-frame {
-    margin: 32px auto 0;
-    width: min(324px, 74vw);
-    border-radius: 28px;
-    overflow: hidden;
-    border: 1px solid var(--line, #222633);
-    background: #000;
-  }
-  .film-frame video { display: block; width: 100%; height: auto; }
-      /* ----------------------------------------------------- scroll story --
-         The device is sticky and the screens cross-fade inside it, so the eye
-         stays on one object while the argument moves. Only opacity and
-         transform animate; nothing here forces a layout while scrolling. */
-      .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
-      .story-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(24px,5vw,72px); align-items:start; }
-      .panel { min-height:74vh; display:flex; flex-direction:column; justify-content:center;
-               opacity:.32; transition:opacity 420ms ease; }
-      .panel.on { opacity:1; }
-      .panel h3 { font-size:clamp(24px,3.4vw,40px); line-height:1.1; letter-spacing:-.02em; margin:0; }
-      .panel p { color:var(--muted); font-size:clamp(15px,1.6vw,19px); line-height:1.5; margin:14px 0 0; max-width:34ch; }
-      .panel-shot { display:none; margin:26px 0 0; }
-      .story-stage { position:sticky; top:12vh; height:74vh; display:flex; align-items:center; justify-content:center; }
-      .stage-glow { position:absolute; width:min(680px,80vw); aspect-ratio:1; border-radius:50%; pointer-events:none;
-        background:radial-gradient(closest-side, rgba(255,179,0,.16) 0%, rgba(255,179,0,.05) 46%, rgba(255,179,0,0) 72%); filter:blur(8px); }
-      .stage-phone { position:relative; width:min(320px,72vw); aspect-ratio:648/1440; padding:10px; border-radius:38px;
-        background:linear-gradient(155deg,#3B4058 0%,#0A0C14 26%,#0A0C14 74%,#3B4058 100%);
-        box-shadow:inset 0 3px 8px rgba(255,255,255,.18), 0 40px 80px rgba(0,0,0,.55), 0 12px 28px rgba(0,0,0,.45); }
-      .stage-phone img { position:absolute; inset:10px; width:calc(100% - 20px); height:auto; border-radius:28px;
-        opacity:0; transform:scale(1.012); transition:opacity 460ms ease, transform 460ms ease; }
-      .stage-phone img.on { opacity:1; transform:none; }
-
-      @media (max-width: 900px) {
-        .story-grid { grid-template-columns:1fr; }
-        .story-stage { display:none; }
-        .panel { min-height:0; opacity:1; padding:clamp(36px,8vh,72px) 0; }
-        .panel-shot { display:flex; justify-content:center; }
-        .panel-shot img { width:min(300px,74vw); border-radius:26px; }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .panel, .stage-phone img { transition:none; }
-        .panel { opacity:1; }
-      }
-
-</style>
+    </style>
   </head>
 
   <body>
-    <a class="btn ghost skip" href="#main">Skip to content</a>
+    <a class="skip pill" href="#main">Skip to content</a>
 
-    <nav class="nav">
+    <nav class="nav" aria-label="Site">
       <div class="wrap nav-in">
         <a class="brand" href="/">
-          <img src="/munchview/brand/mark-96.png" width="28" height="28" alt="" />
+          <img src="/munchview/brand/mark-96.png" width="30" height="30" alt="" />
           Munchview
         </a>
         <span class="spacer"></span>
-        <a class="quiet" href="#how">How it works</a>
+        <a class="quiet" href="#story">How it works</a>
+        <a class="quiet" href="#pro">Pro</a>
         <a class="quiet" href="https://deftday.com/munchview/privacy">Privacy</a>
-        {SIGN_IN_READY ? (
-          <a class="btn" href="/signin" data-signed-in-swap>Sign in</a>
-        ) : (
-          <a class="btn" href={PLAY_URL}>{LIVE ? 'Get it on Play' : 'Join the test'}</a>
-        )}
+        <a class="pill" href={PLAY_URL}>Get it on Play</a>
       </div>
     </nav>
 
     <header class="hero">
       <div class="wrap hero-in">
         <div>
-          <p class="eyebrow"><span class="dot"></span> Android · {STATUS_BADGE}</p>
-          <h1>Say how long you have. <em>Then just watch.</em></h1>
-          <p class="lede">
-            Every other app opens by asking what you are in the mood for. Munchview is built on
-            the belief that the asking is the problem. Tell it how long you have got, and
-            something worth watching is already playing.
+          <p class="eyebrow">
+            What to watch:
+            <span class="chip-swap" aria-hidden="true"><span id="moment">{moments[0]}</span></span>
+            <span class="sr-only">whatever moment you’re in — a lunch break, a study session, winding down.</span>
           </p>
+
+          <h1>How long<br />have you got?</h1>
+
+          <p class="lede">
+            Say the time — ten minutes, an hour — and a good video is
+            <strong>already playing</strong> when the screen lights up.
+            No feed to fall into. No account to make.
+          </p>
+
+          <div class="lengths" aria-hidden="true">
+            {lengths.map((l) => (
+              <div class={l.on ? 'len on' : 'len'}>
+                <b>{l.n}<span>{l.unit}</span></b>
+                <p>{l.what}</p>
+              </div>
+            ))}
+          </div>
+
           <div class="cta">
-            {SIGN_IN_READY ? (
-              <>
-                <a class="btn" href="/signin" data-signed-in-swap>Sign in</a>
-                <a class="btn ghost" href={PLAY_URL}>Get the app</a>
-                <small>Same account as your phone — your profiles, history and picks.</small>
-              </>
-            ) : (
-              <>
-                <a class="btn" href={PLAY_URL}>{LIVE ? 'Get it on Google Play' : 'Join the closed test'}</a>
-                <a class="btn ghost" href="#how">See how it works</a>
-                <small>Free. No account needed.</small>
-              </>
-            )}
+            <a class="watch-btn" href={PLAY_URL}>
+              <span class="press">{LIVE ? 'Free on Google Play' : 'Closed test'}</span>
+              <span class="word">Get the app</span>
+            </a>
+            <small>Android · Free<br />Pro if you want it</small>
           </div>
         </div>
-        <img
-          class="phone"
-          src={shots.home}
-          width="648"
-          height="1440"
-          alt="Munchview's home screen: the question “How long have you got?”, three length buttons with ~20 min chosen, and a large WATCH button."
-          fetchpriority="high"
-        />
+
+        <div class="stage">
+          <div class="stage-glow" aria-hidden="true"></div>
+          <div class="slab">
+            <img
+              src={shots.home}
+              width="648"
+              height="1440"
+              alt="Munchview’s home screen: the question “How long have you got?”, the watching-preferences pill, and one large amber button that says PRESS TO WATCH."
+              fetchpriority="high"
+            />
+          </div>
+        </div>
       </div>
     </header>
 
     <main id="main">
-      <section id="how" class="wrap">
-        <h2>Three seconds, three taps, done</h2>
-        <p class="sub">That is the whole product. Everything else exists to keep it true.</p>
-        <div class="steps">
-          <div class="step">
-            <h3>Open it</h3>
-            <p>No sign-up, no onboarding tour standing between you and a video.</p>
-          </div>
-          <div class="step">
-            <h3>Say your time</h3>
-            <p>Ten, twenty, thirty and up — or set your own length exactly.</p>
-          </div>
-          <div class="step">
-            <h3>Watch</h3>
-            <p>Something that fits starts playing. If it is not for you, one tap moves on.</p>
-          </div>
+      <div class="proof wrap">
+        <div class="proof-in">
+          <div class="stat"><b>3 s</b><p>from opening the app to watching</p></div>
+          <div class="stat"><b>6</b><p>platforms, playing in one calm player</p></div>
+          <div class="stat"><b>0</b><p>trackers or analytics — the learning stays on your phone</p></div>
         </div>
+      </div>
 
-        <div class="lengths" style="margin-top:40px">
-          {lengths.map((l) => (
-            <div class="len">
-              <b>{l.n}<span>{l.unit}</span></b>
-              <p>{l.what}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <!--
-        The scroll story: the phone stays put and the screen inside it changes
-        as the words go by. Six real screens from the current build, one idea
-        each — a reader who scrolls once has seen the whole product without
-        being asked to read a feature list.
-
-        It degrades to a plain stack under 900px, where a sticky column would
-        take the entire viewport and leave nothing to scroll past, and it stops
-        moving entirely under prefers-reduced-motion.
-      -->
-      <section id="story" class="wrap story" aria-labelledby="story-h">
-        <h2 id="story-h" class="sr-only">The app, as it actually looks</h2>
-        <div class="story-grid">
-          <div class="story-copy">
-            <article class="panel" data-panel="0">
-              <h3>How long have you got?</h3>
-              <p>Ten minutes, twenty, thirty or more. Say it, and something good is already playing.</p>
-              <figure class="panel-shot"><img src={shots.home} width="648" height="1440" loading="lazy" alt="" /></figure>
-            </article>
-            <article class="panel" data-panel="1">
-              <h3>One press, no feed on the way</h3>
-              <p>No list to browse first. The pick is made for you, and it plays.</p>
-              <figure class="panel-shot"><img src={shots.player} width="648" height="1440" loading="lazy" alt="" /></figure>
-            </article>
-            <article class="panel" data-panel="2">
-              <h3>One player, six platforms</h3>
-              <p>Same controls wherever the video comes from — each in its own official embedded player.</p>
-              <figure class="panel-shot"><img src={shots.preferences} width="648" height="1440" loading="lazy" alt="" /></figure>
-            </article>
-            <article class="panel" data-panel="3">
-              <h3>A feed that ends</h3>
-              <p>Rails you can reach the end of, built from what you actually finish. On purpose.</p>
-              <figure class="panel-shot"><img src={shots.discover} width="648" height="1440" loading="lazy" alt="" /></figure>
-            </article>
+      <section id="story" aria-label="How Munchview works">
+        <div class="wrap story-grid">
+          <div>
+            {story.map((s, i) => (
+              <article class="panel" data-panel={String(i)}>
+                <h3>{s.w}<span class="a">{s.a}</span></h3>
+                <p>{s.body}</p>
+                <figure class="panel-shot">
+                  <img src={s.shot} width="648" height="1440" loading="lazy" alt={s.alt} />
+                </figure>
+              </article>
+            ))}
           </div>
-
           <div class="story-stage" aria-hidden="true">
             <div class="stage-glow"></div>
-            <div class="stage-phone">
-              <img src={shots.home} width="648" height="1440" data-screen="0" class="on" alt="" />
-              <img src={shots.player} width="648" height="1440" data-screen="1" loading="lazy" alt="" />
-              <img src={shots.preferences} width="648" height="1440" data-screen="2" loading="lazy" alt="" />
-              <img src={shots.discover} width="648" height="1440" data-screen="3" loading="lazy" alt="" />
+            <div class="slab">
+              {story.map((s, i) => (
+                <img
+                  src={s.shot}
+                  width="648"
+                  height="1440"
+                  data-screen={String(i)}
+                  class={i === 0 ? 'on' : ''}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  alt=""
+                />
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      <section class="wrap">
-        <h2>Six platforms, one player</h2>
-        <p class="sub">
-          Everything plays inside the app, in each platform’s own official embedded player — so the
-          controls, the seek bar and where you left off work the same everywhere.
-        </p>
-        <div class="rail">{platforms.map((p) => <span class="chip">{p}</span>)}</div>
-      </section>
-
-      <section class="wrap">
-        <h2>What makes it different</h2>
-        <p class="sub">Six things, each of which the app actually does today.</p>
-        <div class="grid">
-          {features.map((f) => (
-            <article class="card">
-              <h3>{f.title}</h3>
-              <p>{f.body}</p>
-            </article>
-          ))}
+      <section aria-labelledby="plat-h">
+        <div class="wrap">
+          <h2 class="cap" id="plat-h">Everything is on<span class="a">unless you say otherwise.</span></h2>
+          <p class="sub">
+            That line is from the app’s own platforms screen. Turn any of the six off and
+            the feed follows; leave them all on and it simply plays the best thing it has.
+          </p>
+          <div class="plat-grid">
+            {platforms.map((p) => <div class="plat">{p}</div>)}
+          </div>
+          <p class="plat-note">
+            Each platform plays in its <b>own official embedded player</b>, inside the app.
+            Their players are their own — including any ads they run. We put none in.
+          </p>
         </div>
       </section>
 
-      <!-- The app, working, in one take.
-           After "how it works" and before the closing ask: a reader who has
-           just been told it takes three seconds should be able to watch that
-           being true rather than take our word for it.
-           `preload="none"` and no autoplay — a ninety-second file must not
-           download itself for somebody who never scrolls here, and the hero
-           above is already carrying the page's largest paint. -->
-      <section id="film" class="wrap film" aria-labelledby="film-h">
-        <h2 id="film-h">Watch it happen</h2>
-        <p class="sub">
-          Ninety seconds of the real build, in one take: opening it, choosing a
-          length, a video playing in YouTube's own player, and the rails it
-          builds from what you actually watch.
-        </p>
-        <div class="film-frame">
-          <video
-            src="/munchview/film.mp4"
-            poster="/munchview/shots/demo-poster.webp"
-            width="648"
-            height="1440"
-            controls
-            playsinline
-            preload="none"
-            aria-label="A ninety-second screen recording of Munchview: the home screen asking how long you have, choosing a length, pressing watch, a video playing in the official YouTube player, the recommendation rails, and the settings screens."
-          ></video>
+      <section aria-labelledby="lang-h">
+        <div class="wrap">
+          <h2 class="cap" id="lang-h">Eleven languages.<span class="a">Your country’s own feed.</span></h2>
+          <p class="sub">
+            The feed is your country’s, searched in its own language — not in English with a
+            flag on it. Pro can browse every other country’s feed the same way.
+          </p>
+          <div class="lang-rail">
+            {languages.map((l) => <span class="lang">{l}</span>)}
+          </div>
         </div>
       </section>
 
-      <section class="wrap close">
-        <h2>Say how long you’ve got.</h2>
-        <div class="cta" style="justify-content:center">
-          {SIGN_IN_READY ? (
-            <a class="btn" href="/signin" data-signed-in-swap>Sign in</a>
-          ) : null}
-          <a class={SIGN_IN_READY ? 'btn ghost' : 'btn'} href={PLAY_URL}>
-            {LIVE ? 'Get it on Google Play' : 'Join the closed test'}
-          </a>
+      <section id="pro" aria-labelledby="pro-h">
+        <div class="wrap pro-grid">
+          <div>
+            <h2 class="pro-title" id="pro-h">Munchview Pro</h2>
+            <p class="pro-tag">Everything you watch while you’re doing something else.</p>
+            <ul class="pro-list">
+              {pro.map((p) => <li>{p}</li>)}
+            </ul>
+            <p class="pro-fine">
+              Monthly, yearly or lifetime — priced in your own currency, in the app.
+              <b>The free app is the whole idea; Pro widens it.</b>
+            </p>
+          </div>
+          <div class="stage">
+            <div class="stage-glow" aria-hidden="true"></div>
+            <div class="slab">
+              <img
+                src={shots.pro}
+                width="648"
+                height="1440"
+                loading="lazy"
+                alt="The Munchview Pro sheet listing keyword tags, country browsing, custom lengths, taste profiles and resume-on-card."
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="film" aria-labelledby="film-h">
+        <div class="wrap film-grid">
+          <div>
+            <h2 class="cap" id="film-h">Ninety seconds.<span class="a">One take.</span></h2>
+            <p class="sub">
+              The real build, unstaged: opening it, choosing a length, a video playing in
+              YouTube’s own player, and the rails it builds from what you actually watch.
+            </p>
+          </div>
+          <div class="film-frame">
+            <video
+              src="/munchview/film.mp4"
+              poster="/munchview/shots/demo-poster.webp"
+              width="648"
+              height="1440"
+              controls
+              playsinline
+              preload="none"
+              aria-label="A ninety-second screen recording of Munchview: the home screen asking how long you have, choosing a length, pressing watch, a video playing in the official YouTube player, and the recommendation rails."
+            ></video>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Privacy, briefly">
+        <div class="wrap">
+          <div class="privacy-card">
+            <h2>What it doesn’t do</h2>
+            <p>
+              No analytics, no trackers, and no advertising of ours — in either tier. What it
+              learns about your taste stays on your phone. The platforms’ own players run
+              their own ads; those are theirs, and we’d rather say so than pretend.
+              The details live on one page: <a href="https://deftday.com/munchview/privacy">privacy</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="close" aria-label="Get Munchview">
+        <div class="wrap">
+          <h2 class="cap">Say how long<span class="a">you’ve got.</span></h2>
+          <div class="cta" style="justify-content:center">
+            {SIGN_IN_READY ? (
+              <a class="pill" href="/signin" data-signed-in-swap>Sign in</a>
+            ) : null}
+            <a class="watch-btn" href={PLAY_URL}>
+              <span class="press">{LIVE ? 'Free on Google Play' : 'Closed test'}</span>
+              <span class="word">Get the app</span>
+            </a>
+          </div>
         </div>
       </section>
     </main>
@@ -538,14 +745,34 @@ const jsonLd = {
         <a href="https://deftday.com">DeftDay</a>
       </div>
     </footer>
+
     <script is:inline>
+      /* The suggestion chip, cycling the same moments the app's store copy
+         names. Decorative — the real text for readers and screen readers is
+         the static sr-only sentence beside it — and it holds still for
+         anyone who asked for reduced motion. */
+      (function () {
+        var el = document.getElementById('moment');
+        if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var moments = ['a lunch break', 'a study session', 'the workshop', 'winding down'];
+        var i = 0;
+        setInterval(function () {
+          el.classList.add('out');
+          setTimeout(function () {
+            i = (i + 1) % moments.length;
+            el.textContent = moments[i];
+            el.classList.remove('out');
+          }, 300);
+        }, 2800);
+      })();
+
       /* The screen follows whichever panel is being READ, so the trigger line
          sits at the middle of the viewport rather than at its edge. An observer
          rather than a scroll handler: the browser reports the crossing, and the
          page never measures geometry on a scroll frame. */
       (function () {
         var panels = document.querySelectorAll('.panel[data-panel]');
-        var screens = document.querySelectorAll('.stage-phone img[data-screen]');
+        var screens = document.querySelectorAll('.story-stage img[data-screen]');
         if (!panels.length || !('IntersectionObserver' in window)) {
           panels.forEach(function (p) { p.classList.add('on'); });
           return;
@@ -563,20 +790,12 @@ const jsonLd = {
 
       /*
        * Somebody already signed in should not be invited to sign in again.
-       *
-       * The page is static and cached, so this cannot be decided at build
-       * time — it is decided in the browser, from the same key /watch reads.
-       * Nothing is validated here and nothing needs to be: the worst case is
-       * a link to /watch, which checks the session properly and offers a
-       * sign-in if it has expired.
+       * Decided in the browser from the same key /watch reads; the worst case
+       * is a link to /watch, which checks the session properly.
        */
       (function () {
         var session = null;
-        try {
-          session = localStorage.getItem('mv_session');
-        } catch (e) {
-          return;
-        }
+        try { session = localStorage.getItem('mv_session'); } catch (e) { return; }
         if (!session) return;
         var links = document.querySelectorAll('[data-signed-in-swap]');
         for (var i = 0; i < links.length; i += 1) {
