@@ -184,9 +184,19 @@ const updated = 'August 2, 2026';
           nothing about your choices.
         </li>
         <li>
-          Tapping the IMDb button opens that film’s IMDb page in your browser,
-          where <a href="https://www.imdb.com/privacy" target="_blank" rel="noopener">IMDb’s own privacy policy</a>
-          applies.
+          Tapping the IMDb button loads that film’s IMDb page in a sheet
+          inside the app, where <a href="https://www.imdb.com/privacy" target="_blank" rel="noopener">IMDb’s own privacy policy</a>
+          applies — the same as opening the page in any browser.
+        </li>
+        <li>
+          When the app’s language is not English, it asks our own endpoint
+          (<code>api.deftday.com</code>) for that film’s title and synopsis in
+          your language. The request carries the film’s id and the language —
+          nothing about you — and our server forwards it to
+          <a href="https://www.themoviedb.org" target="_blank" rel="noopener">TMDB</a>,
+          whose data it is. The answer is kept on your device, so each film is
+          fetched once. Pickorn uses the TMDB API but is not endorsed or
+          certified by TMDB.
         </li>
       </ul>
       <h3>Not collected</h3>
