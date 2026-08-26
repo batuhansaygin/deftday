@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import SiteChrome from '../components/SiteChrome.astro';
 import Footer from '../components/Footer.astro';
 
-const updated = 'August 2, 2026';
+const updated = 'August 25, 2026';
 ---
 
 <Base
@@ -122,26 +122,6 @@ const updated = 'August 2, 2026';
         list of sessions anywhere. The browser then reads the same record
         described above. There is one record and two ways of reading it, and
         nothing is copied between them. Signing out of the browser ends it.
-      </p>
-      <h3>If you connect your YouTube account</h3>
-      <p>
-        Separate from signing in, and entirely optional. If you tap
-        <b>Connect YouTube</b>, Google asks you to allow one read-only
-        permission (<code>youtube.readonly</code>), and we use it for one thing:
-        reading the videos you have liked on YouTube so the app can show them as
-        their own list. The request goes straight from your phone to YouTube
-        using your own permission — your library never passes through our
-        servers — and the permission token is not saved.
-      </p>
-      <p>
-        Those likes stay a <b>separate list</b>: Munchview's recommendations are
-        built from what you like in Munchview, never mixed with what you liked
-        on YouTube. We <b>never write anything</b> to your YouTube account — the
-        permission we ask for cannot. And we <b>cannot read your YouTube watch
-        history</b>: YouTube's API stopped providing it, so no app can. The
-        viewing history Munchview shows is the one it recorded on your phone.
-        <b>Disconnect</b> removes the imported list from your phone, and you can
-        withdraw the permission at any time in your Google account.
       </p>
       <h3>Not collected</h3>
       <p>
