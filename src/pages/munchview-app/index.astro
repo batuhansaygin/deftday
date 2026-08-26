@@ -658,7 +658,15 @@ const jsonLd = {
         </div>
       </div>
 
-      <section id="story" aria-label="How Munchview works">
+      <section id="story" aria-labelledby="story-h">
+        {/* A real heading, not just an aria-label. The four panels below are
+            h3s, and with nothing above them the outline jumped straight from
+            the page's h1 to h3 — so anyone navigating by headings met four
+            sub-headings belonging to a section that, as far as the outline was
+            concerned, did not exist. An aria-label names a region; it does not
+            appear in the heading list, which is the thing being navigated.
+            Invisible, because the section explains itself on screen. */}
+        <h2 class="sr-only" id="story-h">How Munchview works</h2>
         <div class="wrap story-grid">
           <div>
             {story.map((s, i) => (
