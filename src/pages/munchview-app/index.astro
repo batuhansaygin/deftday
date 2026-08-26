@@ -166,6 +166,15 @@ const jsonLd = {
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
+    <script is:inline>
+      /* Set before paint, and only where the reveal can actually be undone
+         again: without IntersectionObserver the CSS above never hides
+         anything, so an old browser gets the whole page at once rather than
+         a blank one. */
+      if ('IntersectionObserver' in window) {
+        document.documentElement.classList.add('reveal-ready');
+      }
+    </script>
     <style>
       /* Jost — an OFL geometric close enough to the Futura the store captions
          are set in that the site and the screenshots read as one voice.
@@ -512,6 +521,64 @@ const jsonLd = {
         * { transition: none !important; animation: none !important; }
         .panel { opacity: 1; }
       }
+
+      /* ── Arriving as you reach it ──────────────────────────────────────
+         Restraint first: one movement, always the same one — a short rise
+         and a fade, never a slide from the side, never a scale on a block of
+         text. Motion here has one job, which is to say "this is the part you
+         have got to", and a page that does six different things while you
+         scroll is a page you stop reading.
+
+         The rise is 16px. Far enough to register at the edge of vision,
+         short enough that nobody has to wait for it. The curve settles
+         without overshoot — the equivalent of a critically damped spring,
+         because nothing here was thrown by a finger, and bounce on a
+         paragraph that simply appeared reads as decoration.
+
+         The hero and the nav are deliberately exempt. The first screen must
+         be readable the instant it paints, and a sticky bar that starts
+         invisible is a bar that is missing — both were caught by reading the
+         selector against the markup before this shipped, not after.
+
+         The hidden state only exists under `.reveal-ready`, a class set in
+         the head — so a browser without IntersectionObserver, or with
+         scripting off, is never left holding an invisible page.
+
+         `:global()` on that class is load-bearing, not decoration. Astro
+         scopes every selector in this block by appending its own attribute,
+         and the class lives on <html>, which has no such attribute — so the
+         first version of these rules compiled to something that could never
+         match anything and the whole system was dead in the build while the
+         source looked correct. Caught by reading dist/, not the source. */
+      @media (prefers-reduced-motion: no-preference) {
+        :global(html.reveal-ready) .wrap:not(.hero-in):not(.nav-in) > *,
+        :global(html.reveal-ready) .plat-grid > .plat,
+        :global(html.reveal-ready) .lang-rail > .lang {
+          transition:
+            opacity 620ms cubic-bezier(.22, 1, .36, 1),
+            transform 620ms cubic-bezier(.22, 1, .36, 1);
+          transition-delay: calc(var(--i, 0) * 55ms);
+        }
+        :global(html.reveal-ready) .wrap:not(.hero-in):not(.nav-in) > *:not(.in) {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        /* The six marks and the eleven languages arrive as a group rather
+           than as one block: a shorter rise and a hair of scale, so the row
+           reads as items landing rather than a panel sliding. */
+        :global(html.reveal-ready) .plat-grid > .plat:not(.in),
+        :global(html.reveal-ready) .lang-rail > .lang:not(.in) {
+          opacity: 0;
+          transform: translateY(10px) scale(.985);
+        }
+      }
+
+      /* Reduced motion keeps the arrival and drops the travel — the cue
+         survives, the vestibular cost does not. */
+      @media (prefers-reduced-motion: reduce) {
+        :global(html.reveal-ready) .wrap:not(.hero-in):not(.nav-in) > * { transition: opacity 300ms linear; }
+        :global(html.reveal-ready) .wrap:not(.hero-in):not(.nav-in) > *:not(.in) { opacity: 0; transform: none; }
+      }
     </style>
   </head>
 
@@ -802,6 +869,52 @@ const jsonLd = {
           links[i].setAttribute('href', '/watch');
           links[i].textContent = 'Watch';
         }
+      })();
+
+      /* Reveal what the reader has reached, once.
+       *
+       * An observer rather than a scroll handler, for the same reason the
+       * story panels use one: the browser reports the crossing off the main
+       * thread, and the page never measures geometry on a scroll frame.
+       *
+       * Bottom margin of -12% so an element commits when it is properly in
+       * the room, not the instant a pixel of it clears the fold — arriving
+       * exactly at the edge reads as a glitch rather than as an entrance.
+       *
+       * Unobserved after it lands. Nothing re-hides on the way back up: a
+       * page that replays its entrance every time you scroll past is a page
+       * that will not let you re-read a sentence.
+       */
+      (function () {
+        if (!('IntersectionObserver' in window)) return;
+        var groups = [
+          ['.wrap:not(.hero-in):not(.nav-in) > *', 8],
+          ['.plat-grid > .plat', 12],
+          ['.lang-rail > .lang', 14],
+        ];
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          });
+        }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
+
+        groups.forEach(function (g) {
+          var sel = g[0];
+          var cap = g[1];
+          var seen = new Map();
+          document.querySelectorAll(sel).forEach(function (el) {
+            /* The stagger counts within the element's own container, and is
+               capped: the eleventh language should not wait three times as
+               long as the first to say the same thing. */
+            var parent = el.parentElement;
+            var n = seen.get(parent) || 0;
+            seen.set(parent, n + 1);
+            el.style.setProperty('--i', String(Math.min(n, cap)));
+            io.observe(el);
+          });
+        });
       })();
     </script>
   </body>
