@@ -579,6 +579,52 @@ const jsonLd = {
         :global(html.reveal-ready) .wrap:not(.hero-in):not(.nav-in) > * { transition: opacity 300ms linear; }
         :global(html.reveal-ready) .wrap:not(.hero-in):not(.nav-in) > *:not(.in) { opacity: 0; transform: none; }
       }
+
+      /* ── The device settles as you arrive at it ────────────────────────
+         Apple's product pages do one thing with a device shot: it comes up
+         slightly small and settles as the section takes the screen. It is the
+         one pattern worth taking from them here, and the only one on the
+         reference list that is actually theirs — the orbital timelines,
+         spotlight cards and 3D scenes on that catalogue are the decorative
+         class this page has no use for.
+
+         Driven by the browser's own scroll timeline rather than by JavaScript.
+         `animation-timeline: view()` ties the keyframes to the element's
+         passage through the viewport, so the work happens on the compositor:
+         no scroll handler, no library, nothing measuring geometry on a scroll
+         frame. Where it is unsupported the @supports block simply does not
+         apply and the shot is its normal size — a fallback that needs no code.
+
+         The range stops at `cover 40%`: the settle finishes while the section
+         is arriving, so nobody is made to keep scrolling to see a picture
+         finish assembling itself. Motion that outlasts the reader's interest
+         is motion that is in the way.
+
+         Two elements only: the Pro sheet and the film. The story stage is
+         left alone — it already has choreography of its own, and stacking a
+         second animation on a container whose child is mid-crossfade is how
+         you get two motions arguing. The hero never moves at all.
+
+         The first draft of this rule said `.film-grid .slab`, and that
+         section holds a `.film-frame` with a video in it — a rule that
+         matched nothing, sitting in the stylesheet looking correct. Found by
+         checking the built page against the selector rather than trusting it,
+         which is the second time today. */
+      @media (prefers-reduced-motion: no-preference) {
+        @supports (animation-timeline: view()) {
+          .pro-grid .slab,
+          .film-frame {
+            animation: settle linear both;
+            animation-timeline: view();
+            animation-range: entry 12% cover 40%;
+            transform-origin: 50% 70%;
+          }
+          @keyframes settle {
+            from { transform: scale(.94) translateY(18px); }
+            to   { transform: none; }
+          }
+        }
+      }
     </style>
   </head>
 
