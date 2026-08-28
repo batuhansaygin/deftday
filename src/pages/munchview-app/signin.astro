@@ -5,7 +5,7 @@
  * Deliberately not indexed: it is a door, not a page anybody should arrive at
  * from a search. The marketing pages are what SEO is for.
  */
-import { APP_PATH, PLAY_URL, SIGN_IN_READY } from '../../config/munchview';
+import { APP_PATH, EMAIL_SIGNIN_READY, PLAY_URL, SIGN_IN_READY } from '../../config/munchview';
 import MunchviewSignIn from '../../components/MunchviewSignIn.astro';
 import MunchviewPair from '../../components/MunchviewPair.astro';
 import MunchviewPassword from '../../components/MunchviewPassword.astro';
@@ -67,7 +67,10 @@ import { GOOGLE_READY } from '../../config/munchview';
         SIGN_IN_READY ? (
           <div class="actions">
             {GOOGLE_READY ? <MunchviewSignIn next={APP_PATH} /> : <MunchviewPair next={APP_PATH} />}
-            <MunchviewPassword next={APP_PATH} />
+            {/* Only when the Worker will actually answer it — see
+                EMAIL_SIGNIN_READY. A form the API 404s is not a fallback,
+                it is a trap with a submit button. */}
+            {EMAIL_SIGNIN_READY && <MunchviewPassword next={APP_PATH} />}
           </div>
         ) : (
           <div class="actions">

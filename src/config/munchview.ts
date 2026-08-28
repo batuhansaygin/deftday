@@ -114,6 +114,21 @@ export const GOOGLE_READY = GOOGLE_WEB_CLIENT_ID.length > 0;
  */
 export const SIGN_IN_READY = true;
 
+/**
+ * Whether the sign-in page offers email and password at all.
+ *
+ * The content Worker keeps /auth/* behind EMAIL_SIGNIN, off by the owner's
+ * decision of 2026-08-16: there is no password-reset flow yet, and an account
+ * you can create and then be locked out of is worse than one you cannot
+ * create. On 2026-08-28 this page briefly offered the form anyway — turning
+ * SIGN_IN_READY on surfaced every component at once — and pressing its
+ * yellow button could only ever bounce off the API's 404. The owner hit
+ * exactly that. The two flags say the same thing now, and this one flips to
+ * true in the same change that configures the mail provider and turns
+ * EMAIL_SIGNIN on at the Worker.
+ */
+export const EMAIL_SIGNIN_READY = false;
+
 /** Where the browser starts a pairing, and where it later reads the record. */
 export const CONTENT_API_URL = 'https://content.deftday.com';
 
