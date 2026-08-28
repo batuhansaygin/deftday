@@ -104,8 +104,15 @@ export const GOOGLE_READY = GOOGLE_WEB_CLIENT_ID.length > 0;
  * hidden link is not a closed door.
  *
  * Set it back to true on the day the web app is worth arriving at.
+ *
+ * That day: 2026-08-28. The owner asked for sign-in by name, the morning
+ * after the web app reached feature parity with the phone (web 1.11.0 —
+ * the feeds keep the app's promises, positions sync back, the platform
+ * choice is a real control). The Worker's password gate on /watch is a
+ * separate, still-standing control: this flag opens the sign-in door, not
+ * the whole site.
  */
-export const SIGN_IN_READY = false;
+export const SIGN_IN_READY = true;
 
 /** Where the browser starts a pairing, and where it later reads the record. */
 export const CONTENT_API_URL = 'https://content.deftday.com';
