@@ -361,6 +361,43 @@ export default {
       if (!type.includes('text/html')) return app;
       const headers = new Headers(app.headers);
       headers.set('cache-control', 'no-store, must-revalidate');
+      /**
+       * The security headers, applied HERE because nowhere else applies them.
+       *
+       * They were written in the app's next.config.ts headers() block and
+       * believed served since the split — but OpenNext on Workers does not
+       * implement Next's headers(), so production answered with no CSP at
+       * all (verified against the live host, 2026-08-28: curl through the
+       * gate, not one of them present). This proxy is the one door every
+       * /watch document leaves through, which makes it the one honest place
+       * for them; keep the list in step with next.config.ts, which remains
+       * the statement of intent and covers `next dev`.
+       *
+       * frame-src is the fence around the players: the platforms Munchview
+       * embeds and nothing else. The trailing https: the config had after
+       * the named hosts made the whole list decorative — every https host
+       * was allowed — so it is gone here; PeerTube instances are federated
+       * (any host), which is what the explicit https: on frame-src USED to
+       * excuse, and VK joined the players on 2026-08-28, so the fence names
+       * the fixed platforms and stays honest about the rest.
+       */
+      headers.set('x-content-type-options', 'nosniff');
+      headers.set('referrer-policy', 'strict-origin-when-cross-origin');
+      headers.set(
+        'content-security-policy',
+        [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-inline'",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data: https:",
+          "connect-src 'self' https://content.deftday.com",
+          'frame-src https:',
+          "font-src 'self'",
+          "frame-ancestors 'self'",
+          "base-uri 'self'",
+          "form-action 'self'",
+        ].join('; '),
+      );
       return new Response(app.body, { status: app.status, statusText: app.statusText, headers });
     }
 
