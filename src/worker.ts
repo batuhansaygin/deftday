@@ -358,7 +358,22 @@ export default {
        * hashed and keeps whatever long life it was given.
        */
       const type = app.headers.get('content-type') ?? '';
-      if (!type.includes('text/html')) return app;
+      if (!type.includes('text/html')) {
+        /**
+         * The comment below promises the hashed assets "keep whatever long
+         * life they were given" — measured on 2026-08-28, what they were
+         * given is `no-store`: OpenNext stamps it on everything, so every
+         * visit re-downloaded the whole bundle. The filenames are content
+         * hashes; a change is a new URL, which is what makes `immutable`
+         * true rather than brave.
+         */
+        if (url.pathname.startsWith('/watch/_next/static/')) {
+          const headers = new Headers(app.headers);
+          headers.set('cache-control', 'public, max-age=31536000, immutable');
+          return new Response(app.body, { status: app.status, statusText: app.statusText, headers });
+        }
+        return app;
+      }
       const headers = new Headers(app.headers);
       headers.set('cache-control', 'no-store, must-revalidate');
       /**
