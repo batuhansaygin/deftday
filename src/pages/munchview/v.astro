@@ -25,6 +25,10 @@ import { SHARE_NOTE } from '../../config/munchview';
     <p class="sub">Say how long you have — Munchview plays something good that fits. No feed, no scrolling.</p>
     <p class="actions">
       <a class="cta" id="open" href="/munchview">Open in Munchview</a>
+      {/* The web app is a full player now — a desktop reader should not be
+          told the only doors are an Android intent (dead under a mouse —
+          outside QA, 2026-08-28, item 17) or leaving for the platform. */}
+      <a class="cta ghost" id="web" href="https://munchview.app/watch">Watch on the web</a>
       <a class="cta ghost" id="watch" href="/munchview" rel="noopener nofollow">Watch on the platform</a>
     </p>
     <p class="fine">
@@ -105,6 +109,8 @@ import { SHARE_NOTE } from '../../config/munchview';
       'com.munchview.app://open?' +
       new URLSearchParams({ u, ...(t ? { t } : {}) }).toString();
     if (open) open.href = appUrl;
+    const web = document.getElementById('web') as HTMLAnchorElement | null;
+    if (web) web.href = `https://munchview.app/watch?u=${encodeURIComponent(u)}`;
     if (watch) watch.href = u;
   }
 </script>
